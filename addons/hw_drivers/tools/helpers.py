@@ -12,6 +12,8 @@ import logging
 import os
 import subprocess
 import zipfile
+from threading import Thread
+import time
 
 from odoo import _
 from odoo.modules.module import get_resource_path
@@ -21,6 +23,18 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Helper
 #----------------------------------------------------------
+
+class IoTRestart(Thread):
+    """
+    Thread to restart odoo server in IoT Box when we must return a answer before
+    """
+    def __init__(self, delay):
+        Thread.__init__(self)
+        self.delay = delay
+
+    def run(self):
+        time.sleep(self.delay)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
 
 def access_point():
     return get_ip() == '10.11.12.1'
@@ -118,19 +132,37 @@ def get_img_name():
     return 'iotboxv%s_%s.zip' % (major, minor)
 
 def get_ip():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+    while True:
+        try:
+            return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
+        except KeyError:
+            pass
+
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+        except KeyError:
+            pass
+
+        _logger.warning("Couldn't get IP, sleeping and retrying.")
+        time.sleep(5)
 
 def get_mac_address():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
+    while True:
+        try:
+            return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
+        except KeyError:
+            pass
+
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
+        except KeyError:
+            pass
+
+        _logger.warning("Couldn't get MAC address, sleeping and retrying.")
+        time.sleep(5)
 
 def get_ssid():
-    ap = subprocess.call(['systemctl', 'is-active', 'hostapd']) # if service is active return 0 else inactive
+    ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
     if not ap:
         return subprocess.check_output(['grep', '-oP', '(?<=ssid=).*', '/etc/hostapd/hostapd.conf']).decode('utf-8').rstrip()
     process_iwconfig = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -138,7 +170,7 @@ def get_ssid():
     return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
 
 def get_odoo_server_url():
-    ap = subprocess.call(['systemctl', 'is-active', 'hostapd']) # if service is active return 0 else inactive
+    ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
     if not ap:
         return False
     return read_file_first_line('odoo-remote-server.conf')
@@ -216,6 +248,10 @@ def download_drivers(auto=True):
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def odoo_restart(delay):
+    IR = IoTRestart(delay)
+    IR.start()
 
 def read_file_first_line(filename):
     path = Path.home() / filename

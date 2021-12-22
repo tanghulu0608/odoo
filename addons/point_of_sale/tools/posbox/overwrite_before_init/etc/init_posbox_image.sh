@@ -68,7 +68,6 @@ PKGS_TO_INSTALL="
     python3-dateutil \
     python3-decorator \
     python3-docutils \
-    python3-feedparser \
     python3-pil \
     python3-jinja2 \
     python3-ldap \
@@ -150,6 +149,7 @@ update-rc.d -f dnsmasq remove
 update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
+systemctl enable led-status.service
 systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target

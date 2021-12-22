@@ -26,7 +26,7 @@
 # roye w <159820@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# r <263737@qq.com>, 2019
+# rsh <263737@qq.com>, 2019
 # Martin Trigaux, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
@@ -36,8 +36,11 @@
 # Jerry Pan <panjianyu@inspur.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ryan ryan <itechr@outlook.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# ljsrzc007 <ljsrzc007@gmail.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# Chris H, 2021
 # 
 msgid ""
 msgstr ""
@@ -45,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
+"Last-Translator: Chris H, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +146,7 @@ msgstr "%s 限制访问 %s"
 msgid ""
 "%s use default source or destination locations                        from "
 "warehouse %s that will be archived."
-msgstr "%s 使用将要停用的仓库中的默认源或目标位置。 %s "
+msgstr "%s 使用将要归档的仓库中的默认源或目标位置。 %s "
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -759,7 +762,7 @@ msgstr "可应用于产品"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "可应用于品类"
+msgstr "可应用于产品类别"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_selectable
@@ -787,7 +790,7 @@ msgstr "应用特定路线进行补货，而不是产品的默认路线。"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
-msgstr "已停用"
+msgstr "已归档"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -867,6 +870,12 @@ msgstr "可用"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "可用的产品"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr "更改类型之前，可用数量应设置为零"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1090,7 +1099,7 @@ msgstr "变更为更好名称"
 msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
-msgstr "此时禁止更改此记录的公司，您应该将其停用并创建一个新记录。"
+msgstr "此时禁止更改此记录的公司，您应该将其归档并创建一个新记录。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -1557,9 +1566,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "当前产品数量。 \n"
-"对单一库存位置来说，包括了此位置或其任何子位置所存储的产品。 \n"
+"对单一库存地点来说，包括了此位置或其任何子位置所存储的产品。 \n"
 "对单一库存来说，包括了此仓位置置或其任何子位置所存储的产品。  \n"
-"另外，这包括了所有'内部'类型的任何库存位置所存储的产品。"
+"另外，这包括了所有'内部'类型的任何库存地点所存储的产品。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -1586,8 +1595,8 @@ msgstr "客户位置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "DHL 连接器"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1716,7 +1725,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr "通过位置定义信息反映产品的确切位置的方法。此方法可于品类上执行，如果上级位置没有设置也可以延伸到其上级位置。"
+msgstr "通过位置定义信息反映产品的确切位置的方法。此方法可于产品类别上执行，如果上级位置没有设置也可以延伸到其上级位置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
@@ -2234,9 +2243,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "预测数量(计算为手上数量 - 出库 + 入库) \n"
-"对于单一库存位置来说，这包括了存储在此位置及其子位置的货物。\n"
-"对于单一库存来说，这包括了存储在此库存的库存位置及其子位置的货物。\n"
-"否则，这包括存储在任何“内部”类型的任何库存位置的货物。"
+"对于单一库存地点来说，这包括了存储在此位置及其子位置的货物。\n"
+"对于单一库存来说，这包括了存储在此库存的库存地点及其子位置的货物。\n"
+"否则，这包括存储在任何“内部”类型的任何库存地点的货物。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__free_qty
@@ -2247,9 +2256,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "预测数量(以一手数量计算-预留数量)\n"
-"在具有单一库存位置的上下文中，这包括存储在此位置的货物，或其任何子位置。\n"
-"在具有单个仓库的上下文中，这包括存储在该仓库的库存位置的货物，或者它的任何子仓库。\n"
-"否则，这包括存储在‘内部’类型的任何库存位置的货物。"
+"在具有单一库存地点的上下文中，这包括存储在此位置的货物，或其任何子位置。\n"
+"在具有单个仓库的上下文中，这包括存储在该仓库的库存地点的货物，或者它的任何子仓库。\n"
+"否则，这包括存储在‘内部’类型的任何库存地点的货物。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
@@ -2418,7 +2427,7 @@ msgstr "有追溯"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
-msgstr "有多属性单品Sku"
+msgstr "有多变体变体"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posz
@@ -2935,15 +2944,24 @@ msgstr "完成数量是否可以编辑"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "你不能保留超出库存的%s 产品。"
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "不能取消保超过库存数量的 %s 产品。"
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3174,7 +3192,7 @@ msgstr "位置名称"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__lot_stock_id
 msgid "Location Stock"
-msgstr "库存位置"
+msgstr "库存地点"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__usage
@@ -3344,7 +3362,7 @@ msgstr "管理批次/序列号"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_locations
 msgid "Manage Multiple Stock Locations"
-msgstr "管理多个库存位置"
+msgstr "管理多个库存地点"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_multi_warehouses
@@ -4198,6 +4216,12 @@ msgid "Please add some items to move."
 msgstr "请添加一些项目到移动"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -4334,7 +4358,7 @@ msgstr "产品条码 (ZPL)"
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #, python-format
 msgid "Product Categories"
-msgstr "品类"
+msgstr "产品类别"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -4342,7 +4366,7 @@ msgstr "品类"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Product Category"
-msgstr "品类"
+msgstr "产品类别"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -4406,7 +4430,7 @@ msgstr "产品路线报告"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 msgid "Product Template"
-msgstr "产品"
+msgstr "产品模板"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -4425,7 +4449,7 @@ msgstr "产品计量单位"
 #: model:ir.actions.act_window,name:stock.stock_product_normal_action
 #: model:ir.ui.menu,name:stock.product_product_menu
 msgid "Product Variants"
-msgstr "单品Sku"
+msgstr "产品变体"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -4697,9 +4721,9 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location with 'internal' type."
 msgstr ""
 "计划出货产品的数量。\n"
-"在单个库存位置的情况下，这包括离开该位置或其任何子位置的货品。\n"
-"在单个库存的情况下，这包括离开库存的库存位置或其任何子位置的货物。\n"
-"否则，这包括任何离开“内部”类型库存位置的货物。"
+"在单个库存地点的情况下，这包括离开该位置或其任何子位置的货品。\n"
+"在单个库存的情况下，这包括离开库存的库存地点或其任何子位置的货物。\n"
+"否则，这包括任何离开“内部”类型库存地点的货物。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__outgoing_qty
@@ -5123,7 +5147,7 @@ msgstr "勾选的项目会自动建立补货路线"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr "将会为这些补充仓库创建路线，而且你可以在产品和品类选择它们"
+msgstr "将会为这些补充仓库创建路线，而且你可以在产品和产品类别选择它们"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -5402,7 +5426,7 @@ msgstr "在储存的产品上设置所有者"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
-msgstr "设置产品属性（例如颜色，大小）来管理单品Sku"
+msgstr "设置产品变体（例如颜色，大小）来管理产品变体"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5636,12 +5660,12 @@ msgstr "库存盘点明细行"
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_location_tree2
 msgid "Stock Location"
-msgstr "库存位置"
+msgstr "库存地点"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Stock Locations"
-msgstr "库存位置"
+msgstr "库存地点"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -6242,6 +6266,16 @@ msgstr ""
 "这个拣货显示和别的作业链接起来. 稍后, 如果你正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr "该产品已至少在库存移动中使用过一次。 不建议更改产品类型，因为它可能导致不一致。 更好的解决方案是将产品存档，然后创建一个新产品。"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -6268,7 +6302,7 @@ msgstr "该位置将被使用以替换默认值，同样，库存移动的源位
 msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
-msgstr "此库存位置将被使用以替换默认的，当你做盘点时，同样的作为根据制造单生成的库存移动之源位置。"
+msgstr "此库存地点将被使用以替换默认的，当你做盘点时，同样的作为根据制造单生成的库存移动之源位置。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -6601,6 +6635,13 @@ msgid "Unreserve"
 msgstr "取消保留"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr "不支持的搜索条件 在%s库存调整之外"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6618,6 +6659,7 @@ msgstr "更新产品数量"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -6683,7 +6725,7 @@ msgstr "已验证"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
 msgid "Variant Count"
-msgstr "单品Sku计数"
+msgstr "变体计数"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -6898,7 +6940,7 @@ msgstr "选中此选项后，可以在产品表单的存货选项卡中选择路
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr "选中此选项后，将在品类上选择该路线"
+msgstr "选中此选项后，将在产品类别上选择该路线"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -7027,7 +7069,7 @@ msgid ""
 msgstr ""
 "你可以在这里定义贯穿于整个仓库的主要路线，\n"
 "与此同时这也决定了产品的流向。\n"
-"这些路径可以被设置在产品、品类上，\n"
+"这些路径可以被设置在产品、产品类别上，\n"
 " 或者应用于补货和销售订单上。"
 
 #. module: stock
@@ -7128,7 +7170,7 @@ msgid ""
 "You cannot change the unit of measure as there are already stock moves for "
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
-msgstr "你无法更改计量单位，因为此产品已有库存变动。如果要更改计量单位，则应该停用此产品并创建新产品。"
+msgstr "你无法更改计量单位，因为此产品已有库存变动。如果要更改计量单位，则应该归档此产品并创建新产品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:0
@@ -7309,7 +7351,7 @@ msgstr "在仓库%s中仍然有正在进行的提取类型%s的操作"
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr "您对此产品仍然有一些启用的重新排序规则。 请先停用或删除它们。"
+msgstr "您对此产品仍然有一些取消归档的重新排序规则。 请先归档或删除它们。"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0

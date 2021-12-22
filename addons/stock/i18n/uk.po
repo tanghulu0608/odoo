@@ -7,7 +7,7 @@
 # Zoriana Zaiats, 2019
 # Bohdan Lisnenko, 2019
 # Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,7 +81,7 @@ msgstr ""
 " * Готово: Переміщення готове до обробки.\n"
 "(a) Політика доставки \"Якнайшвидше\": принаймні один товар має бути заброньований.\n"
 "(b) Політика доставки \"Коли всі товари готові\": усі товари мають бути заброньовані.\n"
-" * Готово: Переміщення оброблено.\n"
+" * Виконано: Переміщення оброблено.\n"
 " * Скасовано: Переміщення скасоване."
 
 #. module: stock
@@ -895,6 +895,12 @@ msgid "Available Products"
 msgstr "Наявні товари"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr "Перед зміною типу необхідно встановити на нуль доступну кількість"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -1635,8 +1641,8 @@ msgstr "Розташування клієнта"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Конектор DHL"
+msgid "DHL Express Connector"
+msgstr "Конектор DHL Express "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3031,15 +3037,26 @@ msgstr "Чи є величина редагованою"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "Неможливо замовити більше товарів %s ніж у вас на складі."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
+"Неможливо розрезервувати більше товарів %s ніж є на складі. Коригування може"
+" зняти резерв з деяких операцій з проблемними товарами."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "Неможливо відновити більше товарів %s ніж у вас на складі."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr "Неможливо зняти резерв з товарів більше %s ніж є на складі. Зв."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr "Спробуйте нашу автоматичну дію, щоби виправити це"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4319,6 +4336,12 @@ msgid "Please add some items to move."
 msgstr "Додайте кілька елементів для переміщення."
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr "Перевірте наступний серійний номер (name, id): "
+
+#. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -4896,7 +4919,7 @@ msgstr "Оцінити комплектування пізніше"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
-msgstr "Готово"
+msgstr "Підготовлено"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -6478,6 +6501,20 @@ msgstr ""
 " застосовані (що створить дубльовані операції)"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+"Цей товар використовувався принаймні в одному складському переміщенні. Не "
+"рекомендується змінювати тип товару, оскільки це може призвести до "
+"невідповідностей. Кращим рішенням може бути архівування товару та створення "
+"замість нього нового."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -6852,6 +6889,13 @@ msgid "Unreserve"
 msgstr "Відмінити резервування"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr "Непідтримуваний пошук %s поза межами коригування запасів"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6869,6 +6913,7 @@ msgstr "Оновити кількість товару"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button

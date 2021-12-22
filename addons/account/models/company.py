@@ -452,6 +452,7 @@ class ResCompany(models.Model):
                         "\nPlease go to Configuration > Journals.")
                 raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
 
+            account = journal.default_credit_account_id or account
             sample_invoice = self.env['account.move'].with_context(default_type='out_invoice', default_journal_id=journal.id).create({
                 'invoice_payment_ref': _('Sample invoice'),
                 'partner_id': partner.id,
@@ -589,3 +590,16 @@ class ResCompany(models.Model):
             results_by_journal['results'].append(rslt)
 
         return results_by_journal
+
+    def get_fiscal_country(self):
+        """ Returns the country to be used for this company's tax report.
+        By default, it'll be the one from the address; but a config parameter
+        may be used for each company to customize that behavior.
+        """
+        self.ensure_one()
+
+        fiscal_country_key = 'account_fiscal_country_%s' % self.id
+        forced_country_code = self.env['ir.config_parameter'].sudo().get_param(fiscal_country_key)
+        forced_country = forced_country_code and self.env['res.country'].search([('code', 'ilike', forced_country_code)], limit=1)
+
+        return forced_country or self.country_id

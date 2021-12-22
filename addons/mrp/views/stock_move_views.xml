@@ -98,6 +98,7 @@
                     <field name="product_uom_qty" string="To Consume"/>
                     <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" string="Reserved"/>
                     <field name="quantity_done" string="Consumed" attrs="{'column_invisible': [('parent.state', '=', 'draft')]}" readonly="1"/>
+                    <field name="group_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -135,6 +136,18 @@
                         </group>
                     </group>
                 </form>
+            </field>
+        </record>
+
+        <record id="stock_move_line_view_search" model="ir.ui.view">
+            <field name="name">stock.move.line.search</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search" />
+            <field name="arch" type="xml">
+                <filter name="manufacturing" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="domain">[('move_id.production_id', '!=', False)]</attribute>
+                </filter>
             </field>
         </record>
 

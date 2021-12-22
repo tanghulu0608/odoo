@@ -37,6 +37,7 @@ class AccountBankStmtCashWizard(models.Model):
     """
     _name = 'account.bank.statement.cashbox'
     _description = 'Bank Statement Cashbox'
+    _rec_name = 'id'
 
     cashbox_lines_ids = fields.One2many('account.cashbox.line', 'cashbox_id', string='Cashbox Lines')
     start_bank_stmt_ids = fields.One2many('account.bank.statement', 'cashbox_start_id')
@@ -177,12 +178,12 @@ class AccountBankStatement(models.Model):
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
-    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
+    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance, tracking=True)
+    balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]}, tracking=True)
     accounting_date = fields.Date(string="Accounting Date", help="If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
         "This is useful if the accounting period in which the entries should normally be booked is already closed.",
         states={'open': [('readonly', False)]}, readonly=True)
-    state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
+    state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open', tracking=True)
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal)
     journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
@@ -340,7 +341,14 @@ class AccountBankStatement(models.Model):
 
     def action_bank_reconcile_bank_statements(self):
         self.ensure_one()
-        bank_stmt_lines = self.mapped('line_ids')
+        limit = int(self.env["ir.config_parameter"].sudo().get_param("account.reconcile.batch", 1000))
+        bank_stmt_lines = self.env['account.bank.statement.line'].search([
+            ('statement_id', 'in', self.ids),
+            # take not reconciled lines only. See _check_lines_reconciled method
+            ('account_id', '=', False),
+            ('journal_entry_ids', '=', False),
+            ('amount', '!=', 0),
+        ], limit=limit)
         return {
             'type': 'ir.actions.client',
             'tag': 'bank_statement_reconciliation_view',
@@ -462,7 +470,6 @@ class AccountBankStatementLine(models.Model):
     ####################################################
 
     def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
-        acc_type = "acc.reconcile = true"
         select_clause = "SELECT aml.id "
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
         account_clause = ''
@@ -471,7 +478,7 @@ class AccountBankStatementLine(models.Model):
         where_clause = """WHERE aml.company_id = %(company_id)s
                           AND (
                                     """ + account_clause + """
-                                    ("""+acc_type+""" AND aml.reconciled = false)
+                                    (acc.reconcile = true AND aml.reconciled IS NOT TRUE)
                           )"""
         where_clause = where_clause + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else where_clause
         where_clause = where_clause + ' AND aml.id NOT IN %(excluded_ids)s' if excluded_ids else where_clause
@@ -815,6 +822,7 @@ class AccountBankStatementLine(models.Model):
             aml_dict['payment_id'] = payment and payment.id or False
             aml_obj.with_context(check_move_validity=False).create(aml_dict)
 
+            move.update_lines_tax_exigibility() # Needs to be called manually as lines were created 1 by 1
             move.post()
             #record the move name on the statement line to be able to retrieve it in case of unreconciliation
             self.write({'move_name': move.name})

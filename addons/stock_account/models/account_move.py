@@ -25,6 +25,19 @@ class AccountMove(models.Model):
             move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
         return move_vals
 
+    def copy_data(self, default=None):
+        # OVERRIDE
+        # Don't keep anglo-saxon lines when copying a journal entry.
+        res = super().copy_data(default=default)
+
+        if not self._context.get('move_reverse_cancel'):
+            for copy_vals in res:
+                if 'line_ids' in copy_vals:
+                    copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
+                                             if line_vals[0] != 0 or not line_vals[2].get('is_anglo_saxon_line')]
+
+        return res
+
     def post(self):
         # OVERRIDE
 
@@ -93,6 +106,9 @@ class AccountMove(models.Model):
         '''
         lines_vals_list = []
         for move in self:
+            # Make the loop multi-company safe when accessing models like product.product
+            move = move.with_context(force_company=move.company_id.id)
+
             if not move.is_sale_document(include_receipts=True) or not move.company_id.anglo_saxon_accounting:
                 continue
 
@@ -106,6 +122,11 @@ class AccountMove(models.Model):
                 accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
                 debit_interim_account = accounts['stock_output']
                 credit_expense_account = accounts['expense']
+                if not credit_expense_account:
+                    if self.type == 'out_refund':
+                        credit_expense_account = self.journal_id.default_credit_account_id
+                    else: # out_invoice/out_receipt
+                        credit_expense_account = self.journal_id.default_debit_account_id
                 if not debit_interim_account or not credit_expense_account:
                     continue
 
@@ -169,12 +190,12 @@ class AccountMove(models.Model):
                 continue
 
             products = product or move.mapped('invoice_line_ids.product_id')
-            for product in products:
-                if product.valuation != 'real_time':
+            for prod in products:
+                if prod.valuation != 'real_time':
                     continue
 
                 # We first get the invoices move lines (taking the invoice and the previous ones into account)...
-                product_accounts = product.product_tmpl_id._get_product_accounts()
+                product_accounts = prod.product_tmpl_id._get_product_accounts()
                 if move.is_sale_document():
                     product_interim_account = product_accounts['stock_output']
                 else:
@@ -183,10 +204,10 @@ class AccountMove(models.Model):
                 if product_interim_account.reconcile:
                     # Search for anglo-saxon lines linked to the product in the journal entry.
                     product_account_moves = move.line_ids.filtered(
-                        lambda line: line.product_id == product and line.account_id == product_interim_account and not line.reconciled)
+                        lambda line: line.product_id == prod and line.account_id == product_interim_account and not line.reconciled)
 
                     # Search for anglo-saxon lines linked to the product in the stock moves.
-                    product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == product)
+                    product_stock_moves = stock_moves.filtered(lambda stock_move: stock_move.product_id == prod)
                     product_account_moves += product_stock_moves.mapped('account_move_ids.line_ids')\
                         .filtered(lambda line: line.account_id == product_interim_account and not line.reconciled)
 
@@ -203,6 +224,7 @@ class AccountMoveLine(models.Model):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing
         # with anglo-saxon accounting.
         self.ensure_one()
+        self = self.with_context(force_company=self.move_id.journal_id.company_id.id)
         if self.product_id.type == 'product' \
             and self.move_id.company_id.anglo_saxon_accounting \
             and self.move_id.is_purchase_document():
@@ -216,4 +238,4 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        return self.product_id._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+        return self.product_id.with_context(force_company=self.company_id.id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)

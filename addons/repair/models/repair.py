@@ -27,7 +27,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
+        default='/',
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -43,7 +43,7 @@ class Repair(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, states={'confirmed': [('readonly', True)]},
+        index=True, states={'confirmed': [('readonly', True)]}, change_default=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
@@ -190,6 +190,16 @@ class Repair(models.Model):
             self.partner_invoice_id = addresses['invoice']
             self.pricelist_id = self.partner_id.with_context(force_company=company_id).property_product_pricelist.id
 
+    @api.model
+    def create(self, vals):
+        # To avoid consuming a sequence number when clicking on 'Create', we preprend it if the
+        # the name starts with '/'.
+        vals['name'] = vals.get('name') or '/'
+        if vals['name'].startswith('/'):
+            vals['name'] = (self.env['ir.sequence'].next_by_code('repair.order') or '/') + vals['name']
+            vals['name'] = vals['name'][:-1] if vals['name'].endswith('/') and vals['name'] != '/' else vals['name']
+        return super(Repair, self).create(vals)
+
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
@@ -314,14 +324,16 @@ class Repair(models.Model):
                 invoice_vals = {
                     'type': 'out_invoice',
                     'partner_id': partner_invoice.id,
+                    'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration,
-                    'line_ids': [],
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
                     'fiscal_position_id': fp_id
                 }
+                if partner_invoice.property_payment_term_id:
+                    invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id
                 current_invoices_list.append(invoice_vals)
             else:
                 # if group == True: concatenate invoices by partner and currency
@@ -565,11 +577,12 @@ class RepairLine(models.Model):
         index=True, ondelete='cascade')
     type = fields.Selection([
         ('add', 'Add'),
-        ('remove', 'Remove')], 'Type', required=True)
+        ('remove', 'Remove')], 'Type', default='add', required=True)
     product_id = fields.Many2one('product.product', 'Product', required=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
+    price_total = fields.Float('Total', compute='_compute_price_total', compute_sudo=True, digits=0)
     tax_id = fields.Many2many(
         'account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes')
     product_uom_qty = fields.Float(
@@ -611,6 +624,12 @@ class RepairLine(models.Model):
             taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
             line.price_subtotal = taxes['total_excluded']
 
+    @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id', 'repair_id.invoice_method')
+    def _compute_price_total(self):
+        for line in self:
+            taxes = line.tax_id.compute_all(line.price_unit, line.repair_id.pricelist_id.currency_id, line.product_uom_qty, line.product_id, line.repair_id.partner_id)
+            line.price_total = taxes['total_included']
+
     @api.onchange('type', 'repair_id')
     def onchange_operation_type(self):
         """ On change of operation type it sets source location, destination location
@@ -648,7 +667,10 @@ class RepairLine(models.Model):
             else:
                 self.name = self.product_id.display_name
             if self.product_id.description_sale:
-                self.name += '\n' + self.product_id.description_sale
+                if partner:
+                    self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+                else:
+                    self.name += '\n' + self.product_id.description_sale
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:
@@ -657,7 +679,8 @@ class RepairLine(models.Model):
                     # Check automatic detection
                     fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
                     fp = self.env['account.fiscal.position'].browse(fp_id)
-                self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+                taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
+                self.tax_id = fp.map_tax(taxes, self.product_id, partner).ids
             warning = False
             if not pricelist:
                 warning = {
@@ -698,6 +721,7 @@ class RepairFee(models.Model):
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_subtotal', store=True, digits=0)
+    price_total = fields.Float('Total', compute='_compute_price_total', compute_sudo=True, digits=0)
     tax_id = fields.Many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes')
     invoice_line_id = fields.Many2one('account.move.line', 'Invoice Line', copy=False, readonly=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
@@ -707,6 +731,12 @@ class RepairFee(models.Model):
         for fee in self:
             taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
             fee.price_subtotal = taxes['total_excluded']
+
+    @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id')
+    def _compute_price_total(self):
+        for fee in self:
+            taxes = fee.tax_id.compute_all(fee.price_unit, fee.repair_id.pricelist_id.currency_id, fee.product_uom_qty, fee.product_id, fee.repair_id.partner_id)
+            fee.price_total = taxes['total_included']
 
     @api.onchange('repair_id', 'product_id', 'product_uom_qty')
     def onchange_product_id(self):
@@ -724,12 +754,19 @@ class RepairFee(models.Model):
                 # Check automatic detection
                 fp_id = self.env['account.fiscal.position'].get_fiscal_position(partner.id, delivery_id=self.repair_id.address_id.id)
                 fp = self.env['account.fiscal.position'].browse(fp_id)
-            self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
+            taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
+            self.tax_id = fp.map_tax(taxes, self.product_id, partner).ids
         if self.product_id:
-            self.name = self.product_id.display_name
+            if partner:
+                self.name = self.product_id.with_context(lang=partner.lang).display_name
+            else:
+                self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
             if self.product_id.description_sale:
-                self.name += '\n' + self.product_id.description_sale
+                if partner:
+                    self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+                else:
+                    self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:

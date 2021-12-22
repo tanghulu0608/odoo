@@ -63,10 +63,11 @@ class AccountMove(models.Model):
     def _constraint_kode_ppn(self):
         ppn_tag = self.env.ref('l10n_id.ppn_tag')
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi != '08'):
-            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False) and any(ppn_tag.id not in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
+            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type) \
+                    and any(ppn_tag.id not in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type):
                 raise UserError(_('Cannot mix VAT subject and Non-VAT subject items in the same invoice with this kode transaksi.'))
         for move in self.filtered(lambda m: m.l10n_id_kode_transaksi == '08'):
-            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False):
+            if any(ppn_tag.id in line.tag_ids.ids for line in move.line_ids if line.exclude_from_invoice_tab is False and not line.display_type):
                 raise UserError('Kode transaksi 08 is only for non VAT subject items.')
 
     @api.constrains('l10n_id_tax_number')
@@ -156,12 +157,11 @@ class AccountMove(models.Model):
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
             invoice_npwp = '000000000000000'
-            if not move.partner_id.vat:
-                if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                    invoice_npwp = move.partner_id.vat
-                elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                    invoice_npwp = move.partner_id.l10n_id_nik
-                invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
+            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
+                invoice_npwp = move.partner_id.vat
+            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
+                invoice_npwp = move.partner_id.l10n_id_nik
+            invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
 
             # Here all fields or columns based on eTax Invoice Third Party
             eTax['KD_JENIS_TRANSAKSI'] = move.l10n_id_tax_number[0:2] or 0
@@ -178,7 +178,7 @@ class AccountMove(models.Model):
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref
 
-            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0)
+            lines = move.line_ids.filtered(lambda x: x.product_id.id == int(dp_product_id) and x.price_unit < 0 and not x.display_type)
             eTax['FG_UANG_MUKA'] = 0
             eTax['UANG_MUKA_DPP'] = int(abs(sum(lines.mapped('price_subtotal'))))
             eTax['UANG_MUKA_PPN'] = int(abs(sum(lines.mapped(lambda l: l.price_total - l.price_subtotal))))
@@ -194,7 +194,7 @@ class AccountMove(models.Model):
             # HOW TO ADD 2 line to 1 line for free product
             free, sales = [], []
 
-            for line in move.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab):
+            for line in move.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab and not l.display_type):
                 # *invoice_line_unit_price is price unit use for harga_satuan's column
                 # *invoice_line_quantity is quantity use for jumlah_barang's column
                 # *invoice_line_total_price is bruto price use for harga_total's column

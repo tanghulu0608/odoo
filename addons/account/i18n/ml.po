@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
 "Last-Translator: avinashnk94 <avinashnk94@gmail.com>, 2020\n"
 "Language-Team: Malayalam (https://www.transifex.com/odoo/teams/41243/ml/)\n"
@@ -334,12 +334,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Waiting for Payment</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> പേയ്‌മെന്റിനായി കാത്തിരിക്കുന്നു</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> പേയ്‌മെന്റിനായി കാത്തിരിക്കുന്നു</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1292,9 +1292,9 @@ msgid ""
 "put on the regular tax account."
 msgstr ""
 "ക്യാഷ് ബേസിസ് ടാക്സിനായി നികുതി തുക മാറ്റാൻ ഉപയോഗിക്കുന്ന അക്കൗണ്ട്. യഥാർത്ഥ"
-" ഇൻവോയ്സ് അനുരഞ്ജനം ചെയ്യാത്തിടത്തോളം കാലം അതിൽ നികുതി തുക അടങ്ങിയിരിക്കും; "
-"അനുരഞ്ജന സമയത്ത്, ഈ തുക ഈ അക്കൗണ്ടിൽ റദ്ദാക്കുകയും സാധാരണ നികുതി അക്കൗണ്ടിൽ "
-"ഇടുകയും ചെയ്യും."
+" ഇൻവോയ്സ് അനുരഞ്ജനം ചെയ്യാത്തിടത്തോളം കാലം അതിൽ നികുതി തുക "
+"അടങ്ങിയിരിക്കും; അനുരഞ്ജന സമയത്ത്, ഈ തുക ഈ അക്കൗണ്ടിൽ റദ്ദാക്കുകയും സാധാരണ "
+"നികുതി അക്കൗണ്ടിൽ ഇടുകയും ചെയ്യും."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2491,9 +2491,9 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
-"ഇൻവോയ്സിനെ അടിസ്ഥാനമാക്കി: ഇൻവോയ്സ് സാധൂകരിച്ചാലുടൻ നികുതി അടയ്‌ക്കേണ്ടതാണ്."
-" പേയ്‌മെന്റിന്റെ അടിസ്ഥാനത്തിൽ: ഇൻവോയ്സിന്റെ പേയ്‌മെന്റ് ലഭിച്ചാലുടൻ നികുതി "
-"അടയ്‌ക്കേണ്ടതാണ്."
+"ഇൻവോയ്സിനെ അടിസ്ഥാനമാക്കി: ഇൻവോയ്സ് സാധൂകരിച്ചാലുടൻ നികുതി "
+"അടയ്‌ക്കേണ്ടതാണ്. പേയ്‌മെന്റിന്റെ അടിസ്ഥാനത്തിൽ: ഇൻവോയ്സിന്റെ പേയ്‌മെന്റ് "
+"ലഭിച്ചാലുടൻ നികുതി അടയ്‌ക്കേണ്ടതാണ്."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
@@ -2704,6 +2704,7 @@ msgstr "എൻട്രി റദ്ദാക്കുക"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__cancel
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__cancelled
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Cancelled"
 msgstr "റദ്ദാക്കി"
 
@@ -4080,9 +4081,9 @@ msgid ""
 "last day of this month."
 msgstr ""
 "ഇൻവോയ്സ് അതിന്റെ കാലാവധിയിൽ വരേണ്ട മാസത്തിലെ ദിവസം. പൂജ്യമോ നെഗറ്റീവോ "
-"ആണെങ്കിൽ, ഈ മൂല്യം അവഗണിക്കപ്പെടും, നിർദ്ദിഷ്ട ദിവസമൊന്നും സജ്ജീകരിക്കില്ല. "
-"ഒരു മാസത്തിലെ അവസാന ദിവസത്തേക്കാൾ വലുതാണെങ്കിൽ, ഈ നമ്പർ പകരം ഈ മാസത്തിന്റെ "
-"അവസാന ദിവസത്തെ തിരഞ്ഞെടുക്കും."
+"ആണെങ്കിൽ, ഈ മൂല്യം അവഗണിക്കപ്പെടും, നിർദ്ദിഷ്ട ദിവസമൊന്നും "
+"സജ്ജീകരിക്കില്ല. ഒരു മാസത്തിലെ അവസാന ദിവസത്തേക്കാൾ വലുതാണെങ്കിൽ, ഈ നമ്പർ "
+"പകരം ഈ മാസത്തിന്റെ അവസാന ദിവസത്തെ തിരഞ്ഞെടുക്കും."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
@@ -5953,11 +5954,6 @@ msgid "Internal Group"
 msgstr "ആന്തരിക ഗ്രൂപ്പ്"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_move__narration
-msgid "Internal Note"
-msgstr "ആന്തരിക കുറിപ്പ്"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__note
 msgid "Internal Notes"
 msgstr "ആന്തരിക കുറിപ്പുകൾ"
@@ -6342,6 +6338,14 @@ msgstr ""
 "ഇതിനകം തന്നെ ഒരു ജേണൽ എൻ‌ട്രി സൃഷ്‌ടിച്ച ഒരു പേയ്‌മെന്റ് ഇല്ലാതാക്കാൻ ഇത് "
 "അനുവദനീയമല്ല, കാരണം ഇത് നമ്പറിംഗിൽ ഒരു വിടവ് സൃഷ്ടിക്കും. നിങ്ങൾ വീണ്ടും "
 "ജേണൽ എൻ‌ട്രി സൃഷ്‌ടിക്കുകയും പതിവ് പഴയപടിയാക്കലിന് നന്ദി റദ്ദാക്കുകയും വേണം."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"It seems that the taxes have been modified since the creation of the journal"
+" entry. You should create the credit note manually instead."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7542,6 +7546,7 @@ msgstr "ഡ്യൂ അല്ല"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "പണമടച്ചില്ല"
 
@@ -7935,6 +7940,12 @@ msgstr "ഉത്ഭവം"
 #: model:ir.actions.report,name:account.action_account_original_vendor_bill
 msgid "Original Bills"
 msgstr "യഥാർത്ഥ ബില്ലുകൾ"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
+msgid "Original Currency"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__payment_id
@@ -8383,9 +8394,9 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
-"പണലഭ്യത ചലനങ്ങൾ രജിസ്റ്റർ ചെയ്യുന്നതിന് പേയ്‌മെന്റുകൾ ഉപയോഗിക്കുന്നു. "
-"നിങ്ങളുടെ സ്വന്തം വഴിയോ ഇൻസ്റ്റാൾ ചെയ്ത സൗകര്യങ്ങൾ ഉപയോഗിച്ചോ നിങ്ങൾക്ക് ആ "
-"പേയ്‌മെന്റുകൾ പ്രോസസ്സ് ചെയ്യാൻ കഴിയും."
+"പണലഭ്യത ചലനങ്ങൾ രജിസ്റ്റർ ചെയ്യുന്നതിന് പേയ്‌മെന്റുകൾ "
+"ഉപയോഗിക്കുന്നു. നിങ്ങളുടെ സ്വന്തം വഴിയോ ഇൻസ്റ്റാൾ ചെയ്ത സൗകര്യങ്ങൾ "
+"ഉപയോഗിച്ചോ നിങ്ങൾക്ക് ആ പേയ്‌മെന്റുകൾ പ്രോസസ്സ് ചെയ്യാൻ കഴിയും."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -8514,6 +8525,18 @@ msgid ""
 msgstr ""
 "തുടരുന്നതിന് മുമ്പായി അക്ക of ണ്ടുകളുടെ ഒരു ചാർട്ട് ഇൻസ്റ്റാൾ ചെയ്യുക "
 "അല്ലെങ്കിൽ പലവക ജേണൽ സൃഷ്ടിക്കുക."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:0
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a strictly positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -8819,8 +8842,8 @@ msgid ""
 "to the balance of the corresponding lines in the report. A formula cannot "
 "refer to another line using a formula."
 msgstr ""
-"മൊത്തം വരിയുടെ മൂല്യം കണക്കാക്കാൻ ഉപയോഗിക്കുന്ന പൈത്തൺ എക്‌സ്‌പ്രഷൻ. "
-"ടാഗ്_നാമം ഉപയോഗിച്ച് ഈ ഫീൽഡ് പരസ്പരം എക്സ്ക്ലൂസീവ് ആണ്, ഇത് "
+"മൊത്തം വരിയുടെ മൂല്യം കണക്കാക്കാൻ ഉപയോഗിക്കുന്ന പൈത്തൺ "
+"എക്‌സ്‌പ്രഷൻ. ടാഗ്_നാമം ഉപയോഗിച്ച് ഈ ഫീൽഡ് പരസ്പരം എക്സ്ക്ലൂസീവ് ആണ്, ഇത് "
 "ക്രമീകരിക്കുന്നത് വരിയെ മൊത്തം വരിയാക്കി മാറ്റുന്നു. റിപ്പോർട്ടിലെ അനുബന്ധ "
 "വരികളുടെ ബാലൻസ് സൂചിപ്പിക്കുന്നതിന് ടാക്സ് റിപ്പോർട്ട് ലൈൻ കോഡുകൾ ഈ "
 "പദപ്രയോഗത്തിലെ വേരിയബിളുകളായി ഉപയോഗിക്കാം. ഒരു സൂത്രവാക്യം ഉപയോഗിച്ച് "
@@ -9257,6 +9280,11 @@ msgstr "റവന്യൂ അക്രുവൽ അക്കൗണ്ട്"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
 msgstr "വരുമാനം / ചെലവ് അക്കൗണ്ട്"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
+msgid "Reversal Move"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -9739,6 +9767,12 @@ msgid "Send Money"
 msgstr "പണം അയക്കുക"
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "Send Payment"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice
 msgid "Send a sample invoice"
 msgstr ""
@@ -9757,6 +9791,11 @@ msgstr "തപാൽ വഴി ഇൻവോയ്സുകളും പേയ്
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send receipt by email"
 msgstr "രസീത് ഇമെയിൽ വഴി അയയ്ക്കുക"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
+msgid "Send receipts by email"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
@@ -10256,8 +10295,9 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its"
 " impact on financial reports."
 msgstr ""
-"നികുതി സൃഷ്ടിക്കുന്നതിലൂടെ ഈ ലൈനിലേക്ക് നിയോഗിച്ചിട്ടുള്ള ടാഗുകൾ ഉണ്ടെങ്കിൽ."
-" ഇത് സാമ്പത്തിക റിപ്പോർട്ടുകളിൽ അതിന്റെ സ്വാധീനം നിർണ്ണയിക്കുന്നു."
+"നികുതി സൃഷ്ടിക്കുന്നതിലൂടെ ഈ ലൈനിലേക്ക് നിയോഗിച്ചിട്ടുള്ള ടാഗുകൾ "
+"ഉണ്ടെങ്കിൽ. ഇത് സാമ്പത്തിക റിപ്പോർട്ടുകളിൽ അതിന്റെ സ്വാധീനം "
+"നിർണ്ണയിക്കുന്നു."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_cash_box_out
@@ -10646,8 +10686,8 @@ msgid ""
 "                                   This does not especially correspond to the invoices reconciled with the payment,\n"
 "                                   as it can have been generated first, and reconciled later"
 msgstr ""
-"പേയ്‌മെന്റ് സൃഷ്‌ടിച്ച ഇൻവോയ്സ് അടങ്ങിയിരിക്കുന്ന സാങ്കേതിക ഫീൽഡ്. "
-"പേയ്‌മെന്റുമായി പൊരുത്തപ്പെടുന്ന ഇൻവോയ്‌സുകളുമായി ഇത് പ്രത്യേകിച്ച് "
+"പേയ്‌മെന്റ് സൃഷ്‌ടിച്ച ഇൻവോയ്സ് അടങ്ങിയിരിക്കുന്ന സാങ്കേതിക "
+"ഫീൽഡ്. പേയ്‌മെന്റുമായി പൊരുത്തപ്പെടുന്ന ഇൻവോയ്‌സുകളുമായി ഇത് പ്രത്യേകിച്ച് "
 "പൊരുത്തപ്പെടുന്നില്ല, കാരണം ഇത് ആദ്യം ജനറേറ്റുചെയ്യാനും പിന്നീട് അനുരഞ്ജനം "
 "ചെയ്യാനും കഴിയും"
 
@@ -10896,6 +10936,11 @@ msgid "Terms & Conditions"
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move__narration
+msgid "Terms and Conditions"
+msgstr ""
+
+#. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
@@ -10940,9 +10985,9 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
-"അക്കൗണ്ട് ഇതിനകം ഒരു 'വിൽപ്പന' അല്ലെങ്കിൽ 'വാങ്ങൽ' ജേണലിൽ ഉപയോഗത്തിലാണ്. "
-"ഇതിനർത്ഥം അക്കൗണ്ടിന്റെ തരം 'സ്വീകാര്യമായത്' അല്ലെങ്കിൽ 'അടയ്‌ക്കേണ്ടത്' "
-"ആയിരിക്കില്ല എന്നാണ്."
+"അക്കൗണ്ട് ഇതിനകം ഒരു 'വിൽപ്പന' അല്ലെങ്കിൽ 'വാങ്ങൽ' ജേണലിൽ "
+"ഉപയോഗത്തിലാണ്. ഇതിനർത്ഥം അക്കൗണ്ടിന്റെ തരം 'സ്വീകാര്യമായത്' അല്ലെങ്കിൽ "
+"'അടയ്‌ക്കേണ്ടത്' ആയിരിക്കില്ല എന്നാണ്."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11234,6 +11279,14 @@ msgstr ""
 "ഇമെയിൽ വഴി അയയ്ക്കില്ല."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid ""
+"The following payment(s) will not be sent by email, because the customers "
+"don't have email address."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11257,8 +11310,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
-msgid "The holder of a journal's bank account must be the company (%s)."
-msgstr "ഒരു ജേണലിന്റെ ബാങ്ക് അക്കൗണ്ട് കൈവശമുള്ളയാൾ കമ്പനി ( %s) ആയിരിക്കണം."
+msgid ""
+"The holder of the bank account of a \"Bank\" type journal must be the company (%s).\n"
+"However, the holder of \"%s\" is \"%s\".\n"
+"Please select another bank account or change the holder of \"%s\"."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -11359,10 +11415,10 @@ msgid ""
 "properly, invoice repartition lines should be arranged in the same order as "
 "the credit note repartition lines they correspond to."
 msgstr ""
-"പുനരവലോകന ലൈനുകൾ പ്രദർശിപ്പിക്കുകയും പൊരുത്തപ്പെടുത്തുകയും ചെയ്യുന്ന ക്രമം. "
-"റീഫണ്ടുകൾ ശരിയായി പ്രവർത്തിക്കുന്നതിന്, ഇൻവോയ്സ് പുനരാരംഭിക്കൽ ലൈനുകൾ "
-"അവയുമായി ബന്ധപ്പെട്ട ക്രെഡിറ്റ് നോട്ട് പുനരാരംഭിക്കൽ ലൈനുകളുടെ അതേ ക്രമത്തിൽ"
-" ക്രമീകരിക്കണം."
+"പുനരവലോകന ലൈനുകൾ പ്രദർശിപ്പിക്കുകയും പൊരുത്തപ്പെടുത്തുകയും ചെയ്യുന്ന "
+"ക്രമം. റീഫണ്ടുകൾ ശരിയായി പ്രവർത്തിക്കുന്നതിന്, ഇൻവോയ്സ് പുനരാരംഭിക്കൽ ലൈനുകൾ"
+" അവയുമായി ബന്ധപ്പെട്ട ക്രെഡിറ്റ് നോട്ട് പുനരാരംഭിക്കൽ ലൈനുകളുടെ അതേ "
+"ക്രമത്തിൽ ക്രമീകരിക്കണം."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__has_unreconciled_entries
@@ -11567,8 +11623,8 @@ msgid ""
 "The tax set to apply this repartition on refund invoices. Mutually exclusive"
 " with invoice_tax_id"
 msgstr ""
-"റീഫണ്ട് ഇൻവോയ്സുകളിൽ ഈ പുനർവിഭജനം പ്രയോഗിക്കാൻ നികുതി സജ്ജമാക്കി. "
-"ഇൻവോയ്സ്_ടാക്സ്_ഐഡി ഉപയോഗിച്ച് പരസ്പരം എക്സ്ക്ലൂസീവ്"
+"റീഫണ്ട് ഇൻവോയ്സുകളിൽ ഈ പുനർവിഭജനം പ്രയോഗിക്കാൻ നികുതി "
+"സജ്ജമാക്കി. ഇൻവോയ്സ്_ടാക്സ്_ഐഡി ഉപയോഗിച്ച് പരസ്പരം എക്സ്ക്ലൂസീവ്"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -11633,10 +11689,10 @@ msgid ""
 "You could enter\n"
 "BRT: ([\\d,]+)"
 msgstr ""
-"റിജെക്സ് ഡിലിമിറ്ററിന്റെ ആവശ്യമില്ല, റിജെക്സ് മാത്രം ആവശ്യമാണ്. "
-"ഉദാഹരണത്തിന്, നിങ്ങൾക്ക് R: 9672938 10/07 AX 9415126318 T: 5L: NA BRT: "
-"3358,07 C: ൽ നിന്ന് തുക എക്‌സ്‌ട്രാക്റ്റുചെയ്യണമെങ്കിൽ: നിങ്ങൾക്ക് BRT "
-"നൽകാം: ([\\ d,] +)"
+"റിജെക്സ് ഡിലിമിറ്ററിന്റെ ആവശ്യമില്ല, റിജെക്സ് മാത്രം "
+"ആവശ്യമാണ്. ഉദാഹരണത്തിന്, നിങ്ങൾക്ക് R: 9672938 10/07 AX 9415126318 T: 5L: NA"
+" BRT: 3358,07 C: ൽ നിന്ന് തുക എക്‌സ്‌ട്രാക്റ്റുചെയ്യണമെങ്കിൽ: നിങ്ങൾക്ക് BRT"
+" നൽകാം: ([\\ d,] +)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -11680,9 +11736,9 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
-"നിങ്ങളുടെ രാജ്യം അനുസരിച്ച് ഈ തരങ്ങൾ നിർവചിക്കപ്പെടുന്നു. "
-"അക്കൗണ്ടിനെക്കുറിച്ചും അതിന്റെ സവിശേഷതകളെക്കുറിച്ചും കൂടുതൽ വിവരങ്ങൾ ഈ "
-"തരത്തിൽ അടങ്ങിയിരിക്കുന്നു."
+"നിങ്ങളുടെ രാജ്യം അനുസരിച്ച് ഈ തരങ്ങൾ "
+"നിർവചിക്കപ്പെടുന്നു. അക്കൗണ്ടിനെക്കുറിച്ചും അതിന്റെ സവിശേഷതകളെക്കുറിച്ചും "
+"കൂടുതൽ വിവരങ്ങൾ ഈ തരത്തിൽ അടങ്ങിയിരിക്കുന്നു."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -11932,8 +11988,8 @@ msgid ""
 "line will simply create a counterpart on this account"
 msgstr ""
 "പിന്നീടുള്ള അനുരഞ്ജന പ്രക്രിയ ഒഴിവാക്കുന്നതിന് സ്റ്റേറ്റ്മെന്റ് ലൈൻ "
-"സൃഷ്ടിക്കൽ / ഇറക്കുമതി സമയത്ത് ഈ സാങ്കേതിക ഫീൽഡ് ഉപയോഗിക്കാൻ കഴിയും. "
-"സ്റ്റേറ്റ്മെന്റ് ലൈൻ ഈ അക്കൗണ്ടിൽ ഒരു ക p ണ്ടർപാർട്ട് സൃഷ്ടിക്കും"
+"സൃഷ്ടിക്കൽ / ഇറക്കുമതി സമയത്ത് ഈ സാങ്കേതിക ഫീൽഡ് ഉപയോഗിക്കാൻ "
+"കഴിയും. സ്റ്റേറ്റ്മെന്റ് ലൈൻ ഈ അക്കൗണ്ടിൽ ഒരു ക p ണ്ടർപാർട്ട് സൃഷ്ടിക്കും"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -12786,6 +12842,12 @@ msgid "You can only send invoices."
 msgstr "നിങ്ങൾക്ക് ഇൻവോയ്സുകൾ മാത്രമേ അയയ്ക്കാൻ കഴിയൂ."
 
 #. module: account
+#: code:addons/account/wizard/account_payment_send.py:0
+#, python-format
+msgid "You can only send payments."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -12913,8 +12975,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
-"പോസ്റ്റുചെയ്ത അവസ്ഥയിൽ നിങ്ങൾക്ക് ഇതിനകം ഒരു നീക്കം സൃഷ്ടിക്കാൻ കഴിയില്ല. "
-"ദയവായി ഒരു ഡ്രാഫ്റ്റ് നീക്കം സൃഷ്ടിച്ച് അതിനുശേഷം പോസ്റ്റുചെയ്യുക."
+"പോസ്റ്റുചെയ്ത അവസ്ഥയിൽ നിങ്ങൾക്ക് ഇതിനകം ഒരു നീക്കം സൃഷ്ടിക്കാൻ "
+"കഴിയില്ല. ദയവായി ഒരു ഡ്രാഫ്റ്റ് നീക്കം സൃഷ്ടിച്ച് അതിനുശേഷം പോസ്റ്റുചെയ്യുക."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12928,6 +12990,12 @@ msgstr ""
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
 msgstr "ഒരു തവണ പോസ്റ്റുചെയ്ത ഒരു എൻ‌ട്രി നിങ്ങൾക്ക് ഇല്ലാതാക്കാൻ കഴിയില്ല."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You cannot delete an item linked to a posted entry."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12947,9 +13015,9 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
-"ഒരു അനുരഞ്ജന ജേണൽ എൻ‌ട്രിയിൽ നിങ്ങൾക്ക് ഈ പരിഷ്‌ക്കരണം നടത്താൻ കഴിയില്ല. "
-"നിങ്ങൾക്ക് നിയമപരമല്ലാത്ത ചില ഫീൽഡുകൾ മാറ്റാൻ കഴിയും അല്ലെങ്കിൽ ആദ്യം "
-"അനുരഞ്ജനം ചെയ്യണം. ജേണൽ എൻ‌ട്രി (ഐഡി): %s ( %s)"
+"ഒരു അനുരഞ്ജന ജേണൽ എൻ‌ട്രിയിൽ നിങ്ങൾക്ക് ഈ പരിഷ്‌ക്കരണം നടത്താൻ "
+"കഴിയില്ല. നിങ്ങൾക്ക് നിയമപരമല്ലാത്ത ചില ഫീൽഡുകൾ മാറ്റാൻ കഴിയും അല്ലെങ്കിൽ "
+"ആദ്യം അനുരഞ്ജനം ചെയ്യണം. ജേണൽ എൻ‌ട്രി (ഐഡി): %s ( %s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13161,9 +13229,10 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"നെഗറ്റീവ് ആകെ തുക ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഒരു ഇൻവോയ്സ് സാധൂകരിക്കാൻ കഴിയില്ല. "
-"പകരം നിങ്ങൾ ഒരു ക്രെഡിറ്റ് കുറിപ്പ് സൃഷ്ടിക്കണം. ഒരു ക്രെഡിറ്റ് കുറിപ്പായി "
-"അല്ലെങ്കിൽ റീഫണ്ടായി പരിവർത്തനം ചെയ്യുന്നതിന് പ്രവർത്തന മെനു ഉപയോഗിക്കുക."
+"നെഗറ്റീവ് ആകെ തുക ഉപയോഗിച്ച് നിങ്ങൾക്ക് ഒരു ഇൻവോയ്സ് സാധൂകരിക്കാൻ "
+"കഴിയില്ല. പകരം നിങ്ങൾ ഒരു ക്രെഡിറ്റ് കുറിപ്പ് സൃഷ്ടിക്കണം. ഒരു ക്രെഡിറ്റ് "
+"കുറിപ്പായി അല്ലെങ്കിൽ റീഫണ്ടായി പരിവർത്തനം ചെയ്യുന്നതിന് പ്രവർത്തന മെനു "
+"ഉപയോഗിക്കുക."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13203,6 +13272,12 @@ msgstr ""
 #, python-format
 msgid "You must first define an opening move."
 msgstr "നിങ്ങൾ ആദ്യം ഒരു പ്രാരംഭ നീക്കം നിർവചിക്കണം."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "The entry %s (id %s) is already posted."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13374,6 +13449,11 @@ msgid "of the following month"
 msgstr "അടുത്ത മാസത്തെ"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "on"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding debits"
 msgstr "കുടിശ്ശികയുള്ള ഡെബിറ്റുകൾ"
@@ -13437,6 +13517,15 @@ msgstr "മാതൃ കമ്പനി"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "to check"
 msgstr "പരിശോധിക്കാൻ"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The chosen journal has a type that is not compatible with your invoice type."
+" Sales operations should go to 'sale' journals, and purchase operations to "
+"'purchase' ones."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

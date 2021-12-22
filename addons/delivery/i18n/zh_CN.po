@@ -3,7 +3,6 @@
 # 	* delivery
 # 
 # Translators:
-# Martin Trigaux, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
@@ -11,8 +10,10 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # Gary Wei <Gary.wei@elico-corp.com>, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Chris H, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,12 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr "（预估客户运费:%s )"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "免费送货"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -161,7 +168,7 @@ msgstr "免费发货的订单金额，按公司本位币计算"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "已停用"
+msgstr "已归档"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -718,7 +725,7 @@ msgstr "产品数量"
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product Template"
-msgstr "产品"
+msgstr "产品模板"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_type
@@ -1063,6 +1070,20 @@ msgid ""
 msgstr ""
 "您在同一批货出货不同的邮包类型。\n"
 "邮包类型:%s"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid ""
+"You can not update the shipping costs on an order where it was already invoiced!\n"
+"\n"
+"The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
+"\n"
+msgstr ""
+"已开票的订单，不支持修改运费!\n"
+"\n"
+"已经处理以下交货明细（产品、开票数量和价格）：\n"
+"\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

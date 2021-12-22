@@ -5,6 +5,7 @@
 # Translators:
 # TRC Servicios srl <ventas.bbca@gmail.com>, 2019
 # Carlos Liébana Anero <carlosliebana@gmail.com>, 2019
+# 966ff43e6966712895a590e7320ca288, 2019
 # Ivan Coro <ivan@iventiva.com>, 2019
 # Ana Juaristi <ajuaristio@gmail.com>, 2019
 # Luis Pomar <luis.pomar@gmail.com>, 2019
@@ -15,13 +16,11 @@
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2019
-# Glen Sojo <inactive+glen.sojo@transifex.com>, 2019
+# b7db2840ea95169a8b66b2e8c18d323d_52caf48 <e188a842d22a1f8229ec8e1ab8414c94_389188>, 2019
 # Nans Lefebvre <len@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2019
 # gabriumaa <gabriel.umana@delfixcr.com>, 2019
-# 966ff43e6966712895a590e7320ca288, 2019
-# David Vidal <david.vidal@trespinos.es>, 2019
 # Harald Panten <harald.panten@qubiq.es>, 2019
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2019
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
@@ -35,11 +34,17 @@
 # Mariana Santos Romo <msn@odoo.com>, 2019
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Martin Trigaux, 2020
 # Pablo Rojas <rojaspablo88@gmail.com>, 2020
-# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
+# Jose Alejandro Echeverri Valencia <josealejandroeche@gmail.com>, 2020
+# Susanna Pujol, 2020
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2020
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2021
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
+# David Vidal <david.vidal@trespinos.es>, 2021
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
+# Jose Carmona <jrcarmona@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -47,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
+"Last-Translator: Jose Carmona <jrcarmona@gmail.com>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +110,7 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-"* Borrador: La transferencia no ha sido confirmada. No se realizan reservas.\n"
+"* Borrador: La transferencia no ha sido confirmada. Las Reservaciones no aplican.\n"
 " * Esperando otra operación: La transferencia espera otra operación antes de estar preparada.\n"
 " * Esperando: La transferencia está esperando disponibilidad de algunos productos.\n"
 "(a) La política de envío es \"Tan pronto como sea posible\" ningún producto pudo ser reservado.\n"
@@ -311,7 +316,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        HOla ${object.partner_id.name},<br/><br/>\n"
+"        Hola ${object.partner_id.name},<br/><br/>\n"
 "        Nos complace informarle que su pedido ha sido enviado.\n"
 "        %if object.carrier_tracking_ref:\n"
 "            Su referencia de pedido es\n"
@@ -510,7 +515,7 @@ msgstr "<strong>Min cant :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr "<strong>Cantidad disponible</strong>"
+msgstr "<strong>A Mano</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -729,7 +734,7 @@ msgstr "Dirección donde los productos deberían ser entregados. Opcional."
 #. module: stock
 #: model:res.groups,name:stock.group_stock_manager
 msgid "Administrator"
-msgstr "Administradora"
+msgstr "Administrador"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -925,6 +930,13 @@ msgstr "Reservado"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Productos disponibles"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+"La cantidad disponible debe establecerse en cero antes de cambiar el tipo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1669,8 +1681,8 @@ msgstr "Ubicaciones de cliente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "Conector DHL"
+msgid "DHL Express Connector"
+msgstr "Conector DHL Express"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1917,7 +1929,7 @@ msgstr "Descripción"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Descripción para pedidos de entrega"
+msgstr "Descripción para las órdenes de entrega"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -1938,7 +1950,7 @@ msgstr "Descripción de Picking"
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Descripción en los pedidos de Entrega"
+msgstr "Descripción para las órdenes de entrega"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
@@ -2218,10 +2230,10 @@ msgid ""
 "            location to the Stock location. Each report can be performed on\n"
 "            physical, partner or virtual locations."
 msgstr ""
-"Cada operación de stock en Odoo mueve los productos de una\n"
+"Cada operación de existencias en Odoo mueve los productos de una\n"
 "            ubicación a otra. Por ejemplo, si recibe productos\n"
 "            de un proveedor, Odoo moverá los productos de la ubicación del\n"
-"            Vendedor a la ubicación de Stock. Se puede analizar informes\n"
+"            proveedor a la ubicación de existencias. Se pueden realizar informes\n"
 "            por ubicaciones físicas, de terceros o virtuales."
 
 #. module: stock
@@ -2995,7 +3007,7 @@ msgstr "Referencia de inventario"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
-msgstr "Reporte de inventario"
+msgstr "Informe de inventario"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -3065,18 +3077,24 @@ msgstr "Es la cantidad realizada editable"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
 msgstr ""
-"No es posible reservar más productos que los %s que tiene en existencias."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"No es posible deshacer la reserva de más productos que los %s que tiene en "
-"existencias."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -3616,7 +3634,7 @@ msgstr "Mover Paquetes Completos"
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_line_ids
 msgid "Move Line"
-msgstr "Apunte"
+msgstr "Línea de movimiento"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__move_line_nosuggest_ids
@@ -3628,7 +3646,7 @@ msgstr "Linea de movimiento no sugerido"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 msgid "Move Lines"
-msgstr "Movimientos"
+msgstr "Líneas de movimiento"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__date
@@ -4364,6 +4382,12 @@ msgid "Please add some items to move."
 msgstr "Por favor agregue algunos items para procesar movimiento."
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr "Compruebe el siguiente número de serie (nombre, identificador):"
+
+#. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Please specify at least one non-zero quantity."
@@ -4534,7 +4558,7 @@ msgstr "Movimientos productos"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de Producto (Stock Move Line)"
+msgstr "Movimientos de Producto (Líneas de movimiento)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_packaging
@@ -5507,14 +5531,14 @@ msgid ""
 "done"
 msgstr ""
 "Enviar un mensaje de texto SMS de confirmación automática cuando se realicen"
-" los pedidos de entrega"
+" las órdenes de entrega"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
 msgstr ""
-"Envíe un correo electrónico de confirmación automática cuando se realicen "
-"los pedidos de entrega"
+"Enviar un correo electrónico de confirmación automática cuando se realicen "
+"las órdenes de entrega"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
@@ -5738,8 +5762,8 @@ msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
 msgstr ""
-"Algunos productos del ajuste de inventario tienen seguimiento por numero de "
-"lote/serie. Esta seguro que no quiere especificar un numero de lote/serie "
+"Algunos productos del ajuste de inventario tienen seguimiento por número de "
+"lote/serie. ¿Está seguro que no quiere especificar un número de lote/serie "
 "para ellos?"
 
 #. module: stock
@@ -6164,7 +6188,7 @@ msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
 msgstr ""
-"El pedido pendiente <a href=# data-oe-model=stock.picking data-oe-"
+"La entrega pendiente <a href=# data-oe-model=stock.picking data-oe-"
 "id=%d>%s</a> ha sido creada."
 
 #. module: stock
@@ -6499,7 +6523,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Esta nota se agrega a los pedidos de entrega."
+msgstr "Esta nota se agrega a las órdenes de entrega."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6531,6 +6555,20 @@ msgstr ""
 "productos que está devolviendo ahora, asegúrese de <b>anular</b> el albarán "
 "devuelto para evitar que se apliquen de nuevo las reglas de logísticas (lo "
 "que crearía operaciones duplicadas)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+"Este producto se ha utilizado en al menos un movimiento de inventario. No se"
+" recomienda cambiar el tipo de producto, ya que puede provocar "
+"incoherencias. Una mejor solución podría ser archivar el producto y crear "
+"uno nuevo."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -6907,6 +6945,13 @@ msgid "Unreserve"
 msgstr "Anular reserva"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr "Búsqueda en %s no soportada fuera de un ajuste de inventario"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6924,6 +6969,7 @@ msgstr "Actualizar la cantidad de productos"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -7009,7 +7055,7 @@ msgstr "Ubicación de proveedor"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Ubicaciones de Vendedor"
+msgstr "Ubicaciones de proveedor"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__3

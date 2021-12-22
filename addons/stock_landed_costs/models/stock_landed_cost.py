@@ -82,13 +82,15 @@ class LandedCost(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_picking_ids(self):
-        self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
-                                 FROM stock_move AS sm
-                           INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
-                                WHERE sm.picking_id IS NOT NULL""")
         valued_picking_ids_per_company = defaultdict(list)
-        for res in self.env.cr.fetchall():
-            valued_picking_ids_per_company[res[1]].append(res[0])
+        if self.company_id:
+            self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
+                                     FROM stock_move AS sm
+                               INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
+                                    WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
+                                 GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
+            for res in self.env.cr.fetchall():
+                valued_picking_ids_per_company[res[1]].append(res[0])
         for cost in self:
             cost.allowed_picking_ids = valued_picking_ids_per_company[cost.company_id.id]
 
@@ -134,6 +136,7 @@ class LandedCost(models.Model):
                 'type': 'entry',
             }
             valuation_layer_ids = []
+            cost_to_add_byproduct = defaultdict(lambda: 0.0)
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
                 remaining_qty = sum(line.move_id.stock_valuation_layer_ids.mapped('remaining_qty'))
                 linked_layer = line.move_id.stock_valuation_layer_ids[:1]
@@ -157,8 +160,11 @@ class LandedCost(models.Model):
                     valuation_layer_ids.append(valuation_layer.id)
                 # Update the AVCO
                 product = line.move_id.product_id
-                if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                    product.with_context(force_company=self.company_id.id).sudo().standard_price += cost_to_add / product.quantity_svl
+                if product.cost_method == 'average':
+                    cost_to_add_byproduct[product] += cost_to_add
+                # Products with manual inventory valuation are ignored because they do not need to create journal entries.
+                if product.valuation != "real_time":
+                    continue
                 # `remaining_qty` is negative if the move is out and delivered proudcts that were not
                 # in stock.
                 qty_out = 0
@@ -168,10 +174,21 @@ class LandedCost(models.Model):
                     qty_out = line.move_id.product_qty
                 move_vals['line_ids'] += line._create_accounting_entries(move, qty_out)
 
+            # batch standard price computation avoid recompute quantity_svl at each iteration
+            products = self.env['product.product'].browse(p.id for p in cost_to_add_byproduct.keys())
+            for product in products:  # iterate on recordset to prefetch efficiently quantity_svl
+                if not float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
+                    product.with_context(force_company=cost.company_id.id).sudo().standard_price += cost_to_add_byproduct[product] / product.quantity_svl
+
             move_vals['stock_valuation_layer_ids'] = [(6, None, valuation_layer_ids)]
-            move = move.create(move_vals)
-            cost.write({'state': 'done', 'account_move_id': move.id})
-            move.post()
+            # We will only create the accounting entry when there are defined lines (the lines will be those linked to products of real_time valuation category).
+            cost_vals = {'state': 'done'}
+            if move_vals.get("line_ids"):
+                move = move.create(move_vals)
+                cost_vals.update({'account_move_id': move.id})
+            cost.write(cost_vals)
+            if cost.account_move_id:
+                move.post()
 
             if cost.vendor_bill_id and cost.vendor_bill_id.state == 'posted' and cost.company_id.anglo_saxon_accounting:
                 all_amls = cost.vendor_bill_id.line_ids | cost.account_move_id.line_ids
@@ -202,8 +219,7 @@ class LandedCost(models.Model):
         lines = []
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
-            # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel':
+            if move.product_id.cost_method not in ('fifo', 'average') or move.state == 'cancel' or not move.product_qty:
                 continue
             vals = {
                 'product_id': move.product_id.id,
