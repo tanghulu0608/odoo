@@ -12,7 +12,8 @@ from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, http
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
@@ -190,9 +191,11 @@ class Website(models.Model):
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
     def unlink(self):
-        website = self.search([('id', 'not in', self.ids)], limit=1)
-        if not website:
-            raise UserError(_('You must keep at least one website.'))
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG, False):
+            website = self.search([('id', 'not in', self.ids)], limit=1)
+            if not website:
+                raise UserError(_('You must keep at least one website.'))
+
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
@@ -720,8 +723,7 @@ class Website(models.Model):
             :rtype: list({name: str, url: str})
         """
 
-        router = request.httprequest.app.get_db_router(request.db)
-        # Force enumeration to be performed as public user
+        router = http.root.get_db_router(request.db)
         url_set = set()
 
         sitemap_endpoint_done = set()
@@ -872,7 +874,7 @@ class Website(models.Model):
         """
         self.ensure_one()
         if request.endpoint:
-            router = request.httprequest.app.get_db_router(request.db).bind('')
+            router = http.root.get_db_router(request.db).bind('')
             arguments = dict(request.endpoint_arguments)
             for key, val in list(arguments.items()):
                 if isinstance(val, models.BaseModel):

@@ -14144,6 +14144,12 @@ msgid "Invalid model name %r in action definition."
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_actions.py:611
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+
+#. module: base
 #: code:addons/template_inheritance.py:0
 #, python-format
 msgid "Invalid position attribute: '%s'"
@@ -25202,4 +25208,10 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore must be active."
 msgstr ""

@@ -59,10 +59,11 @@
 # Leandro Correa <leandro.lx@gmail.com>, 2020
 # Liane Cafarate <lic@odoo.com>, 2020
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2020
-# Martin Trigaux, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
 # Vanderson Oliveira <vandinho.on10@gmail.com>, 2021
+# Marcos Rodrigues, 2021
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -70,13 +71,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-01 12:20+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Vanderson Oliveira <vandinho.on10@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -773,6 +774,11 @@ msgstr "<strong>Empresa:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Código de Cliente:</strong>"
 
@@ -780,6 +786,11 @@ msgstr "<strong>Código de Cliente:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Customer: </strong>"
 msgstr "<strong>Cliente: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Data:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -4971,7 +4982,7 @@ msgstr "Estados"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Filter on account, label, partner, amount,..."
-msgstr ""
+msgstr "Filtro por conta, etiqueta, parceiro, quantidade,..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -5242,7 +5253,7 @@ msgstr "Do rótulo"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "From now on, you may want to:"
-msgstr ""
+msgstr "De agora em diante, você pode querer:"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -6173,6 +6184,14 @@ msgstr "Impostos da Fatura"
 msgid ""
 "Invoice and credit note repartition should each contain exactly one line for"
 " the base."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
 msgstr ""
 
 #. module: account
@@ -7115,7 +7134,7 @@ msgstr "Manual"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Manual Operations"
-msgstr ""
+msgstr "Operações Manuais"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_ids
@@ -8195,7 +8214,7 @@ msgstr "Tipo de Parceiro"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Pay your"
-msgstr ""
+msgstr "Pague seu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8453,7 +8472,7 @@ msgstr "Percentual"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Percent (%)"
-msgstr ""
+msgstr "Percentagem (%)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__percentage
@@ -8711,7 +8730,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Presets config"
-msgstr ""
+msgstr "Configuração predefinida"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9034,6 +9053,12 @@ msgstr ""
 #: model:ir.actions.client,name:account.action_bank_reconcile
 msgid "Reconciliation on Bank Statements"
 msgstr "Reconciliaçã em Demonstrativos Bancários"
+
+#. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11040,7 +11065,7 @@ msgstr ""
 #: code:addons/account/static/src/js/reconciliation/reconciliation_model.js:0
 #, python-format
 msgid "The amount %s is not a valid partial amount"
-msgstr ""
+msgstr "O montante %s não é um montante parcial válido"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_currency
@@ -13328,7 +13353,7 @@ msgstr "Faixa de CEP Para"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "and follow-up customers"
-msgstr ""
+msgstr "e acompanhamento de clientes"
 
 #. module: account
 #. openerp-web
@@ -13536,7 +13561,7 @@ msgstr "entradas não reconciliadas"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr ""
+msgstr "contas do fornecedor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

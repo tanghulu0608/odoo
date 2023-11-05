@@ -24,7 +24,7 @@
 # Kevin Harrings <kha@odoo.com>, 2021
 # Martin Trigaux, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1813,7 +1813,7 @@ msgstr "Für ungenaue Industrie-Touchscreens."
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Force Done"
-msgstr ""
+msgstr "Erzwingen Erledigt"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2030,7 +2030,7 @@ msgstr "Integrierte Kartenzahlungen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid "Intermediary Account"
-msgstr ""
+msgstr "Zwischenkonto"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_category_action
@@ -2114,7 +2114,7 @@ msgstr "Ist abgerechnet"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
 msgid "Is Using Company Currency"
-msgstr ""
+msgstr "Nutzt Firmenwährung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_restaurant
@@ -2662,7 +2662,7 @@ msgstr "Öffnen POS Menü"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__open_session_ids
 msgid "Open PoS sessions that are using this payment method."
-msgstr ""
+msgstr "Geöffnete PoS-Sitzungen, die diese Zahlungsmethode verwenden."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -2962,7 +2962,7 @@ msgstr "Verfügbare Zahlungsmethoden"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Payment request pending"
-msgstr ""
+msgstr "Zahlungsanforderung ausstehend"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3078,6 +3078,8 @@ msgid ""
 "Please close all the point of sale sessions in this period before closing "
 "it. Open sessions are: %s "
 msgstr ""
+"Bitte schließen Sie vor Abschluss alle Kassensitzungen in diesem Zeitraum. "
+"Offene Sitzungen sind: %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3246,7 +3248,7 @@ msgstr "Point-of-Sale-Gruppenmanager"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Kassensystem Vorgangstyp"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
@@ -3654,7 +3656,7 @@ msgstr "Bondrucker"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
-msgstr ""
+msgstr "Erfassen Sie Zahlungen mit einem Terminal in diesem Journal."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3695,7 +3697,7 @@ msgstr "Belegkopie"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Request sent"
-msgstr ""
+msgstr "Anfrage versandt!"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3755,7 +3757,7 @@ msgstr "Retourniert"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "Stornoanforderung an das Terminal gesendet"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3903,7 +3905,7 @@ msgstr "Senden"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Send Payment Request"
-msgstr ""
+msgstr "Zahlungsaufforderung versenden"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4100,6 +4102,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Einige Bestellungen konnten aufgrund von Konfigurationsfehlern nicht an den "
+"Server übermittelt werden. Sie können das Kassensystem verlassen, aber "
+"schließen Sie die Sitzung nicht, bevor das Problem behoben ist."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4110,6 +4115,10 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Einige Bestellungen konnten aufgrund von Problemen mit der "
+"Internetverbindung nicht an den Server übermittelt werden. Sie können das "
+"Kassensystem verlassen, aber schließen Sie die Sitzung nicht, bevor das "
+"Problem behoben ist."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_pack_operation_lot
@@ -4341,6 +4350,8 @@ msgid ""
 "Technical field which is used to hide use_payment_terminal when no payment "
 "interfaces are installed."
 msgstr ""
+"Technisches Feld, das zum Ausblenden von use_payment_terminal verwendet "
+"wird, wenn keine Zahlungsschnittstellen installiert sind."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4480,6 +4491,8 @@ msgstr ""
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
+"Die gewählte Zahlungsmethode ist in der Konfiguration der POS-Sitzung nicht "
+"zulässig."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -4651,6 +4664,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"Es ist kein Kontenplan für das Unternehmen konfiguriert. Bitte bestimmen Sie"
+" einen Kontenplan über die Einstellungen für die Rechnungsstellung."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4887,6 +4902,7 @@ msgstr "Um neue Aufträge zu erfassen, starten Sie eine neue Sitzung."
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
 msgstr ""
+"Um Produkte zurückzugeben, müssen Sie eine Sitzung im Kassensystem öffnen %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
@@ -4907,7 +4923,7 @@ msgstr "Rabattsumme"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__total_payments_amount
 msgid "Total Payments Amount"
-msgstr ""
+msgstr "Gesamtzahlungen Betrag"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__price_total
@@ -4990,6 +5006,9 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"Die Sitzung kann nicht geschlossen und validiert werden.\n"
+"Bitte setzen Sie das entsprechende Steuerkonto in jeder Aufteilungszeile der folgenden Steuern: \n"
+"%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5163,7 +5182,7 @@ msgstr "Vantiv (US & Kanada)"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_mercury
 msgid "Vantiv Payment Terminal"
-msgstr ""
+msgstr "Vantiv Zahlungsterminal"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_vkeyboard
@@ -5175,7 +5194,7 @@ msgstr "Virtuelle Tastatur"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Waiting for card"
-msgstr ""
+msgstr "Warten auf Karte"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.wall_shelf
@@ -5264,7 +5283,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
+msgstr "Sie können keine Sitzung vor dem Datum der Buchungssperre erstellen."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5480,7 +5499,7 @@ msgstr "z. B. Rücksendebedingungen, Vielen Dank für Ihren Einkauf bei uns!"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr ""
+msgstr "z.B. Softdrinks"
 
 #. module: point_of_sale
 #. openerp-web

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import collections
+import collections.abc
 import imp
 import importlib
 import inspect
@@ -19,6 +19,7 @@ import threading
 import warnings
 from operator import itemgetter
 from os.path import join as opj
+from pathlib import Path
 
 import odoo
 import odoo.tools as tools
@@ -106,7 +107,7 @@ class UpgradeHook(object):
     """Makes the legacy `migrations` package being `odoo.upgrade`"""
 
     def find_module(self, name, path=None):
-        if re.match(r"^odoo.addons.base.maintenance.migrations\b", name):
+        if re.match(r"^odoo\.addons\.base\.maintenance\.migrations\b", name):
             # We can't trigger a DeprecationWarning in this case.
             # In order to be cross-versions, the multi-versions upgrade scripts (0.0.0 scripts),
             # the tests, and the common files (utility functions) still needs to import from the
@@ -158,7 +159,7 @@ def initialize_sys_path():
     legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
     for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
         up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
-        if up not in upgrade.__path__:
+        if os.path.isdir(up) and up not in upgrade.__path__:
             upgrade.__path__.append(up)
 
     # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade
@@ -368,7 +369,7 @@ def load_information_from_description_file(module, mod_path=None):
         # auto_install: [] to always auto_install a module regardless of its
         # dependencies
         auto_install = info.get('auto_install', info.get('active', False))
-        if isinstance(auto_install, collections.Iterable):
+        if isinstance(auto_install, collections.abc.Iterable):
             info['auto_install'] = set(auto_install)
             non_dependencies = info['auto_install'].difference(info['depends'])
             assert not non_dependencies,\
@@ -466,13 +467,7 @@ def get_test_modules(module):
     feed unittest.TestLoader.loadTestsFromModule() """
     # Try to import the module
     results = _get_tests_modules('odoo.addons', module)
-
-    try:
-        importlib.import_module('odoo.upgrade.%s' % module)
-    except ImportError:
-        pass
-    else:
-        results += _get_tests_modules('odoo.upgrade', module)
+    results += list(_get_upgrade_test_modules(module))
 
     return results
 
@@ -498,6 +493,28 @@ def _get_tests_modules(path, module):
     result = [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
               if name.startswith('test_')]
     return result
+
+def _get_upgrade_test_modules(module):
+    upgrade_modules = (
+        f"odoo.upgrade.{module}",
+        f"odoo.addons.{module}.migrations",
+        f"odoo.addons.{module}.upgrades",
+    )
+    for module_name in upgrade_modules:
+        try:
+            upg = importlib.import_module(module_name)
+        except ImportError:
+            continue
+
+        for path in map(Path, upg.__path__):
+            for test in path.glob("tests/test_*.py"):
+                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
+                if not spec:
+                    continue
+                pymod = importlib.util.module_from_spec(spec)
+                sys.modules[spec.name] = pymod
+                spec.loader.exec_module(pymod)
+                yield pymod
 
 
 class OdooTestResult(unittest.result.TestResult):
