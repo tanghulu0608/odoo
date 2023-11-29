@@ -71,7 +71,7 @@ class WebsiteSnippetFilter(models.Model):
         search_domain = context.get('search_domain')
         limit = context.get('limit')
         domain = expression.AND([
-            [('website_published', '=', True)],
+            [('website_published', '=', True)] if self.env.user._is_public() else [],
             website.website_domain(),
             [('company_id', 'in', [False, website.company_id.id])],
             search_domain or [],
@@ -170,6 +170,8 @@ class WebsiteSnippetFilter(models.Model):
             excluded_products |= current_template.product_variant_ids
             included_products = current_template.alternative_product_ids.product_variant_ids
             products = included_products - excluded_products
+            if website.prevent_zero_price_sale:
+                products = products.filtered(lambda p: p._get_contextual_price())
             if products:
                 domain = expression.AND([
                     domain,

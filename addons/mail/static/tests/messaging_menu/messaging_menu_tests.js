@@ -8,7 +8,12 @@ import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { start } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { getFixture, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    makeDeferred,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import { click, contains, insertText, triggerEvents } from "@web/../tests/utils";
 
 QUnit.module("messaging menu");
@@ -422,10 +427,11 @@ QUnit.test("mark unread channel as read", async (assert) => {
             Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
             Command.create({ partner_id: partnerId }),
         ],
+        name: "My Channel",
     });
     const [messagId_1] = pyEnv["mail.message"].create([
-        { author_id: partnerId, model: "discuss.channel", res_id: channelId },
-        { author_id: partnerId, model: "discuss.channel", res_id: channelId },
+        { author_id: partnerId, body: "not empty", model: "discuss.channel", res_id: channelId },
+        { author_id: partnerId, body: "not empty", model: "discuss.channel", res_id: channelId },
     ]);
     const [currentMemberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
@@ -442,8 +448,8 @@ QUnit.test("mark unread channel as read", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await click(".o-mail-NotificationItem [title='Mark As Read']");
-    assert.verifySteps(["set_last_seen_message"]);
     await contains(".o-mail-NotificationItem.text-muted");
+    assert.verifySteps(["set_last_seen_message"]);
     await triggerEvents(".o-mail-NotificationItem", ["mouseenter"]);
     await contains(".o-mail-NotificationItem [title='Mark As Read']", { count: 0 });
     await contains(".o-mail-ChatWindow", { count: 0 });
@@ -1058,4 +1064,21 @@ QUnit.test("messaging menu should show new needaction messages from chatter", as
         record_name: "Frodo Baggins",
     });
     await contains(".o-mail-NotificationItem-text", { text: "@Mitchell Admin" });
+});
+
+QUnit.test("can open messaging menu even if messaging is not initialized", async () => {
+    patchBrowserNotification("default");
+    await startServer();
+    const def = makeDeferred();
+    await start({
+        async mockRPC(route) {
+            if (route === "/mail/init_messaging") {
+                await def;
+            }
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(".o-mail-DiscussSystray", { text: "No conversation yet..." });
+    def.resolve();
+    await contains(".o-mail-NotificationItem", { text: "OdooBot has a request" });
 });

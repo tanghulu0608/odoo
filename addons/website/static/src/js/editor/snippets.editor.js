@@ -503,6 +503,18 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         return buttonEl.dataset.textSelector.slice(1);
     },
 
+    /**
+     * The goal here is to disable parents editors for `s_popup` snippets
+     * since they should not display their parents options.
+     * TODO: Update in master to set the `o_no_parent_editor` class in the
+     * snippet's XML.
+     *
+     * @override
+     */
+    _allowParentsEditors($snippet) {
+        return this._super(...arguments) && !$snippet[0].classList.contains("s_popup");
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -692,6 +704,12 @@ weSnippetEditor.SnippetEditor.include({
      */
     async start() {
         await this._super(...arguments);
+        // When a SnippetEditor is destroyed before the start() has ended
+        // (which can happen when a widget is immediately removed, as start()
+        // is async but destroy() is not), it could create a useless observer.
+        if (this.isDestroyed()) {
+            return;
+        }
         this._adaptOnOptionResize = throttleForAnimation(this._adaptOnOptionResize.bind(this));
         this.editorResizeObserver = new window.ResizeObserver(entries => {
             // In addition to window resizing, every editor's option that
@@ -711,7 +729,7 @@ weSnippetEditor.SnippetEditor.include({
      * @override
      */
     destroy() {
-        this.editorResizeObserver.disconnect();
+        this.editorResizeObserver?.disconnect();
         return this._super(...arguments);
     },
     /**

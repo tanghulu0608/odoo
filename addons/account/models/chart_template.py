@@ -201,7 +201,7 @@ class AccountChartTemplate(models.AbstractModel):
         if install_demo and self.ref('base.module_account').demo and not reload_template:
             try:
                 with self.env.cr.savepoint():
-                    self._load_data(self._get_demo_data(company))
+                    self.sudo()._load_data(self._get_demo_data(company))
                     self._post_load_demo_data(company)
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
@@ -251,7 +251,7 @@ class AccountChartTemplate(models.AbstractModel):
         if account_group_count:
             data.pop('account.group', None)
 
-        current_taxes = self.env['account.tax'].search([
+        current_taxes = self.env['account.tax'].with_context(active_test=False).search([
             *self.env['account.tax']._check_company_domain(company),
         ])
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)

@@ -384,6 +384,7 @@ export class Wysiwyg extends Component {
             return savedVideo;
         };
 
+        const _getContentEditableAreas = this.options.getContentEditableAreas;
         this.odooEditor = new OdooEditor(this.$editable[0], Object.assign({
             _t: _t,
             toolbar: this.toolbarEl,
@@ -396,7 +397,15 @@ export class Wysiwyg extends Component {
             showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
             initialHistoryId: this._serverLastStepId,
-            getContentEditableAreas: this.options.getContentEditableAreas,
+            // TODO other places in this file call this.options.getContentEditableAreas
+            // without the extension here. It does not seem to be a problem (it
+            // was like that before o_editor_banner elements were considered
+            // here), but we might want to review that.
+            getContentEditableAreas: (...args) => {
+                const areaEls = _getContentEditableAreas?.(...args) || [];
+                const bannerEls = this.$editable[0].querySelectorAll('.o_editor_banner > div');
+                return [...areaEls, ...bannerEls];
+            },
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
             defaultLinkAttributes: this.options.userGeneratedContent ? {rel: 'ugc' } : {},
@@ -2269,7 +2278,7 @@ export class Wysiwyg extends Component {
                 const bannerElement = parseHTML(this.odooEditor.document, `
                     <div class="o_editor_banner o_not_editable lh-1 d-flex align-items-center alert alert-${alertClass} pb-0 pt-3" role="status" data-oe-protected="true">
                         <i class="fs-4 fa ${iconClass} mb-3" aria-label="${_t(title)}"></i>
-                        <div class="o_editable o_editable_no_shadow w-100 ms-3" data-oe-protected="false">
+                        <div class="w-100 ms-3" data-oe-protected="false">
                             <p><br></p>
                         </div>
                     </div>
@@ -3007,6 +3016,9 @@ export class Wysiwyg extends Component {
         return record;
     }
     _isLastDocumentStale() {
+        if (!this._serverLastStepId) {
+            return false;
+        }
         return !this.odooEditor.historyGetBranchIds().includes(this._serverLastStepId);
     }
     /**
@@ -3308,12 +3320,14 @@ export class Wysiwyg extends Component {
      * @param {Node} node
      */
     _onPostSanitize(node) {
-        // _fixLinkMutatedElements check to be removed after the new link edge soltion is merged.
+        // _fixLinkMutatedElements check to be removed after the new link edge
+        // solution is merged.
         if (node?.querySelectorAll && this.odooEditor && !this.odooEditor._fixLinkMutatedElements) {
-            for (const element of node.querySelectorAll('.o_editable, .o_not_editable')) {
-                const editable = element.classList.contains('o_editable');
-                if (element.isContentEditable !== editable) {
-                    element.contentEditable = editable;
+            // TODO rethink o_editable as a content-editable marker without
+            // breaking the o_editable behaviors (website, mass_mailing, ...)
+            for (const element of node.querySelectorAll('.o_not_editable')) {
+                if (element.isContentEditable !== false) {
+                    element.contentEditable = false;
                 }
             }
         }
@@ -3354,11 +3368,19 @@ export class Wysiwyg extends Component {
      * @param {number} resId
      */
     async _saveB64Image(el, resModel, resId) {
+        el.classList.remove('o_b64_image_to_save');
+        const imageData = el.getAttribute('src').split('base64,')[1];
+        if (!imageData) {
+            // Checks if the image is in base64 format for RPC call. Relying
+            // only on the presence of the class "o_b64_image_to_save" is not
+            // robust enough.
+            return;
+        }
         const attachment = await this._serviceRpc(
             '/web_editor/attachment/add_data',
             {
                 name: el.dataset.fileName || '',
-                data: el.getAttribute('src').split(',')[1],
+                data: imageData,
                 is_image: true,
                 res_model: resModel,
                 res_id: resId,
@@ -3385,7 +3407,6 @@ export class Wysiwyg extends Component {
             }
             el.setAttribute('src', src);
         }
-        el.classList.remove('o_b64_image_to_save');
     }
     /**
      * Saves a modified image as an attachment.
@@ -3542,7 +3563,7 @@ function isClientFirst(clientA, clientB) {
     } else {
         return clientA.startTime < clientB.startTime;
     }
-};
+}
 
 export function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;

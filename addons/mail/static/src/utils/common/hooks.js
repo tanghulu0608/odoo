@@ -6,6 +6,7 @@ import {
     onWillPatch,
     onWillUnmount,
     useComponent,
+    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -123,6 +124,7 @@ export function useOnBottomScrolled(refName, callback, threshold = 1) {
     });
 }
 
+/** @deprecated */
 export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
     const ref = useRef(refName);
     let el = null;
@@ -164,37 +166,25 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
 export function useVisible(refName, cb, { init = false } = {}) {
     const ref = useRef(refName);
     const state = { isVisible: init };
-    const observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-            const newVal = entry.isIntersecting;
-            if (state.isVisible !== newVal) {
-                state.isVisible = newVal;
-                cb();
-            }
-        }
-    });
-    let el;
-    onMounted(observe);
-    onWillUnmount(() => {
-        if (!el) {
-            return;
-        }
-        observer.unobserve(el);
-    });
-    onPatched(observe);
-
-    function observe() {
-        if (ref.el !== el) {
-            if (el) {
-                observer.unobserve(el);
-                state.isVisible = false;
-            }
-            if (ref.el) {
-                observer.observe(ref.el);
-            }
-        }
-        el = ref.el;
+    function setValue(value) {
+        state.isVisible = value;
+        cb();
     }
+    const observer = new IntersectionObserver((entries) => {
+        setValue(entries.at(-1).isIntersecting);
+    });
+    useEffect(
+        (el) => {
+            if (el) {
+                observer.observe(el);
+                return () => {
+                    setValue(false);
+                    observer.unobserve(el);
+                };
+            }
+        },
+        () => [ref.el]
+    );
     return state;
 }
 
@@ -202,6 +192,7 @@ export function useVisible(refName, cb, { init = false } = {}) {
  * This hook eases adjusting scroll position by snapshotting scroll
  * properties of scrollable in onWillPatch / onPatched hooks.
  *
+ * @deprecated
  * @param {import("@web/core/utils/hooks").Ref} ref
  * @param {function} param1.onWillPatch
  * @param {function} param1.onPatched
@@ -327,6 +318,7 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
 }
 
 /**
+ * @deprecated
  * @param {string} refName
  * @param {ScrollPosition} [model] Model to store saved position.
  * @param {'bottom' | 'top'} [clearOn] Whether scroll
