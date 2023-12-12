@@ -6,8 +6,8 @@
 # Martin Trigaux, 2023
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
 # Wil Odoo, 2023
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3983,7 +3983,7 @@ msgid ""
 "Disallowed Expenses Fleet Data for Belgium\n"
 msgstr ""
 "\n"
-"Niet-toegestane kosten Vlootgegevens voor België\n"
+"Verworpen uitgaven Vlootgegevens voor België\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm_report
@@ -6428,7 +6428,7 @@ msgid ""
 "procure.\n"
 msgstr ""
 "\n"
-"Meester productie schema\n"
+"Hoofdproductieschema\n"
 "========================== \n"
 "\n"
 "Soms moet je de inkooporders aanmaken voor onderdelen \n"
@@ -10856,7 +10856,7 @@ msgstr ""
 "\n"
 "De bronbelasting en de pensioenfondsbelasting worden berekend zoals elke andere belasting\n"
 "met de bestelling op volgorde, dus wees voorzichtig met de volgorde van de belastingen\n"
-"in uw belastingconfiguratie.\n"
+"in je belastingconfiguratie.\n"
 "\n"
 "Werk ook de Italiaanse boekhoudmodule (l10n_it) bij wanneer u deze module installeert.\n"
 
@@ -13828,7 +13828,7 @@ msgstr "Alles wat je nodig heeft om een financiële consolidatie te maken"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Allocate PTOs and follow leaves requests"
-msgstr "PTO's toewijzen en verlofverzoeken opvolgen"
+msgstr "Betaald verlof toewijzen en verlofverzoeken opvolgen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
@@ -14553,7 +14553,7 @@ msgstr "Oostenrijkse SAF-T-export"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_at
 msgid "Austrian Standardized Charts & Tax"
-msgstr "Oostenrijkse gestandaardiseerde grootboekschema & Belastingen"
+msgstr "Oostenrijkse gestandaardiseerde grootboekschema & belastingen"
 
 #. module: base
 #. odoo-python
@@ -22688,7 +22688,7 @@ msgstr "Indonesië - Boekhouding"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr "Industrieën"
+msgstr "Bedrijfstakken"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -23401,7 +23401,7 @@ msgstr ""
 "                      aspecten van gas- en vloeistofstromen wordt uitgevoerd onder de\n"
 "                     richting van de faculteit en onderzoekingenieurs, gesponsord\n"
 "                     voornamelijk door zowel gouvernementele en internationale instanties\n"
-"                     als industrieën."
+"                     als bedrijfstakken."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -32904,7 +32904,7 @@ msgstr "Verzendintegratie met Sendcloud-platform"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_shiprocket
 msgid "Shiprocket Shipping"
-msgstr "Scheepsraketverzending"
+msgstr "Shiprocket Shipping"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -33353,8 +33353,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Specify industries to classify your contacts and draw up reports."
 msgstr ""
-"Specificeer branches om je contacten te classificeren en rapportages op te "
-"stellen."
+"Specificeer bedrijfstakken om je contacten te classificeren en rapportages "
+"op te stellen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__crud_model_id
@@ -35804,8 +35804,8 @@ msgid ""
 "This module ensures that the taxes are computed on the invoice before a "
 "payment is created automatically for a subscription.\n"
 msgstr ""
-"Deze module zorgt ervoor dat de belastingen op de factuur worden berekend "
-"voordat er automatisch een betaling voor een abonnement wordt aangemaakt.\n"
+"Deze module zorgt ervoor dat de BTW op de factuur worden berekend voordat er"
+" automatisch een betaling voor een abonnement wordt aangemaakt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt

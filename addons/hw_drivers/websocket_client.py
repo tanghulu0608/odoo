@@ -1,10 +1,12 @@
-import websocket
 import json
 import logging
 import time
+import urllib.parse
 import urllib3
+import websocket
 
 from threading import Thread
+
 from odoo.addons.hw_drivers import main
 from odoo.addons.hw_drivers.tools import helpers
 
@@ -61,21 +63,19 @@ class WebsocketClient(Thread):
             When the client is setup, this function send a message to subscribe to the iot websocket channel
         """
         ws.send(
-            '{"event_name":"subscribe","data":{"channels":["' + self.iot_channel + '"],"last":0}}'
+            json.dumps({'event_name': 'subscribe', 'data': {'channels':[self.iot_channel], 'last': 0}})
         )
 
     def __init__(self, url):
-        if url:
-            self.url = url.replace("http", "ws")
-            Thread.__init__(self)
-
-    def start_client(self):
-        self.ws = websocket.WebSocketApp(self.url + "/websocket",
-                                         on_open=self.on_open, on_message=on_message,
-                                         on_error=on_error)
-        while 1:
-            self.ws.run_forever()
-            time.sleep(10)
+        url_parsed = urllib.parse.urlsplit(url)
+        scheme = url_parsed.scheme.replace("http", "ws", 1)
+        self.url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
+        Thread.__init__(self)
 
     def run(self):
-        self.start_client()
+        self.ws = websocket.WebSocketApp(self.url,
+            on_open=self.on_open, on_message=on_message,
+            on_error=on_error)
+        while 1: # A loop is necessary because reconnection must occur in all cases, even if the server closes the connection properly
+            self.ws.run_forever()
+            time.sleep(10) # Wait 10 second between each reconnection attempts

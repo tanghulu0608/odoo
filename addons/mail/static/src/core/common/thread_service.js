@@ -191,6 +191,7 @@ export class ThreadService {
     async fetchMessages(thread, { after, before } = {}) {
         thread.status = "loading";
         if (thread.type === "chatter" && !thread.id) {
+            thread.isLoaded = true;
             return [];
         }
         try {
@@ -296,10 +297,13 @@ export class ThreadService {
      */
     async loadAround(thread, messageId) {
         if (!thread.messages.some(({ id }) => id === messageId)) {
+            thread.isLoaded = false;
+            thread.scrollTop = undefined;
             const { messages } = await this.rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
+            thread.isLoaded = true;
             thread.messages = this.store.Message.insert(messages.reverse(), { html: true });
             thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
@@ -312,8 +316,6 @@ export class ThreadService {
                 }
             }
             this._enrichMessagesWithTransient(thread);
-            // Give some time to the UI to update.
-            await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         }
     }
 
@@ -532,6 +534,7 @@ export class ThreadService {
     }
 
     async joinChannel(id, name) {
+        await this.env.services["mail.messaging"].isReady;
         await this.orm.call("discuss.channel", "add_members", [[id]], {
             partner_ids: [this.store.user.id],
         });

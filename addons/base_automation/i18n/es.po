@@ -36,7 +36,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "Se agregó la etiqueta \"%s\""
 
 #. module: base_automation
 #. odoo-python
@@ -486,7 +486,7 @@ msgstr "Usuario genérico"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_is_mail_thread
 msgid "Has Mail Thread"
-msgstr ""
+msgstr "Tiene un hilo de correos"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
@@ -701,7 +701,7 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Remove followers"
-msgstr ""
+msgstr "Eliminar seguidores"
 
 #. module: base_automation
 #. odoo-python
@@ -1016,6 +1016,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possibleto use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Cuando se calcula una condición de tiempo basada en días, es posible "
+"utilizar un calendario para calcular la fecha según los días laborables."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id

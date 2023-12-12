@@ -434,7 +434,7 @@ msgstr "Terugbetaald bedrag"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
 msgid "Refunds"
-msgstr "Retouren"
+msgstr "Creditfacturen"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
@@ -595,11 +595,9 @@ msgstr ""
 #: code:addons/account_payment/models/payment_provider.py:0
 #, python-format
 msgid ""
-"You cannot uninstall this module as payment method transactions already "
-"exist."
+"You cannot uninstall this module as payments using this payment method "
+"already exist."
 msgstr ""
-"Je kan deze module niet verwijderen omdat er al betaalmethodetransacties "
-"bestaan."
 
 #. module: account_payment
 #. odoo-python

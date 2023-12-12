@@ -3,9 +3,9 @@
 # 	* purchase
 # 
 # Translators:
-# Iran Villalobos López, 2023
 # Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -526,7 +526,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias, por lo que la aplicación Inventario debe estar instalada.\n"
+"Un producto almacenable es un producto para el que gestiona existencias, por lo que debe instalar la aplicación Inventario.\n"
 "Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
@@ -1296,7 +1296,7 @@ msgstr "De documentos electrónicos "
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
 msgid "Fully Billed"
-msgstr "Totalmente facturado"
+msgstr "Facturado"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2567,12 +2567,12 @@ msgstr "Sección"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "Nombre de la sección (p. ej., productos, servicios)"
+msgstr "Nombre de la sección (por ejemplo, productos, servicios)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr "Plazo de ejecución de seguridad para la compra"
+msgstr "Plazo de entrega seguro para la compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -2956,8 +2956,8 @@ msgstr "Esta factura de proveedor se modificó desde:"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
-"Este vendedor no tiene ninguna orden de compra. Cree una nueva solicitud de "
-"cotización"
+"Este proveedor no tiene ninguna orden de compra. Cree una nueva solicitud de"
+" cotización."
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0

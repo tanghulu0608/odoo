@@ -5,6 +5,7 @@ import { parseEmail } from "@mail/js/utils";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { Record } from "@mail/core/common/record";
 
 let nextId = 1;
 
@@ -75,15 +76,17 @@ patch(ThreadService.prototype, {
                 thread.selfFollower = { followedThread: thread, ...result.selfFollower };
             }
             thread.followersCount = result.followersCount;
-            for (const followerData of result.followers) {
-                const follower = this.store.Follower.insert({
-                    followedThread: thread,
-                    ...followerData,
-                });
-                if (follower.notEq(thread.selfFollower)) {
-                    thread.followers.add(follower);
+            Record.MAKE_UPDATE(() => {
+                for (const followerData of result.followers) {
+                    const follower = this.store.Follower.insert({
+                        followedThread: thread,
+                        ...followerData,
+                    });
+                    if (follower.notEq(thread.selfFollower)) {
+                        thread.followers.add(follower);
+                    }
                 }
-            }
+            });
             thread.recipientsCount = result.recipientsCount;
             for (const recipientData of result.recipients) {
                 thread.recipients.add({ followedThread: thread, ...recipientData });
@@ -107,7 +110,7 @@ patch(ThreadService.prototype, {
         if (id === false) {
             thread.messages.push({
                 id: this.messageService.getNextTemporaryId(),
-                author: { id: this.store.self.id },
+                author: this.store.self,
                 body: _t("Creating a new record..."),
                 message_type: "notification",
                 trackingValues: [],
@@ -157,15 +160,17 @@ patch(ThreadService.prototype, {
             [thread.id],
             thread.followers.at(-1).id,
         ]);
-        for (const data of followers) {
-            const follower = this.store.Follower.insert({
-                followedThread: thread,
-                ...data,
-            });
-            if (follower.notEq(thread.selfFollower)) {
-                thread.followers.add(follower);
+        Record.MAKE_UPDATE(() => {
+            for (const data of followers) {
+                const follower = this.store.Follower.insert({
+                    followedThread: thread,
+                    ...data,
+                });
+                if (follower.notEq(thread.selfFollower)) {
+                    thread.followers.add(follower);
+                }
             }
-        }
+        });
     },
     async loadMoreRecipients(thread) {
         const recipients = await this.orm.call(
@@ -174,9 +179,11 @@ patch(ThreadService.prototype, {
             [[thread.id], thread.recipients.at(-1).id],
             { filter_recipients: true }
         );
-        for (const data of recipients) {
-            thread.recipients.add({ followedThread: thread, ...data });
-        }
+        Record.MAKE_UPDATE(() => {
+            for (const data of recipients) {
+                thread.recipients.add({ followedThread: thread, ...data });
+            }
+        });
     },
     open(thread, replaceNewMessageChatWindow) {
         if (!this.store.discuss.isActive && !this.ui.isSmall) {
@@ -235,16 +242,16 @@ patch(ThreadService.prototype, {
         return Object.values(this.store.Thread.records)
             .filter((thread) => thread.model === "discuss.channel")
             .sort((a, b) => {
-                if (!a.lastInterestDateTime && !b.lastInterestDateTime) {
-                    return 0;
+                if (a.lastInterestDateTime?.ts !== b.lastInterestDateTime?.ts) {
+                    if (!b.lastInterestDateTime) {
+                        return -1;
+                    }
+                    if (!a.lastInterestDateTime) {
+                        return 1;
+                    }
+                    return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
                 }
-                if (a.lastInterestDateTime && !b.lastInterestDateTime) {
-                    return -1;
-                }
-                if (!a.lastInterestDateTime && b.lastInterestDateTime) {
-                    return 1;
-                }
-                return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
+                return a.id - b.id;
             });
     },
     getNeedactionChannels() {
