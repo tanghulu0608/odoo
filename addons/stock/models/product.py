@@ -587,7 +587,8 @@ class Product(models.Model):
             'warehouse_id': warehouse,
         })
         if rule in seen_rules:
-            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
+            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s",
+                              rule.display_name + f", caused by rule ids: {seen_rules.mapped('id')}"))
         if not rule:
             return seen_rules
         if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
