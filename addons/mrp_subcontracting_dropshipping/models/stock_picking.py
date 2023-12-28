@@ -54,8 +54,8 @@ class StockPicking(models.Model):
 
         return res
 
-    def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
-        res = super()._prepare_subcontract_mo_vals(subcontract_move, bom)
+    def _prepare_subcontract_mo_vals(self, subcontract_move, bom, group):
+        res = super()._prepare_subcontract_mo_vals(subcontract_move, bom, group)
         if not res.get('picking_type_id') and (
                 subcontract_move.location_dest_id.usage == 'customer'
                 or subcontract_move.location_dest_id.is_subcontracting_location

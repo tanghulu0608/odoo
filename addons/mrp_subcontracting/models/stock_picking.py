@@ -123,13 +123,13 @@ class StockPicking(models.Model):
     def _get_warehouse(self, subcontract_move):
         return subcontract_move.warehouse_id or self.picking_type_id.warehouse_id or subcontract_move.move_dest_ids.picking_type_id.warehouse_id
 
-    def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
+    def _prepare_subcontract_mo_vals(self, subcontract_move, bom, group):
         subcontract_move.ensure_one()
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
         vals = {
             'company_id': subcontract_move.company_id.id,
-            'procurement_group_id': self.group_id.id,
+            'procurement_group_id': group.id,
             'subcontractor_id': subcontract_move.picking_id.partner_id.commercial_partner_id.id,
             'picking_ids': [subcontract_move.picking_id.id],
             'product_id': product.id,
@@ -145,6 +145,10 @@ class StockPicking(models.Model):
 
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
+        group = self.env['procurement.group'].create({
+            'name': self.name,
+            'partner_id': self.partner_id.id,
+        })
         for move, bom in subcontract_details:
             # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
@@ -153,7 +157,7 @@ class StockPicking(models.Model):
             if float_compare(quantity, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
-            mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
+            mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom, group))
             mo.date_finished = move.date  # Avoid to have the picking late depending of the MO
             mo.action_confirm()
 
