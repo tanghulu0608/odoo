@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from functools import lru_cache
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
@@ -25,19 +24,9 @@ class PosOrder(models.Model):
 
     @api.depends('date_order', 'company_id')
     def _compute_currency_rate(self):
-        @lru_cache
-        def get_rate(from_currency, to_currency, company, date):
-            return self.env['res.currency']._get_conversion_rate(
-                from_currency=from_currency,
-                to_currency=to_currency,
-                company=company,
-                date=date,
-            )
         for order in self:
             date_order = order.date_order or fields.Datetime.now()
-            # date_order is a datetime, but the rates are looked up on a date basis,
-            # therefor converting the date_order to a date helps with sharing entries in the lru_cache
-            order.currency_rate = get_rate(order.company_id.currency_id, order.currency_id, order.company_id, date_order.date())
+            order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, date_order.date())
 
     def _prepare_invoice_vals(self):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
@@ -124,6 +113,14 @@ class PosOrder(models.Model):
             'domain': [('id', 'in', linked_orders.ids)],
         }
 
+    def _get_invoice_lines_values(self, line_values, pos_line):
+        inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line)
+
+        if pos_line.sale_order_origin_id:
+            origin_line = pos_line.sale_order_line_id
+            origin_line._set_analytic_distribution(inv_line_vals)
+
+        return inv_line_vals
 
 class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'

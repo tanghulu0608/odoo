@@ -1132,6 +1132,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     if (zws) {
         const siblings = [...zws.parentElement.childNodes];
         if (
+            !isBlock(zws.parentElement) &&
             selectedTextNodes.includes(siblings[0]) &&
             selectedTextNodes.includes(siblings[siblings.length - 1])
         ) {
@@ -1866,8 +1867,8 @@ export function getFontSizeDisplayValue(sel, getCSSVariableValue, convertNumeric
     `);
     let remValue;
     if (closestFontSizedEl) {
-        const customFontSize = closestFontSizedEl.style.fontSize;
-        if (customFontSize) {
+        const useFontSizeInput = closestFontSizedEl.style.fontSize;
+        if (useFontSizeInput) {
             // Use the computed value to always convert to px. However, this
             // currently does not check that the inline font-size is the one
             // actually having an effect (there could be an !important CSS rule
@@ -2659,7 +2660,8 @@ export function enforceWhitespace(el, offset, direction, rule) {
         if (
             spaceVisibility &&
             !foundVisibleSpaceTextNode &&
-            getState(...rightPos(spaceNode), DIRECTIONS.RIGHT).cType & CTGROUPS.BLOCK
+            getState(...rightPos(spaceNode), DIRECTIONS.RIGHT).cType & CTGROUPS.BLOCK &&
+            getState(...leftPos(spaceNode), DIRECTIONS.LEFT).cType !== CTYPES.CONTENT
         ) {
             spaceVisibility = false;
         }

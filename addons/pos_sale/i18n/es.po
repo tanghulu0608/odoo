@@ -177,11 +177,11 @@ msgstr "Facturado"
 #: code:addons/pos_sale/static/src/app/order_management_screen/sale_order_management_screen/sale_order_management_screen.js:0
 #, python-format
 msgid ""
-"It seems that you didn't configure a down payment product in your point of sale.\n"
-"                        You can go to your point of sale configuration to choose one."
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
 msgstr ""
-"Parece que no configuró un producto para anticipo en su punto de venta.\n"
-"                        Puede ir a la configuración de su punto de venta para elegir uno."
+"Parece que no configuró un producto para anticipo en su punto de venta. "
+"Puede ir a la configuración de su punto de venta para elegir uno."
 
 #. module: pos_sale
 #. odoo-python

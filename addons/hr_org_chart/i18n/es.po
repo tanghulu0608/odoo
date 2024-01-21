@@ -23,7 +23,7 @@ msgstr ""
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
 msgid "<span class=\"o_stat_text\">Org Chart</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Organigrama</span>"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
@@ -33,7 +33,7 @@ msgstr "Agregar un nuevo empleado"
 #. module: hr_org_chart
 #: model:ir.model,name:hr_org_chart.model_hr_employee_base
 msgid "Basic Employee"
-msgstr "Empleado Básico"
+msgstr "Empleado básico"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
@@ -120,7 +120,7 @@ msgstr "Sin posición jerárquica."
 #: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr "Operación no permitida"
+msgstr "Operación no admitida"
 
 #. module: hr_org_chart
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
