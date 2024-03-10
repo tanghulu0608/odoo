@@ -7,7 +7,14 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
-import { makeDeferred, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    makeDeferred,
+    nextTick,
+    patchDate,
+    patchTimeZone,
+    patchWithCleanup,
+    triggerHotkey,
+} from "@web/../tests/helpers/utils";
 import { click, contains, insertText } from "@web/../tests/utils";
 import { SIZES, patchUiSize } from "../helpers/patch_ui_size";
 
@@ -667,10 +674,46 @@ QUnit.test("should not be able to reply to temporary/transient messages", async 
     await contains(".o-mail-Message [title='Reply']", { count: 0 });
 });
 
+QUnit.test("squashed transient message should not have date in the sidebar", async () => {
+    patchDate(2024, 2, 26, 10, 0, 0);
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Channel 1" });
+    pyEnv["mail.message"].create([
+        {
+            body: "Hello world 1",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            body: "Hello world 2",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message.o-squashed");
+    await contains(".o-mail-Message.o-squashed .o-mail-Message-sidebar", {
+        text: "10:00",
+    });
+    await insertText(".o-mail-Composer-input", "/who");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message", { text: "You are alone in this channel." });
+    await insertText(".o-mail-Composer-input", "/who");
+    await click(".o-mail-Composer-send:enabled");
+    await click(":nth-child(2 of .o-mail-Message.o-squashed");
+    await nextTick();
+    await contains(":nth-child(2 of .o-mail-Message.o-squashed) .o-mail-Message-sidebar", {
+        text: "10:00",
+        count: 0,
+    });
+});
+
 QUnit.test("message comment of same author within 1min. should be squashed", async () => {
     // messages are squashed when "close", e.g. less than 1 minute has elapsed
     // from messages of same author and same thread. Note that this should
     // be working in non-mailboxes
+    patchTimeZone(0); // so it matches server timezone
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
@@ -713,7 +756,7 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     await contains(".o-mail-Message", {
         contains: [
             [".o-mail-Message-content", { text: "body2" }],
-            [".o-mail-Message-sidebar .o-mail-Message-date"],
+            [".o-mail-Message-sidebar .o-mail-Message-date", { text: "10:00" }],
         ],
     });
 });

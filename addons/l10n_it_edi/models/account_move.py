@@ -115,8 +115,8 @@ class AccountMove(models.Model):
     @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
     def _compute_l10n_it_partner_pa(self):
         for move in self:
-            move.l10n_it_partner_pa = (move.country_code == 'IT' and move.commercial_partner_id.l10n_it_pa_index and
-                                       len(move.commercial_partner_id.l10n_it_pa_index) == 6)
+            partner = move.commercial_partner_id
+            move.l10n_it_partner_pa = partner and partner._l10n_it_edi_is_public_administration()
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):
@@ -125,18 +125,34 @@ class AccountMove(models.Model):
             We recognize these cases based on the taxes that target the VJ tax grids, which imply
             the use of VAT External Reverse Charge.
         """
-        it_tax_report_vj_lines = self.env['account.report.line'].search([
-            ('report_id.country_id.code', '=', 'IT'),
-            ('code', '=like', 'VJ%'),
-        ])
-        vj_lines_tags = it_tax_report_vj_lines.expression_ids._get_matching_tags()
-        for move in self:
-            if not move.is_purchase_document():
-                move.l10n_it_edi_is_self_invoice = False
-                continue
-            invoice_lines_tags = move.line_ids.tax_tag_ids
-            ids_intersection = set(invoice_lines_tags.ids) & set(vj_lines_tags.ids)
-            move.l10n_it_edi_is_self_invoice = bool(ids_intersection)
+        purchases = self.filtered(lambda m: m.is_purchase_document())
+        others = self - purchases
+        for move in others:
+            move.l10n_it_edi_is_self_invoice = False
+        if purchases:
+            it_tax_report_vj_lines = self.env['account.report.line'].search([
+                ('report_id.country_id.code', '=', 'IT'),
+                ('code', '=like', 'VJ%')
+            ])
+            vj_lines_tags = it_tax_report_vj_lines.expression_ids._get_matching_tags()
+            for move in purchases:
+                invoice_lines_tags = move.line_ids.tax_tag_ids
+                ids_intersection = set(invoice_lines_tags.ids) & set(vj_lines_tags.ids)
+                move.l10n_it_edi_is_self_invoice = bool(ids_intersection)
+
+    def _l10n_it_edi_exempt_reason_tag_mapping(self):
+        return {
+            "N3.2": "VJ3",
+            "N3.3": "VJ1",
+            "N6.1": "VJ6",
+            "N6.2": "VJ7",
+            "N6.3": "VJ12",
+            "N6.4": "VJ13",
+            "N6.5": "VJ14",
+            "N6.6": "VJ15",
+            "N6.7": "VJ16",
+            "N6.8": "VJ17",
+        }
 
     # -------------------------------------------------------------------------
     # Overrides
@@ -184,10 +200,8 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
 
-        if (errors := self._l10n_it_edi_export_data_check()):
-            message = _("Errors occured while creating the e-invoice file.")
-            message += "\n- " + "\n- ".join(errors)
-            raise UserError(message)
+        if self._l10n_it_edi_export_data_check():
+            raise UserError(_("The invoices you're trying to send have incomplete or incorrect data, please verify before sending."))
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
         self.env['ir.attachment'].create(attachment_vals)
@@ -329,7 +343,7 @@ class AccountMove(models.Model):
         document_type = self._l10n_it_edi_get_document_type()
 
         # Represent if the document is a reverse charge refund in a single variable
-        reverse_charge = document_type in ['TD17', 'TD18', 'TD19']
+        reverse_charge = document_type in ['TD16', 'TD17', 'TD18', 'TD19']
         is_downpayment = document_type in ['TD02']
         reverse_charge_refund = self.move_type == 'in_refund' and reverse_charge
         convert_to_euros = self.currency_id.name != 'EUR'
@@ -460,10 +474,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         template_reference = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', raise_if_not_found=False)
         buyer = self.commercial_partner_id
+        checks = ['partner_address_missing', 'partner_vat_codice_fiscale_missing']
         return bool(
             template_reference
             and not self.l10n_it_edi_is_self_invoice
-            and self._l10n_it_edi_export_buyer_data_check()
+            and list(buyer._l10n_it_edi_export_check(checks).keys()) == ['partner_address_missing']
             and (not buyer.country_id or buyer.country_id.code == 'IT')
             and (buyer.l10n_it_codice_fiscale or (buyer.vat and (buyer.vat[:2].upper() == 'IT' or buyer.vat[:2].isdecimal())))
             and self.amount_total <= 400
@@ -480,6 +495,7 @@ class AccountMove(models.Model):
             'partner_country_code': partner_values.get('country_code', False),
             'simplified': self._l10n_it_edi_is_simplified(),
             'self_invoice': self.l10n_it_edi_is_self_invoice,
+            'tax_tags': {tag for tag in self.line_ids.tax_tag_ids.mapped(lambda x: (x.name or '').upper().replace("+", "").replace("-", "")) if tag},
             'downpayment': self._is_downpayment(),
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
@@ -519,42 +535,54 @@ class AccountMove(models.Model):
                      'simplified': False,
                      'self_invoice': True,
                      'partner_country_code': "SM"},
+            'TD16': {'move_types': ['in_invoice', 'in_refund'],
+                     'import_type': 'in_invoice',
+                     'simplified': False,
+                     'self_invoice': True,
+                     'tax_tags': {'VJ6', 'VJ7', 'VJ8', 'VJ12', 'VJ13', 'VJ14', 'VJ15', 'VJ16', 'VJ17'}},
             'TD17': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
-                     'services_or_goods': "service"},
+                     'services_or_goods': "service",
+                     'tax_tags': {'VJ3'}},
             'TD18': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
                      'services_or_goods': "consu",
                      'goods_in_italy': False,
-                     'partner_in_eu': True},
+                     'partner_in_eu': True,
+                     'tax_tags': {'VJ9'}},
             'TD19': {'move_types': ['in_invoice', 'in_refund'],
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
                      'services_or_goods': "consu",
-                     'goods_in_italy': True},
+                     'goods_in_italy': True,
+                     'tax_tags': {'VJ3'}},
         }
 
     def _l10n_it_edi_get_document_type(self):
-        """ Compare the features of the invoice to the requirements of each TDxx FatturaPA
-            document type until you find a valid one. """
+        """ Compare the features of the invoice to the requirements of each Document Type (TDxx)
+        FatturaPA until you find a valid one. """
+
+        def compare(actual_values, expected_values):
+            """ Compare a single entry from the invoice features with the one of the document_type """
+            if isinstance(expected_values, set | list | tuple):
+                # i.e. When we compare actual tax_tags from the invoice with expected tags, we see if there is at least one in common
+                if isinstance(actual_values, set):
+                    return actual_values & set(expected_values)
+                # i.e. When we compare the move_type with the available ones, these can be more than one
+                return actual_values in expected_values
+            # We compare other features directly, one on one
+            return actual_values == expected_values
+
         invoice_features = self._l10n_it_edi_features_for_document_type_selection()
-        for code, document_type_features in self._l10n_it_edi_document_type_mapping().items():
-            comparisons = []
-            for key, invoice_feature in invoice_features.items():
-                if key not in document_type_features:
-                    continue
-                document_type_feature = document_type_features.get(key)
-                if isinstance(document_type_feature, list):
-                    comparisons.append(invoice_feature in document_type_feature)
-                else:
-                    comparisons.append(invoice_feature == document_type_feature)
-            if all(comparisons):
-                return code
+        for document_type_code, document_type_features in self._l10n_it_edi_document_type_mapping().items():
+            # By using a generator instead of a list, we can avoid some comparisons
+            if all(compare(invoice_values, document_type_features[k]) for k, invoice_values in invoice_features.items() if k in document_type_features):
+                return document_type_code
         return False
 
     def _l10n_it_edi_is_simplified_document_type(self, document_type):
@@ -633,7 +661,7 @@ class AccountMove(models.Model):
             # then try and fill it with the content imported from the attachment.
             # Should the import fail, thanks to try..except and savepoint,
             # we will anyway end up with an empty `in_invoice` with the attachment posted on it.
-            if move := self.with_company(self.company_id)._l10n_it_edi_create_move_with_attachment(
+            if move := self.with_company(proxy_user.company_id)._l10n_it_edi_create_move_with_attachment(
                 invoice_data['filename'],
                 invoice_data['file'],
                 invoice_data['key'],
@@ -702,21 +730,30 @@ class AccountMove(models.Model):
                 return partner
         return self.env['res.partner']
 
-    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None):
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, l10n_it_exempt_reason=None):
         """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
             and matches the percentage found in the XML for the company. """
+
         domain = [
             *self.env['account.tax']._check_company_domain(company),
-            ('amount', '=', percentage),
             ('amount_type', '=', 'percent'),
             ('type_tax_use', '=', 'purchase'),
         ] + (extra_domain or [])
 
-        # As we're importing vendor bills, we're excluding Reverse Charge Taxes
-        # which have a [100.0, 100.0, -100.0] repartition lines factor_percent distribution.
-        # We only allow for taxes that have all positive repartition lines factor_percent distribution.
-        taxes = self.env['account.tax'].search(domain).filtered(
-            lambda tax: all(rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids))
+        # We suppose we're importing a file that comes in as a customer invoice where the sale tax will be 0%.
+        # To retrieve the correct purchase tax, we examine the sale tax's l10n_it_exempt_reason.
+        # We determine whether the l10n_it_exempt_reason is specific to reverse charge.
+        reversed_tax_tag = self._l10n_it_edi_exempt_reason_tag_mapping().get(l10n_it_exempt_reason, '')
+        if not reversed_tax_tag:
+            # Normal VAT taxes have a known percentage and generally have all positive repartition lines
+            domain += [('amount', '=', percentage), ('l10n_it_exempt_reason', '=', l10n_it_exempt_reason)]
+            taxes = self.env['account.tax'].search(domain).filtered(
+                lambda tax: all(rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids))
+        else:
+            # In case of reverse charge, the purchase tax has a negative repartition line.
+            domain += [('invoice_repartition_line_ids.tag_ids.name', '=', f'+{reversed_tax_tag.lower()}')]
+            taxes = self.env['account.tax'].search(domain, order="amount desc").filtered(
+                lambda tax: any(rep_line.factor_percent < 0 for rep_line in tax.invoice_repartition_line_ids))
 
         return taxes[0] if taxes else taxes
 
@@ -744,6 +781,11 @@ class AccountMove(models.Model):
             _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
 
         self.move_type = move_type
+
+        if self.name and self.name != '/':
+            # the journal might've changed, so we need to recompute the name in case it was set (first entry in journal)
+            self.name = False
+            self._compute_name()
 
         # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
         extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, tree)
@@ -979,9 +1021,8 @@ class AccountMove(models.Model):
 
         move_line.tax_ids = []
         if percentage is not None:
-            l10n_it_exempt_reason = get_text(element, './/Natura') or False
-            conditions = [('l10n_it_exempt_reason', '=', l10n_it_exempt_reason)]
-            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, conditions):
+            l10n_it_exempt_reason = get_text(element, './/Natura').upper() or False
+            if tax := self._l10n_it_edi_search_tax_for_import(company, percentage, None, l10n_it_exempt_reason=l10n_it_exempt_reason):
                 move_line.tax_ids += tax
             else:
                 message = Markup("<br/>").join((
@@ -1031,117 +1072,67 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     def _l10n_it_edi_export_data_check(self):
-        errors = self._l10n_it_edi_base_export_data_check()
-        if not self._l10n_it_edi_is_simplified():
-            errors += self._l10n_it_edi_export_buyer_data_check()
+        """ This function checks the Settings, Company, Partners, Moves involved in the
+            sending activity and returns an errors dictionary ready for the
+            actionable_errors widget to display. """
+
+        companies = self.mapped("company_id")
+        companies_partners = companies.mapped("partner_id")
+        moves_full = self.filtered(lambda m: not m._l10n_it_edi_is_simplified())
+        moves_simplified = self.filtered(lambda m: m._l10n_it_edi_is_simplified())
+
+        full = moves_full.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners)
+        simplified = moves_simplified.mapped("commercial_partner_id").filtered(lambda p: p not in companies_partners | full)
+        representatives = companies.mapped("l10n_it_tax_representative_partner_id").filtered(lambda p: p not in companies_partners | simplified | full)
+
+        return {
+            **companies._l10n_it_edi_export_check(),
+            **full._l10n_it_edi_export_check(['partner_address_missing']),
+            **simplified._l10n_it_edi_export_check(['partner_country_missing']),
+            **(simplified | full)._l10n_it_edi_export_check(['partner_vat_codice_fiscale_missing']),
+            **representatives._l10n_it_edi_export_check(['partner_vat_missing']),
+            **self._l10n_it_edi_base_export_check(),
+            **self._l10n_it_edi_export_taxes_check(),
+        }
+
+    def _l10n_it_edi_base_export_check(self):
+        def build_error(message, records):
+            return {
+                'message': message,
+                **({
+                    'action_text': _("View invoice(s)"),
+                    'action': records._get_records_action(name=_("Invoice(s) to check")),
+                } if len(self) > 1 else {})
+            }
+
+        errors = {}
+        if moves := self.filtered(lambda move: move.l10n_it_edi_is_self_invoice and move._l10n_it_edi_services_or_goods() == 'both'):
+            errors['move_reverse_charge_with_mixed_services_and_goods'] = build_error(
+                message=_("Cannot apply Reverse Charge to bills which contains both services and goods."),
+                records=moves)
+        if pa_moves := self.filtered(lambda move: move.company_id.partner_id._l10n_it_edi_is_public_administration()):
+            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_type):
+                message = _("Your company belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
+                errors['move_missing_origin_document'] = build_error(message=message, records=moves)
+            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > fields.Date.today()):
+                message = _("The Origin Document Date cannot be in the future.")
+                errors['move_future_origin_document_date'] = build_error(message=message, records=moves)
         return errors
 
-    def _l10n_it_edi_format_export_data_errors(self):
-        messages = (
-            self._l10n_it_edi_format_errors(move.name + ":" if len(self) > 1 else False, move_warnings)
-            for move in self if (move_warnings := move._l10n_it_edi_export_data_check())
-        )
-        return Markup("<br>").join(messages) or False
-
-    def _l10n_it_edi_base_export_data_check(self):
-        errors = []
-        seller = self.company_id
-        buyer = self.commercial_partner_id
-        is_self_invoice = self.l10n_it_edi_is_self_invoice
-        if is_self_invoice:
-            seller, buyer = buyer, seller
-
-        # <1.1.1.1>
-        if not seller.country_id:
-            errors.append(_("%s must have a country", seller.display_name))
-
-        # <1.1.1.2>
-        if not self.company_id.vat:
-            errors.append(_("%s must have a VAT number", seller.display_name))
-        if seller.vat and len(seller.vat) > 30:
-            errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
-
-        # <1.2.1.2>
-        if not is_self_invoice and not seller.l10n_it_codice_fiscale:
-            errors.append(_("%s must have a codice fiscale number", seller.display_name))
-
-        # <1.2.1.8>
-        if not is_self_invoice and not seller.l10n_it_tax_system:
-            errors.append(_("The seller's company must have a tax system."))
-
-        # <1.2.2>
-        if not seller.street and not seller.street2:
-            errors.append(_("%s must have a street.", seller.display_name))
-        if not seller.zip:
-            errors.append(_("%s must have a post code.", seller.display_name))
-        elif len(seller.zip) != 5 and seller.country_id.code == 'IT':
-            errors.append(_("%s must have a post code of length 5.", seller.display_name))
-        if not seller.city:
-            errors.append(_("%s must have a city.", seller.display_name))
-        if not seller.country_id:
-            errors.append(_("%s must have a country.", seller.display_name))
-
-        if not is_self_invoice and seller.l10n_it_has_tax_representative and not seller.l10n_it_tax_representative_partner_id.vat:
-            errors.append(_("Tax representative partner %s of %s must have a tax number.", seller.l10n_it_tax_representative_partner_id.display_name, seller.display_name))
-
-        # <1.4.1>
-        if not buyer.vat and not buyer.l10n_it_codice_fiscale and buyer.country_id.code == 'IT':
-            errors.append(_("The buyer, %s, or his company must have a VAT number and/or a tax code (Codice Fiscale).", buyer.display_name))
-
-        if is_self_invoice and self._l10n_it_edi_services_or_goods() == 'both':
-            errors.append(_("Cannot apply Reverse Charge to a bill which contains both services and goods."))
-
-        if is_self_invoice and not buyer.partner_id.l10n_it_pa_index:
-            errors.append(_("Vendor bills sent as self-invoices to the SdI require a valid PA Index (Codice Destinatario) on the company's contact."))
-
-        for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
-            if not tax_line.tax_line_id.l10n_it_exempt_reason and tax_line.tax_line_id.amount == 0:
-                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
-
-        if self.l10n_it_partner_pa:
-            if not self.l10n_it_origin_document_type:
-                errors.append(_("This invoice targets the Public Administration, please fill out"
-                                " Origin Document Type field in the Electronic Invoicing tab."))
-            if self.l10n_it_origin_document_date and self.l10n_it_origin_document_date > fields.Date.today():
-                errors.append(_("The Origin Document Date cannot be in the future."))
-
-        errors += self._l10n_it_edi_export_taxes_data_check()
-
-        return errors
-
-    def _l10n_it_edi_export_taxes_data_check(self):
-        """
-            Can be overridden by submodules like l10n_it_edi_withholding, which also allows for withholding and pension_fund taxes.
-        """
-        errors = []
-        for invoice_line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
-            all_taxes = invoice_line.tax_ids.flatten_taxes_hierarchy()
-            vat_taxes = all_taxes.filtered(lambda t: t.amount_type == 'percent' and t.amount >= 0)
-            if len(vat_taxes) != 1:
-                errors.append(_("In line %s, you must select one and only one VAT tax.", invoice_line.name))
-        return errors
-
-    def _l10n_it_edi_export_buyer_data_check(self):
-        errors = []
-        buyer = self.commercial_partner_id
-
-        # <1.4.2>
-        if not buyer.street and not buyer.street2:
-            errors.append(_("%s must have a street.", buyer.display_name))
-        if not buyer.country_id:
-            errors.append(_("%s must have a country.", buyer.display_name))
-        if not buyer.zip:
-            errors.append(_("%s must have a post code.", buyer.display_name))
-        elif len(buyer.zip) != 5 and buyer.country_id.code == 'IT':
-            errors.append(_("%s must have a post code of length 5.", buyer.display_name))
-        if not buyer.city:
-            errors.append(_("%s must have a city.", buyer.display_name))
-
-        for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
-            if not tax_line.tax_line_id.l10n_it_exempt_reason and tax_line.tax_line_id.amount == 0:
-                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
-
-        return errors
+    def _l10n_it_edi_export_taxes_check(self):
+        if move_lines := self.mapped("invoice_line_ids").filtered(lambda line:
+            line.display_type == 'product'
+            and len(line.tax_ids.flatten_taxes_hierarchy()._l10n_it_filter_kind('vat')) != 1
+        ):
+            return {
+                'move_only_one_vat_tax_per_line': {
+                    'message': _("Invoices must have exactly one VAT tax set per line."),
+                    **({
+                        'action_text': _("View invoice(s)"),
+                        'action': move_lines.mapped("move_id")._get_records_action(name=_("Check taxes on invoice lines")),
+                    } if len(self) > 1 else {})
+                }}
+        return {}
 
     def _l10n_it_edi_get_formatters(self):
         def format_alphanumeric(text, maxlen=None):

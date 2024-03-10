@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Wichanon Jamwutthipreecha, 2024
-# Wil Odoo, 2024
 # Rasareeyar Lappiam, 2024
+# Odoo Thaidev <odoothaidev@gmail.com>, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1448,7 +1449,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "A Section Subtitle"
-msgstr "คำบรรยายส่วน"
+msgstr "คำบรรยายหมวด"
 
 #. module: website
 #. odoo-javascript
@@ -1571,7 +1572,7 @@ msgstr "AI"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "API Key"
-msgstr "API Key"
+msgstr "คีย์ API"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_groups
@@ -1601,6 +1602,13 @@ msgstr "เกี่ยวกับเรา"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
 msgid "About us"
 msgstr "เกี่ยวกับเรา"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "การเข้าถึงถูกปฏิเสธ"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
@@ -1831,6 +1839,11 @@ msgid "Add a new field at the end"
 msgstr "เพิ่มฟิลด์ใหม่ในตอนท้าย"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
+msgid "Add groups in the \"Access Rights\" tab below."
+msgstr "เพิ่มกลุ่มในแท็บ \"สิทธิ์การเข้าถึง\" ด้านล่าง"
+
+#. module: website
 #. odoo-python
 #: code:addons/website/models/res_lang.py:0
 #, python-format
@@ -1845,6 +1858,13 @@ msgid "Add new %s"
 msgstr "เพิ่ม %s ใหม่"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/add_page_dialog.xml:0
+#, python-format
+msgid "Add page template"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Add to Cart Button"
 msgstr "ปุ่มเพิ่มลงตะกร้า"
@@ -1852,7 +1872,7 @@ msgstr "ปุ่มเพิ่มลงตะกร้า"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Add to cart"
-msgstr "เพิ่มในรถเข็น"
+msgstr "เพิ่มในตะกร้า"
 
 #. module: website
 #. odoo-javascript
@@ -2343,7 +2363,7 @@ msgid ""
 "                                                such as maintaining the content of their cart, or allowing file uploads."
 msgstr ""
 "ตรวจสอบผู้ใช้ ปกป้องข้อมูลผู้ใช้ และอนุญาตให้เว็บไซต์ให้บริการตามที่ผู้ใช้คาดหวัง\n"
-"                                                เช่น การรักษาเนื้อหาในรถเข็น หรือการอนุญาตให้อัปโหลดไฟล์"
+"                                                เช่น การรักษาเนื้อหาในตะกร้า หรือการอนุญาตให้อัปโหลดไฟล์"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_search
@@ -2422,6 +2442,13 @@ msgstr "พื้นหลัง"
 #, python-format
 msgid "Background Shape"
 msgstr "รูปร่างพื้นหลัง"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.background.video.xml:0
+#, python-format
+msgid "Background video"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -2605,7 +2632,7 @@ msgstr "หนังสือ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Bootstrap-based templates"
-msgstr "Bootstrap-based templates"
+msgstr "เทมเพลตที่ใช้ Bootstrap"
 
 #. module: website
 #. odoo-javascript
@@ -2903,7 +2930,10 @@ msgid "Careful"
 msgstr "ระมัดระวัง"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_dynamic_snippet_carousel/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Carousel"
 msgstr "ม้าหมุน"
 
@@ -3195,6 +3225,13 @@ msgid "Clothes"
 msgstr "เสื้อผ้า"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
+#, python-format
+msgid "Clothes, Marketing, ..."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3204,7 +3241,7 @@ msgstr "โค้ด"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Code Injection"
-msgstr "Code Injection"
+msgstr "การแทรกรหัส"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
@@ -3473,7 +3510,7 @@ msgstr "เนื้อหา"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_activated
 #: model:ir.model.fields,field_description:website.field_website__cdn_activated
 msgid "Content Delivery Network (CDN)"
-msgstr "Content Delivery Network (CDN)"
+msgstr "เครือข่ายการจัดส่งเนื้อหา (CDN)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4138,7 +4175,7 @@ msgstr "ปิดใช้งานตัวอย่างข้อมูลท
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Disabled"
-msgstr "Disabled"
+msgstr "ปิดใช้งาน"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -4334,6 +4371,17 @@ msgid "Display this website when users visit this domain"
 msgstr "แสดงเว็บไซต์นี้เมื่อผู้ใช้เยี่ยมชมโดเมนนี้"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/edit_head_body_dialog/edit_head_body_dialog.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"อย่าคัดลอก/วางโค้ดที่คุณไม่เข้าใจ เพราะอาจทำให้ข้อมูลของคุณมีความเสี่ยงได้"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -4472,7 +4520,7 @@ msgstr "วันครบกำหนด"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Duplicate"
-msgstr "ทำซ้ำ"
+msgstr "คัดลอก"
 
 #. module: website
 #. odoo-javascript
@@ -4676,6 +4724,7 @@ msgstr "ยกระดับแบรนด์ของคุณกับเร
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
+#: model_terms:ir.ui.view,arch_db:website.s_share
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -4941,7 +4990,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
 msgid "Extension View"
-msgstr "Extension View"
+msgstr "มุมมองส่วนขยาย"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
@@ -4957,9 +5006,19 @@ msgid "Extra Large"
 msgstr "ใหญ่พิเศษ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.layout
+msgid "Extra items button"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
 msgid "Extra link"
 msgstr "ลิงก์เสริม"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
+msgid "Extra page"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4977,8 +5036,19 @@ msgid "F.A.Q."
 msgstr "F.A.Q."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/000.js:0
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
+#: model_terms:ir.ui.view,arch_db:website.header_social_links
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#: model_terms:ir.ui.view,arch_db:website.template_footer_centered
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#, python-format
 msgid "Facebook"
 msgstr "Facebook"
 
@@ -5527,6 +5597,15 @@ msgid "Get in touch"
 msgstr "ติดต่อกันอยู่เสมอ"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
+#, python-format
+msgid "GitHub"
+msgstr "GitHub"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_github
 msgid "GitHub Account"
 msgstr "บัญชี GitHub"
@@ -5606,7 +5685,7 @@ msgstr "Google Analytics"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
 #: model:ir.model.fields,field_description:website.field_website__google_analytics_key
 msgid "Google Analytics Key"
-msgstr "Google Analytics Key"
+msgstr "คีย์ Google Analytics"
 
 #. module: website
 #. odoo-javascript
@@ -5623,13 +5702,25 @@ msgstr "Google Map"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
 msgid "Google Maps API Key"
-msgstr "Google Maps API Key"
+msgstr "คีย์ Google Maps API"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "Google Search Console"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+"Google ไม่จำเป็นต้องส่ง Ping อีกต่อไป มันจะดึงข้อมูล /sitemap.xml "
+"ของคุณโดยอัตโนมัติ"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5998,7 +6089,7 @@ msgstr "หน้าแรกของเว็บไซต์ปัจจุบ
 #: model:ir.ui.menu,name:website.menu_website_preview
 #, python-format
 msgid "Homepage"
-msgstr "Homepage"
+msgstr "โฮมเพจ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6191,6 +6282,18 @@ msgid ""
 msgstr ""
 "หากคุณละทิ้งการแก้ไขปัจจุบัน การเปลี่ยนแปลงที่ไม่ได้บันทึกทั้งหมดจะสูญหายไป "
 "คุณสามารถยกเลิกเพื่อกลับสู่โหมดแก้ไข"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead."
+msgstr ""
+"หากคุณต้องการเพิ่มแท็กการวิเคราะห์หรือการตลาด "
+"ให้ใส่โค้ดใน<head>หรือ<body>ของคุณแทน"
 
 #. module: website
 #. odoo-javascript
@@ -6492,7 +6595,15 @@ msgid "Inset"
 msgstr "แทรก"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_instagram_page/000.js:0
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.header_social_links
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#, python-format
 msgid "Instagram"
 msgstr "Instagram"
 
@@ -7121,7 +7232,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Library"
-msgstr "Library"
+msgstr "ห้องสมุด"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse_options
@@ -7189,6 +7300,19 @@ msgstr "ปุ่มลิงค์"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Link text"
 msgstr "ลิงก์ข้อความ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
+#: model_terms:ir.ui.view,arch_db:website.header_social_links
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
+#: model_terms:ir.ui.view,arch_db:website.template_footer_centered
+#, python-format
+msgid "LinkedIn"
+msgstr "LinkedIn"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_linkedin
@@ -7272,6 +7396,7 @@ msgstr "กำลังโหลด..."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #, python-format
@@ -7365,6 +7490,7 @@ msgid "Management"
 msgstr "การจัดการ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_map
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Map"
 msgstr "แผนที่"
@@ -7446,7 +7572,7 @@ msgstr "ขนาดไฟล์สูงสุด"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Measurement ID"
-msgstr "Measurement ID"
+msgstr "รหัสการวัด"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
@@ -7462,6 +7588,13 @@ msgstr "รายการสื่อ"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
 msgid "Media heading"
 msgstr "หัวเรื่องสื่อ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/content/snippets.animation.js:0
+#, python-format
+msgid "Media video"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns_menu
@@ -7501,6 +7634,11 @@ msgstr "คลาส Mega Menu"
 #: model:ir.model.fields,field_description:website.field_website_menu__mega_menu_content
 msgid "Mega Menu Content"
 msgstr "เนื้อหา Mega Menu"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
+msgid "Mega menu default image"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -8054,6 +8192,11 @@ msgid "Next"
 msgstr "ถัดไป"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.step_wizard
+msgid "Next:"
+msgstr "ถัดไป:"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "No Slide Effect"
 msgstr "ไม่มีเอฟเฟกต์สไลด์"
@@ -8484,6 +8627,13 @@ msgstr "สั่งตอนนี้"
 #, python-format
 msgid "Other Information:"
 msgstr "ข้อมูลอื่น ๆ:"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#, python-format
+msgid "Other social network"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_image
@@ -8939,6 +9089,11 @@ msgid "Pills"
 msgstr "ทรงยา"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_share
+msgid "Pinterest"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Placeholder"
 msgstr "ตัวอย่างข้อความ"
@@ -9014,6 +9169,7 @@ msgid "Points of sale"
 msgstr "การขายหน้าร้าน"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
@@ -9022,7 +9178,7 @@ msgstr "ป็อปอัพ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Portfolio"
-msgstr "Portfolio"
+msgstr "พอร์ตโฟลิโอ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -9222,6 +9378,11 @@ msgstr "ความหนาแถบความคืบหน้า"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
 msgid "Progress Tracking"
 msgstr "การติดตามความคืบหน้า"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_progress_bar
+msgid "Progress bar"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9974,7 +10135,7 @@ msgstr "ที่สอง"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Section Subtitle"
-msgstr "คำบรรยายส่วน"
+msgstr "คำบรรยายหมวด"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_showcase
@@ -10901,7 +11062,7 @@ msgstr "ไอดีเทมเพลต: %s"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
-msgstr "Template fallback"
+msgstr "ทางเลือกเทมเพลต"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -11016,6 +11177,15 @@ msgid ""
 msgstr ""
 "กล่องชาร์จขนาดกะทัดรัดที่ให้บริการชาร์จขณะเดินทางที่สะดวกสบายด้วยอายุการใช้งานแบตเตอรี่สูงสุด"
 " 17 ชั่วโมง คุณจึงสามารถเพลิดเพลินกับเพลงโปรดได้โดยไม่ติดขัด"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11426,6 +11596,16 @@ msgstr ""
 " เนื้อหานี้จะยาวขึ้นเล็กน้อย"
 
 #. module: website
+#: model:ir.ui.view,website_meta_description:website.contactus
+msgid "This is the contact us page of the website"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,website_meta_description:website.homepage
+msgid "This is the homepage of the website"
+msgstr ""
+
+#. module: website
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 #, python-format
@@ -11500,6 +11680,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
 msgstr "Thumbnails"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
+#, python-format
+msgid "TikTok"
+msgstr "TikTok"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_tiktok
@@ -11765,7 +11954,17 @@ msgid "Turn every feature into a benefit for your reader."
 msgstr "เปลี่ยนทุกฟีเจอร์ให้เป็นประโยชน์สำหรับผู้อ่านของคุณ"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
+#: model_terms:ir.ui.view,arch_db:website.header_social_links
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
+#: model_terms:ir.ui.view,arch_db:website.template_footer_centered
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#, python-format
 msgid "Twitter"
 msgstr "Twitter"
 
@@ -11777,7 +11976,7 @@ msgstr "บัญชี Twitter"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Twitter Scroller"
-msgstr "Twitter Scroller"
+msgstr "ตัวเลื่อนทวิตเตอร์"
 
 #. module: website
 #. odoo-javascript
@@ -12175,7 +12374,7 @@ msgstr "สลัดผัก เบอร์เกอร์เนื้อ แ�
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Vert. Alignment"
-msgstr "Vert. Alignment"
+msgstr "การจัดตำแหน่งแนวตั้ง"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -12190,6 +12389,7 @@ msgid "Vertical Alignment"
 msgstr "การจัดตำแหน่งแนวตั้ง"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_video
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Video"
@@ -12897,6 +13097,11 @@ msgid "What you see is what you get"
 msgstr "สิ่งที่คุณเห็นคือสิ่งที่คุณได้รับ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_share
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Width"
@@ -13143,6 +13348,15 @@ msgstr "คุณจะสามารถสร้างเพจของคุ
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_social_media/options.js:0
+#: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
+#: model_terms:ir.ui.view,arch_db:website.s_social_media
+#, python-format
+msgid "YouTube"
+msgstr "YouTube"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 #, python-format
 msgid "Your Company"
@@ -13163,6 +13377,15 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "อีเมลของคุณ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr "ข้อมูลโค้ดฝังของคุณไม่มีอะไรจะแสดง คลิกที่แก้ไขเพื่อแก้ไข"
 
 #. module: website
 #. odoo-javascript
@@ -13475,12 +13698,12 @@ msgstr "เช่น หน้าแรก"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce"
-msgstr "eCommerce"
+msgstr "อีคอมเมิร์ซ"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
-msgstr "eLearning"
+msgstr "การอบรมออนไลน์"
 
 #. module: website
 #. odoo-python

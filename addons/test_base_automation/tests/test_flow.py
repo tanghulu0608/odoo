@@ -1027,6 +1027,34 @@ class TestCompute(common.TransactionCase):
         obj.message_post(author_id=ext_partner.id, subtype_xmlid="mail.mt_comment")
         self.assertTrue(obj.active)
 
+    def test_multiple_mail_triggers(self):
+        lead_model = self.env["ir.model"]._get("base.automation.lead.test")
+        with self.assertRaises(ValidationError):
+            create_automation(self, trigger="on_message_sent", model_id=lead_model.id)
+
+        lead_thread_model = self.env["ir.model"]._get("base.automation.lead.thread.test")
+
+        create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
+            "state": "object_write",
+            "update_path": "active",
+            "update_boolean_value": "false"
+        })
+        create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
+            "state": "object_write",
+            "evaluation_type": "equation",
+            "update_path": "name",
+            "value": "record.name + '!'"
+        })
+
+        ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
+        internal_partner = self.env["res.users"].browse(2).partner_id
+
+        obj = self.env["base.automation.lead.thread.test"].create({"name": "test"})
+        obj.message_subscribe([ext_partner.id, internal_partner.id])
+
+        obj.message_post(author_id=internal_partner.id, message_type="comment", subtype_xmlid="mail.mt_comment")
+        self.assertFalse(obj.active)
+        self.assertEqual(obj.name, "test!")
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):
@@ -1100,3 +1128,26 @@ class TestHttp(common.HttpCase):
             "_id": obj.id,
             "_model": obj._name,
         })
+
+    def test_on_change_get_views_cache(self):
+        model_name = "base.automation.lead.test"
+        my_view = self.env["ir.ui.view"].create({
+            "name": "My View",
+            "model": model_name,
+            "type": "form",
+            "arch": "<form><field name='active'/></form>",
+        })
+        self.assertEqual(
+            self.env[model_name].get_view(my_view.id)["arch"],
+            '<form><field name="active"/></form>'
+        )
+        model = self.env["ir.model"]._get(model_name)
+        active_field = self.env["ir.model.fields"]._get(model_name, "active")
+        create_automation(self, trigger="on_change", model_id=model.id, on_change_field_ids=[Command.set([active_field.id])], _actions={
+            "state": "code",
+            "code": "",
+        })
+        self.assertEqual(
+            self.env[model_name].get_view(my_view.id)["arch"],
+            '<form><field name="active" on_change="1"/></form>'
+        )

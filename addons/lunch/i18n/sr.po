@@ -5,10 +5,10 @@
 # Translators:
 # Bojan Milovanovic <bojan.milovanovic@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2023
 # Milan Bojovic <mbojovic@outlook.com>, 2024
 # Nemanja Skadric, 2024
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2024
 # コフスタジオ, 2024
 # 
 msgid ""
@@ -1274,12 +1274,12 @@ msgstr "Mozzarella, Pesto, Tomatoes"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
-msgstr "My Account"
+msgstr "Moj nalog"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
 msgid "My Account History"
-msgstr "My Account History"
+msgstr "Istorija Mog naloga"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
@@ -1998,7 +1998,7 @@ msgstr "To Order"
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "To Pay"
-msgstr ""
+msgstr "Plaćanje"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog

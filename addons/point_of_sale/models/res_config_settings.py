@@ -30,7 +30,7 @@ class ResConfigSettings(models.TransientModel):
         return self.env['pos.config'].search([('company_id', '=', self.env.company.id)], order='write_date desc', limit=1)
 
     pos_config_id = fields.Many2one('pos.config', string="Point of Sale", default=lambda self: self._default_pos_config())
-    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
+    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False, check_company=True)
     module_pos_mercury = fields.Boolean(string="Vantiv Payment Terminal", help="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method.")
     module_pos_adyen = fields.Boolean(string="Adyen Payment Terminal", help="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.")
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")
@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
     module_pos_paytm = fields.Boolean(string="PayTM Payment Terminal", help="The transactions are processed by PayTM. Set your PayTM credentials on the related payment method.")
     module_pos_preparation_display = fields.Boolean(string="Preparation Display", help="Show orders on the preparation display screen.")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
-    account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
+    account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False, check_company=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
     is_kiosk_mode = fields.Boolean(string="Is Kiosk Mode", default=False)
 
@@ -56,8 +56,8 @@ class ResConfigSettings(models.TransientModel):
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")
     pos_company_has_template = fields.Boolean(related='pos_config_id.company_has_template')
     pos_default_bill_ids = fields.Many2many(related='pos_config_id.default_bill_ids', readonly=False)
-    pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True)
-    pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True)
+    pos_default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
+    pos_fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', compute='_compute_pos_fiscal_positions', readonly=False, store=True, check_company=True)
     pos_has_active_session = fields.Boolean(related='pos_config_id.has_active_session')
     pos_iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories', compute='_compute_pos_iface_available_categ_ids', readonly=False, store=True)
     pos_iface_big_scrollbars = fields.Boolean(related='pos_config_id.iface_big_scrollbars', readonly=False)
@@ -106,20 +106,6 @@ class ResConfigSettings(models.TransientModel):
     pos_trusted_config_ids = fields.Many2many(related='pos_config_id.trusted_config_ids', readonly=False)
     point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
 
-    @api.model
-    def _keep_new_vals(self, pos_config, pos_fields_vals):
-        """ Keep vals in pos_fields_vals that are different than
-        pos_config's values.
-        """
-        new_vals = {}
-        for field, val in pos_fields_vals.items():
-            if pos_config._fields.get(field):
-                cache_value = pos_config._fields.get(field).convert_to_cache(val, pos_config)
-                record_value = pos_config._fields.get(field).convert_to_record(cache_value, pos_config)
-                if record_value != pos_config[field]:
-                    new_vals[field] = val
-        return new_vals
-
     @api.model_create_multi
     def create(self, vals_list):
         # STEP: Remove the 'pos' fields from each vals.
@@ -164,7 +150,6 @@ class ResConfigSettings(models.TransientModel):
         # STEP: Finally, we write the value of 'pos' fields to 'pos_config_id'.
         for pos_config_id, pos_fields_vals in pos_config_id_to_fields_vals_map.items():
             pos_config = self.env['pos.config'].browse(pos_config_id)
-            pos_fields_vals = self._keep_new_vals(pos_config, pos_fields_vals)
             pos_config.with_context(from_settings_view=True).write(pos_fields_vals)
 
         return result
@@ -278,6 +263,7 @@ class ResConfigSettings(models.TransientModel):
             ])
             if not res_config.pos_use_pricelist:
                 res_config.pos_pricelist_id = False
+                res_config.pos_available_pricelist_ids = res_config.pos_config_id.available_pricelist_ids
             else:
                 if any([p.currency_id.id != currency_id for p in res_config.pos_available_pricelist_ids]):
                     res_config.pos_available_pricelist_ids = pricelists_in_current_currency

@@ -2235,7 +2235,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #, python-format
 msgid "Item(s) added to your cart"
-msgstr ""
+msgstr "عناصر تمت إضافتها إلى عربة تسوقك "
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -4641,6 +4641,11 @@ msgstr "مبيعات المتجر الإلكتروني"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
 msgstr "المتجر الإلكتروني "
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
+msgid "eCommerce cart"
+msgstr "عربة التسويق في المتجر الإلكتروني "
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

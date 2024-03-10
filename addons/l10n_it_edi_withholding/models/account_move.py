@@ -19,10 +19,11 @@ class AccountMove(models.Model):
     @api.depends('amount_total_signed')
     def _compute_amount_extended(self):
         for move in self:
-            totals = dict(vat=0.0, withholding=0.0, pension_fund=0.0)
+            totals = {None: 0.0, 'vat':0.0, 'withholding': 0.0, 'pension_fund': 0.0}
             if move.is_invoice(True):
                 for line in [line for line in move.line_ids if line.tax_line_id]:
-                    totals[line.tax_line_id._l10n_it_get_tax_kind()] -= line.balance
+                    kind = line.tax_line_id._l10n_it_get_tax_kind()
+                    totals[kind] -= line.balance
             move.l10n_it_amount_vat_signed = totals['vat']
             move.l10n_it_amount_withholding_signed = totals['withholding']
             move.l10n_it_amount_pension_fund_signed = totals['pension_fund']
@@ -116,13 +117,13 @@ class AccountMove(models.Model):
     # Import
     # -------------------------------------------------------------------------
 
-    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, vat_only=True):
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None, vat_only=True, l10n_it_exempt_reason=False):
         """ In case no withholding_type or pension_fund is specified, exclude taxes that have it.
             It means that we're searching for VAT taxes, especially in the base l10n_it_edi module
         """
         if vat_only:
-            extra_domain += [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
-        return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain)
+            extra_domain = (extra_domain or []) + [('l10n_it_withholding_type', '=', False), ('l10n_it_pension_fund_type', '=', False)]
+        return super()._l10n_it_edi_search_tax_for_import(company, percentage, extra_domain=extra_domain, l10n_it_exempt_reason=l10n_it_exempt_reason)
 
     def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
         extra_info, message_to_log = super()._l10n_it_edi_get_extra_info(company, document_type, body_tree)

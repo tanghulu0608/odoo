@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Martin Trigaux, 2023
 # Carlos Manrique Enguita, 2023
 # Larissa Manderfeld, 2024
+# Martin Trigaux, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Martin Trigaux, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +70,7 @@ msgstr "hace %d años"
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 #, python-format
 msgid "%s Files"
-msgstr "%s Archivos"
+msgstr "%s archivos"
 
 #. module: web
 #. odoo-javascript
@@ -170,14 +170,14 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/filter_panel/calendar_filter_panel.js:0
 #, python-format
 msgid "+ Add %s"
-msgstr "+ Añadir %s"
+msgstr "+ Agregar %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "+ KEY"
-msgstr "+ KEY"
+msgstr "+ CLAVE"
 
 #. module: web
 #. odoo-javascript
@@ -557,7 +557,7 @@ msgstr "<i class=\"fa fa-repeat\"/> Restablecer"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">$ 2,887.50</span>"
-msgstr "<span class=\"text-nowrap\">$ 2,887.50</span>"
+msgstr "<span class=\"text-nowrap\">2.887,50 €</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -565,8 +565,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       22,137.50</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
-"                                                       22,137.50</span></span>"
+"<span class=\"text-nowrap\"><span class=\"oe_currency_value\">\n"
+"                                                       22.137,50</span> €</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -574,8 +574,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">11,750.00</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">11,750.00</span></span>"
+"<span class=\"text-nowrap\"><span "
+"class=\"oe_currency_value\">11.750,00</span> €</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -583,18 +583,18 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">7,500.00</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">$ <span "
-"class=\"oe_currency_value\">7,500.00</span></span>"
+"<span class=\"text-nowrap\"><span "
+"class=\"oe_currency_value\">7.500,00</span> €</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
-msgstr "<span class=\"text-nowrap\">1,500.00</span>"
+msgstr "<span class=\"text-nowrap\">1.500,00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
-msgstr "<span class=\"text-nowrap\">2,350.00</span>"
+msgstr "<span class=\"text-nowrap\">2.350,00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -608,7 +608,7 @@ msgid ""
 "                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>Estados Unidos</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -623,7 +623,7 @@ msgstr "<span itemprop=\"name\">Deco Addict</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr "<span><span class=\"oe_currency_value\">19.250,00</span> €</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -954,7 +954,7 @@ msgstr "Actividades"
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
 msgid "Add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #. module: web
 #. odoo-javascript
@@ -962,7 +962,7 @@ msgstr "Añadir"
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
 #, python-format
 msgid "Add Custom Filter"
-msgstr "Añadir filtro personalizado"
+msgstr "Agregar filtro personalizado"
 
 #. module: web
 #. odoo-javascript
@@ -977,7 +977,7 @@ msgstr "Agregar grupo personalizado"
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
 msgid "Add New Rule"
-msgstr "Agregar una nueva regla"
+msgstr "Agregar nueva regla"
 
 #. module: web
 #. odoo-javascript
@@ -1006,7 +1006,7 @@ msgstr "Agregar un valor"
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 #, python-format
 msgid "Add a line"
-msgstr "Agregar línea"
+msgstr "Agregar una línea"
 
 #. module: web
 #. odoo-javascript
@@ -1056,7 +1056,7 @@ msgstr "Agregar fecha de inicio"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Add: %s"
-msgstr "Añadir: %s"
+msgstr "Agregar: %s"
 
 #. module: web
 #. odoo-javascript
@@ -1215,21 +1215,21 @@ msgstr ""
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive all the selected records?"
-msgstr "¿Está seguro de que quiere archivar todos los registros archivados?"
+msgstr "¿Está seguro de que desea archivar todos los registros seleccionados?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr "¿Estás seguro de que deseas archivar este registro?"
+msgstr "¿Estás seguro de que desea archivar este registro?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.js:0
 #, python-format
 msgid "Are you sure that you want to remove this filter?"
-msgstr "¿Está seguro de que quiere eliminar este filtro?"
+msgstr "¿Está seguro de que desea eliminar este filtro?"
 
 #. module: web
 #. odoo-javascript
@@ -1491,6 +1491,17 @@ msgstr "Icono booleano"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+#, python-format
+msgid ""
+"Boolean field from the model used in the relation, which indicates whether "
+"the state is folded or not."
+msgstr ""
+"Campo booleano del modelo usado en relación, el cual indica si la etapa está"
+" plegada o no."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 #, python-format
 msgid ""
@@ -1667,7 +1678,7 @@ msgstr "Cancelar"
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.xml:0
 #, python-format
 msgid "Cancel Upload"
-msgstr "Cancelar carga"
+msgstr "Cancelar subida"
 
 #. module: web
 #. odoo-javascript
@@ -1737,7 +1748,7 @@ msgstr "Casillas de verificación"
 #: code:addons/web/static/src/core/file_input/file_input.xml:0
 #, python-format
 msgid "Choose File"
-msgstr "Seleccione el archivo"
+msgstr "Elegir archivo"
 
 #. module: web
 #. odoo-javascript
@@ -1966,7 +1977,7 @@ msgstr "Ajustes de configuración"
 #. module: web
 #: model:ir.actions.act_window,name:web.action_base_document_layout_configurator
 msgid "Configure your document layout"
-msgstr "Configurar el diseño de tu documento"
+msgstr "Configure el diseño de sus documentos"
 
 #. module: web
 #. odoo-javascript
@@ -2412,7 +2423,7 @@ msgstr "Fuente predeterminada"
 #: code:addons/web/static/src/views/fields/dynamic_placeholder_popover.xml:0
 #, python-format
 msgid "Default text is used when no values are set"
-msgstr "El texto predeterminado se utiliza cuando no hay valores establecidos"
+msgstr "El texto por defecto se utiliza cuando no hay valores establecidos"
 
 #. module: web
 #. odoo-javascript
@@ -2458,7 +2469,7 @@ msgstr ""
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Delete"
-msgstr "Suprimir"
+msgstr "Eliminar"
 
 #. module: web
 #. odoo-javascript
@@ -2531,7 +2542,7 @@ msgstr "Dígitos"
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Disable 'Create and Edit' option"
-msgstr "Deshabilitar la opción 'Crear y Editar'"
+msgstr "Deshabilitar la opción 'Crear y editar'"
 
 #. module: web
 #. odoo-javascript
@@ -2599,7 +2610,7 @@ msgstr "Nombre mostrado"
 #: code:addons/web/static/src/views/fields/radio/radio_field.js:0
 #, python-format
 msgid "Display horizontally"
-msgstr "Visualizar horizontalmente"
+msgstr "Mostrar horizontalmente"
 
 #. module: web
 #. odoo-javascript
@@ -2635,7 +2646,7 @@ msgstr ""
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_bar.js:0
 #, python-format
 msgid "Do you really want to cancel the upload of %s?"
-msgstr "¿Realmente quieres cancelar la carga de %s?"
+msgstr "¿Está seguro de que desea cancelar la carga de %s?"
 
 #. module: web
 #. odoo-javascript
@@ -2647,7 +2658,7 @@ msgstr "¿Seguro que desea eliminar esta plantilla de exportación?"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
 msgid "Document Template"
-msgstr "Plantilla del documento"
+msgstr "Plantilla de documento"
 
 #. module: web
 #. odoo-javascript
@@ -2845,7 +2856,7 @@ msgstr "Correo electrónico"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Empty email address"
-msgstr "Vaciar dirección de correo electrónico"
+msgstr "Dirección de correo electrónico vacía"
 
 #. module: web
 #. odoo-javascript
@@ -3184,7 +3195,7 @@ msgstr "Número flotante"
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
 #, python-format
 msgid "Fold"
-msgstr "Doblar"
+msgstr "Plegar"
 
 #. module: web
 #. odoo-javascript
@@ -3427,7 +3438,20 @@ msgstr "Hacerse cargo de"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr "Texto de encabezado en la parte de arriba de todos los reportes"
+msgstr "Texto de encabezado en la parte de arriba de todos los informes"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"Tome en cuenta que no es posible guardar automáticamente sus cambios "
+"recientes. Haga clic en el botón <i class=\"fa fa-cloud-upload fa-fw\"></i> "
+"ahora para guardar su trabajo antes de salir de esta pestaña."
 
 #. module: web
 #. odoo-javascript
@@ -3691,7 +3715,7 @@ msgstr "Datos incorrectos"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #, python-format
 msgid "Invalid domain"
-msgstr "Dominio inválido"
+msgstr "Dominio no válido"
 
 #. module: web
 #. odoo-javascript
@@ -4301,17 +4325,17 @@ msgstr "Cerrar sesión"
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Logo"
-msgstr "Logo"
+msgstr "Logotipo"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_primary_color
 msgid "Logo Primary Color"
-msgstr "Logo Color Primario"
+msgstr "Color primario del logotipo"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
-msgstr "Logo Color Secundario"
+msgstr "Color secundario del logotipo"
 
 #. module: web
 #. odoo-javascript
@@ -4350,19 +4374,19 @@ msgstr "Acciones principales"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Manage Attachments"
-msgstr "Administrar archivos adjuntos"
+msgstr "Gestionar archivos adjuntos"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Manage Databases"
-msgstr "Gestionar Bases de datos"
+msgstr "Gestionar bases de datos"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "Manage Filters"
-msgstr "Gestionar Filtros"
+msgstr "Gestionar filtros"
 
 #. module: web
 #. odoo-javascript
@@ -4958,7 +4982,7 @@ msgstr "No hay registros"
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.js:0
 #, python-format
 msgid "No records found!"
-msgstr "¡No se encontrarón archivos!"
+msgstr "¡No se encontraron registros!"
 
 #. module: web
 #. odoo-javascript
@@ -4973,7 +4997,7 @@ msgstr "Sin resultado"
 #: code:addons/web/static/src/core/select_menu/select_menu.xml:0
 #, python-format
 msgid "No result found"
-msgstr "No se ha encontrado ningún resultado"
+msgstr "No se encontraron resultados"
 
 #. module: web
 #. odoo-javascript
@@ -4981,7 +5005,7 @@ msgstr "No se ha encontrado ningún resultado"
 #: code:addons/web/static/src/model/relational_model/record.js:0
 #, python-format
 msgid "No valid record to save"
-msgstr "No hay registro válido para guardar"
+msgstr "No hay registro válido que guardar"
 
 #. module: web
 #. odoo-javascript
@@ -5194,7 +5218,7 @@ msgstr "Advertencia de Odoo"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.webclient_offline
 msgid "Odoo logo"
-msgstr "Logo de Odoo"
+msgstr "Logotipo de Odoo"
 
 #. module: web
 #. odoo-javascript
@@ -5609,7 +5633,7 @@ msgstr "Con tecnología de %s%s"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr "Respaldado por <span>Odoo</span>"
+msgstr "Con la tecnología de <span>Odoo</span>"
 
 #. module: web
 #. odoo-javascript
@@ -5647,12 +5671,12 @@ msgstr "Previsualizar"
 #. module: web
 #: model:ir.actions.report,name:web.action_report_externalpreview
 msgid "Preview External Report"
-msgstr "Vista previa del Informe Externo"
+msgstr "Vista previa del informe externo"
 
 #. module: web
 #: model:ir.actions.report,name:web.action_report_internalpreview
 msgid "Preview Internal Report"
-msgstr "Vista previa del Informe Interno"
+msgstr "Vista previa del informe interno"
 
 #. module: web
 #. odoo-javascript
@@ -5672,7 +5696,7 @@ msgstr "Vista previa del campo de la imagen"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__preview_logo
 msgid "Preview logo"
-msgstr "Vista previa del logo"
+msgstr "Vista previa del logotipo"
 
 #. module: web
 #. odoo-javascript
@@ -5775,6 +5799,13 @@ msgstr "Barra de progreso"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/view_components/column_progress.xml:0
+#, python-format
+msgid "Progress bar"
+msgstr "Barra de progreso"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Properties"
@@ -5850,7 +5881,7 @@ msgstr "Trimestre"
 #: code:addons/web/static/src/views/kanban/kanban_header.xml:0
 #, python-format
 msgid "Quick add"
-msgstr "Añadido rápido"
+msgstr "Agregar rápidamente"
 
 #. module: web
 #. odoo-javascript
@@ -6086,7 +6117,7 @@ msgstr "Diseño del informe"
 #. module: web
 #: model:ir.actions.report,name:web.action_report_layout_preview
 msgid "Report Layout Preview"
-msgstr "Vista previa del diseño del reporte"
+msgstr "Vista previa del diseño del informe"
 
 #. module: web
 #. odoo-javascript
@@ -6128,7 +6159,7 @@ msgstr "Reestablecer la expresión"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
-msgstr "Restablecer a colores de logo"
+msgstr "Restablecer a colores de logotipo"
 
 #. module: web
 #. odoo-javascript
@@ -6142,7 +6173,7 @@ msgstr "Girar (r)"
 #: code:addons/web/static/src/webclient/clickbot/clickbot_loader.js:0
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr "Haga clic en Prueba en todas partes"
+msgstr "Ejecutar prueba de clic en todos lados"
 
 #. module: web
 #. odoo-javascript
@@ -6150,7 +6181,7 @@ msgstr "Haga clic en Prueba en todas partes"
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr "Ejecutar pruebas de JS Mobile"
+msgstr "Ejecutar pruebas JS Mobile"
 
 #. module: web
 #. odoo-javascript
@@ -6158,7 +6189,7 @@ msgstr "Ejecutar pruebas de JS Mobile"
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Tests"
-msgstr "Correr los tests JS"
+msgstr "Ejecutar pruebas JS"
 
 #. module: web
 #. odoo-javascript
@@ -6269,7 +6300,7 @@ msgstr "Guardar y cerrar"
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 #, python-format
 msgid "Save & New"
-msgstr "Guardar y Nuevo"
+msgstr "Guardar y nuevo"
 
 #. module: web
 #. odoo-javascript
@@ -6277,6 +6308,13 @@ msgstr "Guardar y Nuevo"
 #, python-format
 msgid "Save as:"
 msgstr "Guardar como:"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/custom_favorite_item/custom_favorite_item.xml:0
+#, python-format
+msgid "Save current search"
+msgstr "Guardar búsqueda actual"
 
 #. module: web
 #. odoo-javascript
@@ -6323,7 +6361,7 @@ msgstr "Escorpio"
 #: code:addons/web/static/src/webclient/settings_form_view/settings/settings_app.xml:0
 #, python-format
 msgid "Search"
-msgstr "Búsqueda"
+msgstr "Buscar"
 
 #. module: web
 #. odoo-javascript
@@ -6457,7 +6495,7 @@ msgstr "Seleccionar por defecto"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #, python-format
 msgid "Select a model to add a filter."
-msgstr "Seleccione un modelo para añadir un filtro."
+msgstr "Seleccionar un modelo para agregar un filtro."
 
 #. module: web
 #. odoo-javascript
@@ -7052,7 +7090,22 @@ msgstr "El campo seleccionado se utilizará para prellenar la firma"
 #, python-format
 msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
 msgstr ""
-"Este archivo seleccionado (%sB) excede el tamaño de archivo permitido (%sB)."
+"Este archivo seleccionado (%sB) excede el tamaño máximo de archivo permitido"
+" (%sB)."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
+#, python-format
+msgid ""
+"The style compilation failed. This is an administrator or developer error "
+"that must be fixed for the entire database before continuing working. See "
+"browser console or server logs for details."
+msgstr ""
+"La compilación de estilos falló. Este es un error de administrador o "
+"desarrollador que se debe corregir para toda la base de datos antes de "
+"continuar trabajando. Consulte la consola de navegador o los registros del "
+"servidor para obtener más detalles."
 
 #. module: web
 #. odoo-javascript
@@ -7565,7 +7618,7 @@ msgstr "Actualizar a versiones futuras"
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #, python-format
 msgid "Upload and Set"
-msgstr "Subir y configurar"
+msgstr "Subir y establecer"
 
 #. module: web
 #. odoo-javascript
@@ -7583,7 +7636,7 @@ msgstr "Suba su archivo"
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Uploaded"
-msgstr "Cargado"
+msgstr "Subido"
 
 #. module: web
 #. odoo-javascript
@@ -7776,7 +7829,7 @@ msgstr "Ver derechos de acceso"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Fields"
-msgstr "Ver Campos"
+msgstr "Ver campos"
 
 #. module: web
 #. odoo-javascript
@@ -7852,7 +7905,7 @@ msgstr "WC"
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: web
 #. odoo-javascript
@@ -7866,7 +7919,7 @@ msgstr "Advertencia para futuras fechas"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Warnings"
-msgstr "Avisos"
+msgstr "Advertencias"
 
 #. module: web
 #. odoo-javascript
@@ -7893,7 +7946,7 @@ msgstr "Pruebas de red"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__website
 msgid "Website Link"
-msgstr "Enlace a página web"
+msgstr "Enlace a sitio web"
 
 #. module: web
 #. odoo-javascript
@@ -7917,7 +7970,7 @@ msgstr "Semana"
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Week numbers"
-msgstr "Números de la semana"
+msgstr "Números de semana"
 
 #. module: web
 #. odoo-javascript
@@ -7949,7 +8002,7 @@ msgstr "Widget:"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_form_controller.js:0
 #, python-format
 msgid "Would you like to save your changes?"
-msgstr "¿Le gustaría guardar sus cambios?"
+msgstr "¿Desea guardar sus cambios?"
 
 #. module: web
 #. odoo-javascript
@@ -8267,7 +8320,7 @@ msgstr "actor"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #. module: web
 #. odoo-javascript
@@ -16456,7 +16509,7 @@ msgstr "fuente "
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "fountain pen"
-msgstr "pluma fuente "
+msgstr "bolígrafo fuente "
 
 #. module: web
 #. odoo-javascript
@@ -20440,7 +20493,7 @@ msgstr "cerrade con llave"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "locked with pen"
-msgstr "cerrado con pluma"
+msgstr "cerrado con bolígrafo"
 
 #. module: web
 #. odoo-javascript
@@ -30390,7 +30443,7 @@ msgstr "casilla con marca de verificación "
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "ticket"
-msgstr "tíquet"
+msgstr "ticket"
 
 #. module: web
 #. odoo-javascript

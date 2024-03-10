@@ -109,7 +109,7 @@ class IrAttachment(models.Model):
         full_path = self._full_path(fname)
         dirname = os.path.dirname(full_path)
         if not os.path.isdir(dirname):
-            os.makedirs(dirname)
+            os.makedirs(dirname, exist_ok=True)
         # prevent sha-1 collision
         if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
             raise UserError(_("The attachment collides with an existing file."))
@@ -739,4 +739,4 @@ class IrAttachment(models.Model):
             ('res_id', '=', 0),
             ('create_uid', '=', SUPERUSER_ID),
         ]).unlink()
-        self.clear_caches()
+        self.env.registry.clear_cache('assets')

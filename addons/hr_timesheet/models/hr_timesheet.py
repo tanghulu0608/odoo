@@ -11,13 +11,16 @@ from odoo.osv import expression
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    @api.model
-    def _get_favorite_project_id(self, employee_id=False):
+    def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id
-        last_timesheet_ids = self.search([
+        return [
             ('employee_id', '=', employee_id),
             ('project_id', '!=', False),
-        ], limit=5)
+        ]
+
+    @api.model
+    def _get_favorite_project_id(self, employee_id=False):
+        last_timesheet_ids = self.search(self._get_favorite_project_id_domain(employee_id), limit=5)
         if len(last_timesheet_ids.project_id) == 1:
             return last_timesheet_ids.project_id.id
         return False
@@ -369,11 +372,9 @@ class AccountAnalyticLine(models.Model):
                     raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
                 vals['account_id'] = account.id
                 vals['company_id'] = account.company_id.id or data.company_id.id
-            if not vals.get('partner_id'):
-                vals['partner_id'] = data.partner_id.id
             if not vals.get('product_uom_id'):
                 company = account_per_id[vals['account_id']].company_id or data.company_id
-                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id)
+                vals['product_uom_id'] = uom_id_per_company.get(company.id, company.project_time_mode_id.id) or self.env.company.project_time_mode_id.id
         return vals_list
 
     def _timesheet_postprocess(self, values):

@@ -67,7 +67,7 @@ class AccountAccount(models.Model):
         ],
         string="Type", tracking=True,
         required=True,
-        compute='_compute_account_type', store=True, readonly=False, precompute=True,
+        compute='_compute_account_type', store=True, readonly=False, precompute=True, index=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."
     )
     include_initial_balance = fields.Boolean(string="Bring Accounts Balance Forward",
@@ -671,7 +671,7 @@ class AccountAccount(models.Model):
             container = {'records': self.env['account.move']}
             manager = self.env['account.move']._check_balanced(container)
         else:
-            manager = nullcontext
+            manager = nullcontext()
         with manager:
             rslt = super(AccountAccount, self).load(fields, data)
             if importing:
@@ -904,6 +904,11 @@ class AccountGroup(models.Model):
         if vals.get('code_prefix_end') and 'code_prefix_start' in vals and not vals['code_prefix_start']:
             del vals['code_prefix_start']
         return vals
+
+    @api.constrains('parent_id')
+    def _check_parent_not_circular(self):
+        if not self._check_recursion():
+            raise ValidationError(_("You cannot create recursive groups."))
 
     @api.model_create_multi
     def create(self, vals_list):

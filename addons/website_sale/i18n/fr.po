@@ -738,7 +738,7 @@ msgstr "Adresse"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_autocomplete
 msgid "Address Autocomplete"
-msgstr "Autocomplétion de l'adresse"
+msgstr "Autocomplétion des adresses"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2278,7 +2278,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #, python-format
 msgid "Item(s) added to your cart"
-msgstr ""
+msgstr "Article(s) ajouté(s) à votre panier"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -2458,7 +2458,7 @@ msgstr "Obligatoire (pas de paiement en tant qu'invité)"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__medium
 msgid "Medium"
-msgstr "Moyenne"
+msgstr "Médium"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_has_error
