@@ -37,7 +37,7 @@ class HrEmployeePrivate(models.Model):
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False)
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True, readonly=False, ondelete='restrict')
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     resource_calendar_id = fields.Many2one(tracking=True)
@@ -285,6 +285,14 @@ class HrEmployeePrivate(models.Model):
         return self.env['hr.employee.public'].get_view(view_id, view_type, **options)
 
     @api.model
+    def get_views(self, views, options=None):
+        if self.check_access_rights('read', raise_exception=False):
+            return super().get_views(views, options)
+        res = self.env['hr.employee.public'].get_views(views, options)
+        res['models'].update({'hr.employee': res['models']['hr.employee.public']})
+        return res
+
+    @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         """
             We override the _search because it is the method that checks the access rights
@@ -520,6 +528,14 @@ class HrEmployeePrivate(models.Model):
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz() for emp in self}
 
+    def _employee_attendance_intervals(self, start, stop, lunch=False):
+        self.ensure_one()
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        if not lunch:
+            return self._get_expected_attendances(start, stop)
+        else:
+            return calendar._attendance_intervals_batch(start, stop, self.resource_id, lunch=True)[self.resource_id.id]
+
     def _get_expected_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None
@@ -529,8 +545,9 @@ class HrEmployeePrivate(models.Model):
                                 date_to,
                                 tz=employee_timezone,
                                 resources=self.resource_id,
+                                compute_leaves=True,
                                 domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
-        return calendar._get_attendance_intervals_days_data(calendar_intervals)
+        return calendar_intervals
 
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()

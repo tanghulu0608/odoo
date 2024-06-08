@@ -146,7 +146,7 @@ class PaymentTransaction(models.Model):
                     )
 
         payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == self.provider_id._get_code())
+            .filtered(lambda l: l.payment_provider_id == self.provider_id)
         payment_values = {
             'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
@@ -196,15 +196,15 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        self = self.with_user(SUPERUSER_ID)  # Log messages as 'OdooBot'
+        author = self.env.user.partner_id if self.env.uid == SUPERUSER_ID else self.partner_id
         if self.source_transaction_id:
             for invoice in self.source_transaction_id.invoice_ids:
-                invoice.message_post(body=message)
+                invoice.message_post(body=message, author_id=author.id)
             payment_id = self.source_transaction_id.payment_id
             if payment_id:
-                payment_id.message_post(body=message)
+                payment_id.message_post(body=message, author_id=author.id)
         for invoice in self.invoice_ids:
-            invoice.message_post(body=message)
+            invoice.message_post(body=message, author_id=author.id)
 
     #=== BUSINESS METHODS - POST-PROCESSING ===#
 

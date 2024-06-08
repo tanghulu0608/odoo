@@ -39,7 +39,7 @@ class Applicant(models.Model):
         inverse='_inverse_partner_email', store=True, index='trigram')
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
     probability = fields.Float("Probability")
-    partner_id = fields.Many2one('res.partner', "Contact", copy=False)
+    partner_id = fields.Many2one('res.partner', "Contact", copy=False, index='btree_not_null')
     create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
@@ -320,16 +320,16 @@ class Applicant(models.Model):
             if not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(_('You must define a Contact Name for this applicant.'))
-                applicant.partner_id = self.env['res.partner'].create({
-                    'is_company': False,
-                    'name': applicant.partner_name,
-                    'email': applicant.email_from,
-                    'mobile': applicant.partner_mobile,
-                    'phone': applicant.partner_phone,
-                })
-            else:
+                applicant.partner_id = self.env['res.partner'].find_or_create(applicant.email_from)
+            if applicant.partner_name and not applicant.partner_id.name:
+                applicant.partner_id.name = applicant.partner_name
+            if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
+                # change email on a partner will trigger other heavy code, so avoid to change the email when
+                # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
                 applicant.partner_id.email = applicant.email_from
+            if applicant.partner_mobile:
                 applicant.partner_id.mobile = applicant.partner_mobile
+            if applicant.partner_phone:
                 applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends('partner_phone')
@@ -413,7 +413,8 @@ class Applicant(models.Model):
         return res
 
     def _email_is_blacklisted(self, mail):
-        return mail in [m.strip() for m in self.env['ir.config_parameter'].sudo().get_param('hr_recruitment.blacklisted_emails', '').split(',')]
+        normalized_mail = tools.email_normalize(mail)
+        return normalized_mail in [m.strip() for m in self.env['ir.config_parameter'].sudo().get_param('hr_recruitment.blacklisted_emails', '').split(',')]
 
     def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
@@ -445,17 +446,6 @@ class Applicant(models.Model):
             and not self.user_has_groups('hr_recruitment.group_hr_recruitment_user'):
             view_id = self.env.ref('hr_recruitment.hr_applicant_view_form_interviewer').id
         return super().get_view(view_id, view_type, **options)
-
-    def _notify_get_recipients(self, message, msg_vals, **kwargs):
-        """
-            Do not notify members of the Recruitment Interviewer group that are not part of
-            Recruitment User group as well, as this
-            might leak some data they shouldn't have access to.
-        """
-        recipients = super()._notify_get_recipients(message, msg_vals, **kwargs)
-        interviewer_group = self.env.ref('hr_recruitment.group_hr_recruitment_interviewer').id
-        user_group = self.env.ref('hr_recruitment.group_hr_recruitment_user').id
-        return [recipient for recipient in recipients if not (interviewer_group in recipient['groups'] and user_group not in recipient['groups'])]
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
@@ -610,17 +600,21 @@ class Applicant(models.Model):
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'partner_name': partner_name or email_from_normalized,
-            'partner_id': msg.get('author_id', False),
         }
         if msg.get('from') and not self._email_is_blacklisted(msg.get('from')):
             defaults['email_from'] = msg.get('from')
+            defaults['partner_id'] = msg.get('author_id', False)
+        if msg.get('email_from') and self._email_is_blacklisted(msg.get('email_from')):
+            del msg['email_from']
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         if stage and stage.id:
             defaults['stage_id'] = stage.id
         if custom_values:
             defaults.update(custom_values)
-        return super(Applicant, self).message_new(msg, custom_values=defaults)
+        res = super().message_new(msg, custom_values=defaults)
+        res._compute_partner_phone_email()
+        return res
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:

@@ -29,6 +29,7 @@ PAYMENT_METHODS_MAPPING = {
     'sepa_direct_debit': 'sepa_debit',
     'afterpay': 'afterpay_clearpay',
     'clearpay': 'afterpay_clearpay',
+    'mobile_pay': 'mobilepay',
     'unknown': 'card',  # For express checkout.
 }
 
@@ -105,4 +106,16 @@ SUPPORTED_COUNTRIES = {
     'SK',
     'TH',  # Beta
     'US',
+}
+
+# Businesses in supported outlying territories should register for a Stripe account with the parent
+# territory selected as the Country.
+# See https://support.stripe.com/questions/stripe-availability-for-outlying-territories-of-supported-countries.
+COUNTRY_MAPPING = {
+    'MQ': 'FR',  # Martinique
+    'GP': 'FR',  # Guadeloupe
+    'GF': 'FR',  # French Guiana
+    'RE': 'FR',  # Réunion
+    'YT': 'FR',  # Mayotte
+    'MF': 'FR',  # Saint-Martin
 }

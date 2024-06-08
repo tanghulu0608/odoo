@@ -88,7 +88,7 @@ class AccountMoveLine(models.Model):
         string='Account',
         compute='_compute_account_id', store=True, readonly=False, precompute=True,
         inverse='_inverse_account_id',
-        index=True,
+        index=False,  # covered by account_move_line_account_id_date_idx defined in init()
         auto_join=True,
         ondelete="cascade",
         domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
@@ -604,7 +604,7 @@ class AccountMoveLine(models.Model):
                     or accounts.get(('res.company', move.company_id.id, account_type))
                 )
                 if line.move_id.fiscal_position_id:
-                    account_id = self.move_id.fiscal_position_id.map_account(self.env['account.account'].browse(account_id))
+                    account_id = line.move_id.fiscal_position_id.map_account(self.env['account.account'].browse(account_id))
                 line.account_id = account_id
 
         product_lines = self.filtered(lambda line: line.display_type == 'product' and line.move_id.is_invoice(True))
@@ -895,7 +895,7 @@ class AccountMoveLine(models.Model):
             tax_ids = False if self.env.context.get('skip_computed_taxes') else self.account_id.tax_ids
 
         if self.company_id and tax_ids:
-            tax_ids = tax_ids.filtered_domain(company_domain)
+            tax_ids = tax_ids._filter_taxes_by_company(self.company_id)
 
         if tax_ids and self.move_id.fiscal_position_id:
             tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
@@ -1432,6 +1432,16 @@ class AccountMoveLine(models.Model):
         # Match exactly how the ORM converts domains to ensure the query planner uses it
         create_index(self._cr, 'account_move_line__unreconciled_index', 'account_move_line', ['account_id', 'partner_id'],
                      where="(reconciled IS NULL OR reconciled = false OR reconciled IS NOT true) AND parent_state = 'posted'")
+        create_index(self.env.cr,
+                     indexname='account_move_line_journal_id_neg_amnt_residual_idx',
+                     tablename='account_move_line',
+                     expressions=['journal_id'],
+                     where="amount_residual < 0 AND parent_state = 'posted'")
+        # covers the standard index on account_id
+        create_index(self.env.cr,
+                     indexname='account_move_line_account_id_date_idx',
+                     tablename='account_move_line',
+                     expressions=['account_id', 'date'])
         super().init()
 
     def default_get(self, fields_list):
@@ -1473,6 +1483,10 @@ class AccountMoveLine(models.Model):
                 res_vals.pop('balance', 0)
                 res_vals.pop('debit', 0)
                 res_vals.pop('credit', 0)
+
+            if res_vals['display_type'] in ('line_section', 'line_note'):
+                res_vals.pop('account_id')
+
         return result_vals_list
 
     @contextmanager
@@ -1572,9 +1586,8 @@ class AccountMoveLine(models.Model):
                 line_to_write -= line
                 continue
 
-            if line.parent_state == 'posted':
-                if any(key in vals for key in ('tax_ids', 'tax_line_id')):
-                    raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
+            if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in ('tax_ids', 'tax_line_id')):
+                raise UserError(_('You cannot modify the taxes related to a posted journal item, you should reset the journal entry to draft to do so.'))
 
             # Check the lock date.
             if line.parent_state == 'posted' and any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['fiscal']):
@@ -1776,6 +1789,8 @@ class AccountMoveLine(models.Model):
             return aml.move_id.payment_id or aml.move_id.statement_line_id
 
         def get_odoo_rate(aml, other_aml, currency):
+            if forced_rate := self._context.get('forced_rate_from_register_payment'):
+                return forced_rate
             if other_aml and not is_payment(aml) and is_payment(other_aml):
                 return get_accounting_rate(other_aml, currency)
             if aml.move_id.is_invoice(include_receipts=True):
@@ -1785,6 +1800,8 @@ class AccountMoveLine(models.Model):
             return currency._get_conversion_rate(aml.company_currency_id, currency, aml.company_id, exchange_rate_date)
 
         def get_accounting_rate(aml, currency):
+            if forced_rate := self._context.get('forced_rate_from_register_payment'):
+                return forced_rate
             balance = aml._get_reconciliation_aml_field_value('balance', shadowed_aml_values)
             amount_currency = aml._get_reconciliation_aml_field_value('amount_currency', shadowed_aml_values)
             if not aml.company_currency_id.is_zero(balance) and not currency.is_zero(amount_currency):
@@ -2607,7 +2624,7 @@ class AccountMoveLine(models.Model):
         journal = company.currency_exchange_journal_id
         expense_exchange_account = company.expense_currency_exchange_account_id
         income_exchange_account = company.income_currency_exchange_account_id
-        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date
+        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date if journal else date.min
 
         move_vals = {
             'move_type': 'entry',

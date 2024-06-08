@@ -27,7 +27,7 @@ class ReportBomStructure(models.AbstractModel):
         components_qty_to_produce = defaultdict(lambda: 0)
         components_qty_available = {}
         for comp in bom_data.get('components', []):
-            if comp['product'].type != 'product' or float_is_zero(comp['base_bom_line_qty'], precision_digits=comp['uom'].rounding):
+            if comp['product'].type != 'product' or float_is_zero(comp['base_bom_line_qty'], precision_rounding=comp['uom'].rounding):
                 continue
             components_qty_to_produce[comp['product_id']] += comp['base_bom_line_qty']
             components_qty_available[comp['product_id']] = comp['free_to_manufacture_qty']
@@ -573,12 +573,19 @@ class ReportBomStructure(models.AbstractModel):
         found_rules = []
         if self._need_special_rules(product_info, parent_bom, parent_product):
             found_rules = self._find_special_rules(product, product_info, parent_bom, parent_product)
+            if found_rules and not self._is_resupply_rules(found_rules, bom):
+                # We only want to show the effective resupply (i.e. a form of manufacture or buy)
+                found_rules = []
         if not found_rules:
             found_rules = product._get_rules_from_location(warehouse.lot_stock_id)
         if not found_rules:
             return {}
         rules_delay = sum(rule.delay for rule in found_rules)
         return self.with_context(parent_bom=parent_bom)._format_route_info(found_rules, rules_delay, warehouse, product, bom, quantity)
+
+    @api.model
+    def _is_resupply_rules(self, rules, bom):
+        return bom and any(rule.action == 'manufacture' for rule in rules)
 
     @api.model
     def _need_special_rules(self, product_info, parent_bom=False, parent_product=False):

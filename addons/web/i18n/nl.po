@@ -3,10 +3,11 @@
 # 	* web
 # 
 # Translators:
-# Wil Odoo, 2023
 # Jolien De Paepe, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -667,7 +668,7 @@ msgstr "<span>BTW </span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Unit Price</span>"
-msgstr "<span>Prijs</span>"
+msgstr "<span>Eenheidsprijs</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1050,6 +1051,15 @@ msgstr "Context van qweb-richtlijn toevoegen"
 #, python-format
 msgid "Add start date"
 msgstr "Startdatum toevoegen"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Add to Favorites"
+msgstr "Toevoegen aan favorieten"
 
 #. module: web
 #. odoo-javascript
@@ -1818,12 +1828,12 @@ msgstr "Klikbaar"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
@@ -3560,8 +3570,8 @@ msgstr "ILY"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "ISO-geformateerde datum (bijv. \"2018-12-31\") of \"vandaag\"."
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr "ISO-geformateerde datum (bijv. \"2018-12-31\") of \"%s\"."
 
 #. module: web
 #. odoo-javascript
@@ -4050,7 +4060,7 @@ msgstr "Japanse \"geheim\" knop"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Japanese “service charge” button"
-msgstr "Japanse \"servicekosten”knop"
+msgstr "Japanse “servicekosten” knop"
 
 #. module: web
 #. odoo-javascript
@@ -5070,6 +5080,13 @@ msgstr "Niet actieve status, klik om te wijzigen"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#, python-format
+msgid "Number of files"
+msgstr "Aantal bestanden"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
@@ -5593,7 +5610,7 @@ msgstr "Klik eerst op de \"Opslaan\" knop"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Please complete your properties before adding a new one"
-msgstr "Voltooi je eigendommen voordat je een nieuwe toevoegt"
+msgstr "Voltooi je eigenschappen voordat je een nieuwe toevoegt"
 
 #. module: web
 #. odoo-javascript
@@ -5954,13 +5971,13 @@ msgstr "Alleen lezen:"
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 #, python-format
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
 "Klaar om je record in het niets te laten verdwijnen? Weet je het zeker?\n"
-"Deze zal voor altijd verdwenen zijn!\n"
+"Het zal voor altijd verdwenen zijn!\n"
 "\n"
 "Denk twee keer na voordat je op de knop 'Verwijderen' klikt!"
 
@@ -6089,6 +6106,15 @@ msgstr "Eigenschap verwijderen"
 #, python-format
 msgid "Remove field"
 msgstr "Verwijder veld"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Remove from Favorites"
+msgstr "Verwijderen uit favorieten"
 
 #. module: web
 #. odoo-javascript
@@ -6907,6 +6933,7 @@ msgstr "T-shirt"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
@@ -7108,19 +7135,6 @@ msgstr ""
 "ontwikkelaar die voor de hele database moet worden hersteld voordat je "
 "verder kan werken. Raadpleeg de browserconsole of serverlogboeken voor meer "
 "informatie."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
-#, python-format
-msgid ""
-"The style compilation failed, see the error below. This is an administrator "
-"or developer error that must be fixed for the entire database before "
-"continuing working."
-msgstr ""
-"De stijlcompilatie is mislukt, zie onderstaande fout. Dit is een fout van de"
-" beheerder of de ontwikkelaar die voor de hele database moet worden hersteld"
-" voordat je verder kan werken."
 
 #. module: web
 #. odoo-python
@@ -8603,6 +8617,7 @@ msgstr "anker"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 #, python-format
@@ -33581,6 +33596,13 @@ msgstr "zombie"
 #, python-format
 msgid "— press"
 msgstr "— druk"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "— zoeken"
 
 #. module: web
 #. odoo-javascript

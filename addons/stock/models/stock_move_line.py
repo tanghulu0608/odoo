@@ -3,7 +3,7 @@
 
 from collections import Counter, defaultdict
 
-from odoo import _, api, fields, tools, models
+from odoo import _, api, fields, tools, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet, groupby
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
@@ -56,7 +56,7 @@ class StockMoveLine(models.Model):
     date = fields.Datetime('Date', default=fields.Datetime.now, required=True)
     owner_id = fields.Many2one(
         'res.partner', 'From Owner',
-        check_company=True,
+        check_company=True, index='btree_not_null',
         help="When validating the transfer, the products will be taken from this owner.")
     location_id = fields.Many2one(
         'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
@@ -142,9 +142,8 @@ class StockMoveLine(models.Model):
         for record in self:
             if not record.quant_id or record.quantity:
                 continue
-            origin_move = record.move_id._origin
-            if float_compare(record.move_id.product_qty, origin_move.quantity, record.move_id.product_uom.rounding) > 0:
-                record.quantity = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - origin_move.quantity))
+            if float_compare(record.move_id.product_qty, record.quantity, precision_rounding=record.move_id.product_uom.rounding) > 0:
+                record.quantity = max(0, min(record.quant_id.available_quantity, record.move_id.product_qty - record.move_id.quantity))
             else:
                 record.quantity = max(0, record.quant_id.available_quantity)
 
@@ -244,17 +243,17 @@ class StockMoveLine(models.Model):
         self = self.with_context(do_not_unreserve=True)
         for package, smls in groupby(self, lambda sml: sml.result_package_id):
             smls = self.env['stock.move.line'].concat(*smls)
-            excluded_smls = smls
+            excluded_smls = set(smls.ids)
             if package.package_type_id:
-                best_loc = smls.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids, products=smls.product_id)._get_putaway_strategy(self.env['product.product'], package=package)
+                best_loc = smls.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls, products=smls.product_id)._get_putaway_strategy(self.env['product.product'], package=package)
                 smls.location_dest_id = smls.package_level_id.location_dest_id = best_loc
             elif package:
                 used_locations = set()
                 for sml in smls:
                     if len(used_locations) > 1:
                         break
-                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(sml.product_id, quantity=sml.quantity)
-                    excluded_smls -= sml
+                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(sml.product_id, quantity=sml.quantity)
+                    excluded_smls.discard(sml.id)
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:
                     smls.location_dest_id = smls.move_id.location_dest_id
@@ -262,19 +261,19 @@ class StockMoveLine(models.Model):
                     smls.package_level_id.location_dest_id = smls.location_dest_id
             else:
                 for sml in smls:
-                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls.ids)._get_putaway_strategy(
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls)._get_putaway_strategy(
                         sml.product_id, quantity=sml.quantity, packaging=sml.move_id.product_packaging_id,
                     )
                     if putaway_loc_id != sml.location_dest_id:
                         sml.location_dest_id = putaway_loc_id
-                    excluded_smls -= sml
+                    excluded_smls.discard(sml.id)
 
     def _get_default_dest_location(self):
         if not self.user_has_groups('stock.group_stock_storage_categories'):
             return self.location_dest_id[:1]
         if self.env.context.get('default_location_dest_id'):
             return self.env['stock.location'].browse([self.env.context.get('default_location_dest_id')])
-        return (self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id)[0]
+        return (self.move_id.location_dest_id or self.picking_id.location_dest_id or self.location_dest_id)[:1]
 
     def _get_putaway_additional_qty(self):
         addtional_qty = {}
@@ -408,9 +407,10 @@ class StockMoveLine(models.Model):
             for ml in self:
                 if ml.product_id.type != 'product' or ml.state == 'done':
                     continue
-                if 'quantity' in vals:
-                    new_reserved_qty = ml.product_uom_id._compute_quantity(
-                        vals['quantity'], ml.product_id.uom_id, rounding_method='HALF-UP')
+                if 'quantity' in vals or 'product_uom_id' in vals:
+                    new_ml_uom = updates.get('product_uom_id', ml.product_uom_id)
+                    new_reserved_qty = new_ml_uom._compute_quantity(
+                        vals.get('quantity', ml.quantity), ml.product_id.uom_id, rounding_method='HALF-UP')
                     # Make sure `reserved_uom_qty` is not negative.
                     if float_compare(new_reserved_qty, 0, precision_rounding=ml.product_id.uom_id.rounding) < 0:
                         raise UserError(_('Reserving a negative quantity is not allowed.'))
@@ -428,7 +428,7 @@ class StockMoveLine(models.Model):
                         lot=updates.get('lot_id', ml.lot_id), package=updates.get('package_id', ml.package_id),
                         owner=updates.get('owner_id', ml.owner_id))
 
-                if 'quantity' in vals and vals['quantity'] != ml.quantity:
+                if ('quantity' in vals and vals['quantity'] != ml.quantity) or 'product_uom_id' in vals:
                     moves_to_recompute_state |= ml.move_id
 
         # When editing a done move line, the reserved availability of a potential chained move is impacted. Take care of running again `_action_assign` on the concerned moves.
@@ -518,6 +518,8 @@ class StockMoveLine(models.Model):
         ml_ids_tracked_without_lot = OrderedSet()
         ml_ids_to_delete = OrderedSet()
         ml_ids_to_create_lot = OrderedSet()
+        ml_ids_to_check = defaultdict(OrderedSet)
+
         for ml in self:
             # Check here if `ml.quantity` respects the rounding of `ml.product_uom_id`.
             uom_qty = float_round(ml.quantity, precision_rounding=ml.product_uom_id.rounding, rounding_method='HALF-UP')
@@ -529,48 +531,54 @@ class StockMoveLine(models.Model):
                                   'rounding precision of your unit of measure.',
                                   ml.product_id.display_name, ml.product_uom_id.name))
 
-            quantity_float_compared = float_compare(ml.quantity, 0, precision_rounding=ml.product_uom_id.rounding)
-            if quantity_float_compared > 0:
-                if ml.product_id.tracking != 'none':
-                    picking_type_id = ml.move_id.picking_type_id
-                    if picking_type_id:
-                        if picking_type_id.use_create_lots:
-                            # If a picking type is linked, we may have to create a production lot on
-                            # the fly before assigning it to the move line if the user checked both
-                            # `use_create_lots` and `use_existing_lots`.
-                            if ml.lot_name and not ml.lot_id:
-                                lot = self.env['stock.lot'].search([
-                                    ('company_id', '=', ml.company_id.id),
-                                    ('product_id', '=', ml.product_id.id),
-                                    ('name', '=', ml.lot_name),
-                                ], limit=1)
-                                if lot:
-                                    ml.lot_id = lot.id
-                                else:
-                                    ml_ids_to_create_lot.add(ml.id)
-                        elif not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots:
-                            # If the user disabled both `use_create_lots` and `use_existing_lots`
-                            # checkboxes on the picking type, he's allowed to enter tracked
-                            # products without a `lot_id`.
-                            continue
-                    elif ml.is_inventory:
-                        # If an inventory adjustment is linked, the user is allowed to enter
-                        # tracked products without a `lot_id`.
-                        continue
+            qty_done_float_compared = float_compare(ml.quantity, 0, precision_rounding=ml.product_uom_id.rounding)
+            if qty_done_float_compared > 0:
+                if ml.product_id.tracking == 'none':
+                    continue
+                picking_type_id = ml.move_id.picking_type_id
+                if not picking_type_id and not ml.is_inventory and not ml.lot_id:
+                    ml_ids_tracked_without_lot.add(ml.id)
+                    continue
+                if not picking_type_id or ml.lot_id or (not picking_type_id.use_create_lots and not picking_type_id.use_existing_lots):
+                    # If the user disabled both `use_create_lots` and `use_existing_lots`
+                    # checkboxes on the picking type, he's allowed to enter tracked
+                    # products without a `lot_id`.
+                    continue
+                if picking_type_id.use_create_lots:
+                    ml_ids_to_check[(ml.product_id, ml.company_id)].add(ml.id)
+                else:
+                    ml_ids_tracked_without_lot.add(ml.id)
 
-                    if not ml.lot_id and ml.id not in ml_ids_to_create_lot:
-                        ml_ids_tracked_without_lot.add(ml.id)
-            elif quantity_float_compared < 0:
+            elif qty_done_float_compared < 0:
                 raise UserError(_('No negative quantities allowed'))
             elif not ml.is_inventory:
                 ml_ids_to_delete.add(ml.id)
+
+        for (product, company), mls in ml_ids_to_check.items():
+            mls = self.env['stock.move.line'].browse(mls)
+            lots = self.env['stock.lot'].search([
+                ('company_id', '=', company.id),
+                ('product_id', '=', product.id),
+                ('name', 'in', mls.mapped('lot_name')),
+            ])
+            lots = {lot.name: lot for lot in lots}
+            for ml in mls:
+                lot = lots.get(ml.lot_name)
+                if lot:
+                    ml.lot_id = lot.id
+                elif ml.lot_name:
+                    ml_ids_to_create_lot.add(ml.id)
+                else:
+                    ml_ids_tracked_without_lot.add(ml.id)
+
 
         if ml_ids_tracked_without_lot:
             mls_tracked_without_lot = self.env['stock.move.line'].browse(ml_ids_tracked_without_lot)
             raise UserError(_('You need to supply a Lot/Serial Number for product: \n - ') +
                               '\n - '.join(mls_tracked_without_lot.mapped('product_id.display_name')))
-        ml_to_create_lot = self.env['stock.move.line'].browse(ml_ids_to_create_lot)
-        ml_to_create_lot._create_and_assign_production_lot()
+
+        if ml_ids_to_create_lot:
+            self.env['stock.move.line'].browse(ml_ids_to_create_lot)._create_and_assign_production_lot()
 
         mls_to_delete = self.env['stock.move.line'].browse(ml_ids_to_delete)
         mls_to_delete.unlink()
@@ -741,8 +749,42 @@ class StockMoveLine(models.Model):
                 candidate.quantity -= candidate.product_id.uom_id._compute_quantity(quantity, candidate.product_uom_id, rounding_method='HALF-UP')
                 break
 
-        self.env['stock.move.line'].browse(to_unlink_candidate_ids).unlink()
+        move_line_to_unlink = self.env['stock.move.line'].browse(to_unlink_candidate_ids)
+        if self.env['ir.config_parameter'].sudo().get_param('stock.break_mto'):
+            for m in (move_line_to_unlink.move_id | move_to_reassign):
+                m.write({
+                    'procure_method': 'make_to_stock',
+                    'move_orig_ids': [Command.clear()]
+                })
+        move_line_to_unlink.unlink()
         move_to_reassign._action_assign()
+
+    def _get_aggregated_properties(self, move_line=False, move=False):
+        move = move or move_line.move_id
+        uom = move.product_uom or move_line.product_uom_id
+        name = move.product_id.display_name
+        description = move.description_picking
+        if description == name or description == move.product_id.name:
+            description = False
+        product = move.product_id
+        line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{move.product_packaging_id or ""}'
+        return {
+            'line_key': line_key,
+            'name': name,
+            'description': description,
+            'product_uom': uom,
+            'move': move,
+            'packaging': move.product_packaging_id,
+        }
+
+    @api.model
+    def _compute_packaging_qtys(self, aggregated_move_lines):
+        # Needs to be computed after aggregation of line qtys
+        for line in aggregated_move_lines.values():
+            if line['packaging']:
+                line['packaging_qty'] = line['packaging']._compute_qty(line['qty_ordered'], line['product_uom'])
+                line['packaging_quantity'] = line['packaging']._compute_qty(line['quantity'], line['product_uom'])
+        return aggregated_move_lines
 
     def _get_aggregated_product_quantities(self, **kwargs):
         """ Returns a dictionary of products (key = id+name+description+uom+packaging) and corresponding values of interest.
@@ -756,24 +798,6 @@ class StockMoveLine(models.Model):
         """
         aggregated_move_lines = {}
 
-        def get_aggregated_properties(move_line=False, move=False):
-            move = move or move_line.move_id
-            uom = move.product_uom or move_line.product_uom_id
-            name = move.product_id.display_name
-            description = move.description_picking
-            if description == name or description == move.product_id.name:
-                description = False
-            product = move.product_id
-            line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{move.product_packaging_id or ""}'
-            return (line_key, name, description, uom, move.product_packaging_id)
-
-        def _compute_packaging_qtys(aggregated_move_lines):
-            # Needs to be computed after aggregation of line qtys
-            for line in aggregated_move_lines.values():
-                if line['packaging']:
-                    line['packaging_qty'] = line['packaging']._compute_qty(line['qty_ordered'], line['product_uom'])
-                    line['packaging_quantity'] = line['packaging']._compute_qty(line['quantity'], line['product_uom'])
-            return aggregated_move_lines
 
         # Loops to get backorders, backorders' backorders, and so and so...
         backorders = self.env['stock.picking']
@@ -785,7 +809,8 @@ class StockMoveLine(models.Model):
         for move_line in self:
             if kwargs.get('except_package') and move_line.result_package_id:
                 continue
-            line_key, name, description, uom, packaging = get_aggregated_properties(move_line=move_line)
+            aggregated_properties = self._get_aggregated_properties(move_line=move_line)
+            line_key, uom = aggregated_properties['line_key'], aggregated_properties['product_uom']
             quantity = move_line.product_uom_id._compute_quantity(move_line.quantity, uom)
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
@@ -794,22 +819,19 @@ class StockMoveLine(models.Model):
                     # Filters on the aggregation key (product, description and uom) to add the
                     # quantities delayed to backorders to retrieve the original ordered qty.
                     following_move_lines = backorders.move_line_ids.filtered(
-                        lambda ml: get_aggregated_properties(move=ml.move_id)[0] == line_key
+                        lambda ml: self._get_aggregated_properties(move=ml.move_id)['line_key'] == line_key
                     )
                     qty_ordered += sum(following_move_lines.move_id.mapped('product_uom_qty'))
                     # Remove the done quantities of the other move lines of the stock move
                     previous_move_lines = move_line.move_id.move_line_ids.filtered(
-                        lambda ml: get_aggregated_properties(move=ml.move_id)[0] == line_key and ml.id != move_line.id
+                        lambda ml: self._get_aggregated_properties(move=ml.move_id)['line_key'] == line_key and ml.id != move_line.id
                     )
                     qty_ordered -= sum([m.product_uom_id._compute_quantity(m.quantity, uom) for m in previous_move_lines])
                 aggregated_move_lines[line_key] = {
-                    'name': name,
-                    'description': description,
+                    **aggregated_properties,
                     'quantity': quantity,
                     'qty_ordered': qty_ordered or quantity,
-                    'product_uom': uom,
                     'product': move_line.product_id,
-                    'packaging': packaging,
                 }
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] += quantity
@@ -818,29 +840,27 @@ class StockMoveLine(models.Model):
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
         if kwargs.get('strict'):
-            return _compute_packaging_qtys(aggregated_move_lines)
+            return self._compute_packaging_qtys(aggregated_move_lines)
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_ids:
             if not (empty_move.state == "cancel" and empty_move.product_uom_qty
                     and float_is_zero(empty_move.quantity, precision_rounding=empty_move.product_uom.rounding)):
                 continue
-            line_key, name, description, uom, packaging = get_aggregated_properties(move=empty_move)
+            aggregated_properties = self._get_aggregated_properties(move=empty_move)
+            line_key = aggregated_properties['line_key']
 
             if line_key not in aggregated_move_lines:
                 qty_ordered = empty_move.product_uom_qty
                 aggregated_move_lines[line_key] = {
-                    'name': name,
-                    'description': description,
+                    **aggregated_properties,
                     'quantity': False,
                     'qty_ordered': qty_ordered,
-                    'product_uom': uom,
                     'product': empty_move.product_id,
-                    'packaging': packaging,
                 }
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
 
-        return _compute_packaging_qtys(aggregated_move_lines)
+        return self._compute_packaging_qtys(aggregated_move_lines)
 
     def _compute_sale_price(self):
         # To Override
@@ -929,7 +949,7 @@ class StockMoveLine(models.Model):
         self = self.with_context(inventory_mode=False)
         processed_move_line = self.env['stock.move.line']
         for move_line in self:
-            if move_line.is_inventory and not float_is_zero(move_line.quantity, precision_digits=move_line.product_uom_id.rounding):
+            if move_line.is_inventory and not float_is_zero(move_line.quantity, precision_rounding=move_line.product_uom_id.rounding):
                 processed_move_line += move_line
                 move_vals.append(move_line._get_revert_inventory_move_values())
         if not processed_move_line:

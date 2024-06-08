@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# lhmflexerp <lhm@flexerp.dk>, 2024
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
@@ -27,6 +28,9 @@ msgid ""
 "title=\"The address is unknown on the partner\" invisible=\"not "
 "send_by_post_readonly\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle\" role=\"img\" aria-label=\"Warning\" "
+"title=\"The address is unknown on the partner\" invisible=\"not "
+"send_by_post_readonly\"/>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
@@ -65,7 +69,7 @@ msgstr ""
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_move
 msgid "Journal Entry"
-msgstr "Postering"
+msgstr "Journalbilag"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_move_send__send_by_post_readonly

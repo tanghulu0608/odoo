@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
+from collections import defaultdict
 from datetime import datetime
-from markupsafe import Markup
 from functools import partial
 from itertools import groupby
-from collections import defaultdict
+from markupsafe import Markup
+from random import randrange
 
+import base64
+import logging
 import psycopg2
 import pytz
 import re
@@ -15,7 +17,6 @@ from odoo import api, fields, models, tools, _
 from odoo.tools import float_is_zero, float_round, float_repr, float_compare
 from odoo.exceptions import ValidationError, UserError
 from odoo.osv.expression import AND
-import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -153,6 +154,10 @@ class PosOrder(models.Model):
         pos_order = pos_order.with_company(pos_order.company_id)
         self = self.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, pos_session, draft)
+
+        if pos_session._is_capture_system_activated():
+            pos_session._remove_capture_content(order)
+
         return pos_order._process_saved_order(draft)
 
     def _link_combo_items(self, order_vals):
@@ -538,7 +543,12 @@ class PosOrder(models.Model):
         }
 
     def _is_pos_order_paid(self):
-        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+        amount_total = self.amount_total
+        # If we are checking if a refund was paid and if it was a total refund, we take into account the amount paid on
+        # the original order. For a pertial refund, we take into account the value of the items returned.
+        if float_is_zero(self.refunded_order_ids.amount_total + amount_total, precision_rounding=self.currency_id.rounding):
+            amount_total = -self.refunded_order_ids.amount_paid
+        return float_is_zero(self._get_rounded_amount(amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount, force_round=False):
         # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
@@ -661,7 +671,7 @@ class PosOrder(models.Model):
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_id.address_get(['invoice'])['invoice'],
             'partner_bank_id': self._get_partner_bank_id(),
             'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id.id,
@@ -711,6 +721,7 @@ class PosOrder(models.Model):
                 'group_tax_id': None if tax_rep.tax_id.id == tax_line_vals['tax_id'] else tax_line_vals['tax_id'],
                 'amount_currency': amount_currency,
                 'balance': balance,
+                'tax_tag_invert': tax_rep.document_type != 'refund',
             })
             total_amount_currency += amount_currency
             total_balance += balance
@@ -729,13 +740,14 @@ class PosOrder(models.Model):
                 'tax_tag_ids': update_base_line_vals['tax_tag_ids'],
                 'amount_currency': amount_currency,
                 'balance': balance,
+                'tax_tag_invert': not base_line_vals['is_refund'],
             })
             total_amount_currency += amount_currency
             total_balance += balance
 
         # Cash rounding.
         cash_rounding = self.config_id.rounding_method
-        if self.config_id.cash_rounding and cash_rounding and not self.config_id.only_round_cash_method:
+        if self.config_id.cash_rounding and cash_rounding and (not self.config_id.only_round_cash_method or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
             amount_currency = cash_rounding.compute_difference(self.currency_id, total_amount_currency)
             if not self.currency_id.is_zero(amount_currency):
                 balance = company_currency.round(amount_currency * rate)
@@ -843,20 +855,23 @@ class PosOrder(models.Model):
         })
         reversal_entry.action_post()
 
-        # Reconcile the new receivable line with the lines from the payment move.
         pos_account_receivable = self.company_id.account_default_pos_receivable_account_id
-        reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id == pos_account_receivable)
-        payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id == pos_account_receivable)
-        (reversal_entry_receivable | payment_receivable).reconcile()
+        account_receivable = self.payment_ids.payment_method_id.receivable_account_id
+        reversal_entry_receivable = reversal_entry.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
+        payment_receivable = payment_moves.line_ids.filtered(lambda l: l.account_id in (pos_account_receivable + account_receivable))
+        lines_to_reconcile = defaultdict(lambda: self.env['account.move.line'])
+        for line in (reversal_entry_receivable | payment_receivable):
+            lines_to_reconcile[line.account_id] |= line
+        for line in lines_to_reconcile.values():
+            line.filtered(lambda l: not l.reconciled).reconcile()
 
     def action_pos_order_invoice(self):
         if len(self.company_id) > 1:
             raise UserError(_("You cannot invoice orders belonging to different companies."))
         self.write({'to_invoice': True})
-        res = self._generate_pos_order_invoice()
         if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing and self.session_id.state != 'closed':
             self._create_order_picking()
-        return res
+        return self._generate_pos_order_invoice()
 
     def _generate_pos_order_invoice(self):
         moves = self.env['account.move']
@@ -877,7 +892,7 @@ class PosOrder(models.Model):
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
             moves += new_move
-            payment_moves = order._apply_invoice_payments()
+            payment_moves = order._apply_invoice_payments(order.session_id.state == 'closed')
 
             # Send and Print
             if self.env.context.get('generate_pdf', True):
@@ -908,9 +923,9 @@ class PosOrder(models.Model):
     def action_pos_order_cancel(self):
         return self.write({'state': 'cancel'})
 
-    def _apply_invoice_payments(self):
+    def _apply_invoice_payments(self, is_reverse=False):
         receivable_account = self.env["res.partner"]._find_accounting_partner(self.partner_id).with_company(self.company_id).property_account_receivable_id
-        payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves()
+        payment_moves = self.payment_ids.sudo().with_company(self.company_id)._create_payment_moves(is_reverse)
         if receivable_account.reconcile:
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
@@ -932,8 +947,12 @@ class PosOrder(models.Model):
         :type draft: bool.
         :Returns: list -- list of db-ids for the created and updated orders.
         """
+        order_names = [order['data']['name'] for order in orders]
+        sync_token = randrange(100000000)  # Use to differentiate 2 parallels calls to this function in the logs
+        _logger.info("Start PoS synchronisation #%d for PoS orders references: %s (draft: %s)", sync_token, order_names, draft)
         order_ids = []
         for order in orders:
+            order_name = order['data']['name']
             existing_draft_order = None
 
             if 'server_id' in order['data'] and order['data']['server_id']:
@@ -945,16 +964,23 @@ class PosOrder(models.Model):
                     continue
 
             if not existing_draft_order:
-                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order['data']['name']), ('state', '=', 'draft')], limit=1)
+                existing_draft_order = self.env['pos.order'].search(['&', ('pos_reference', '=', order_name), ('state', '=', 'draft')], limit=1)
 
-            if existing_draft_order:
-                order_ids.append(self._process_order(order, draft, existing_draft_order))
-            else:
-                existing_orders = self.env['pos.order'].search([('pos_reference', '=', order['data']['name'])])
-                if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
-                    order_ids.append(self._process_order(order, draft, False))
-
-        return self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+            try:
+                if existing_draft_order:
+                    order_ids.append(self._process_order(order, draft, existing_draft_order))
+                else:
+                    existing_orders = self.env['pos.order'].search([('pos_reference', '=', order_name)])
+                    if all(not self._is_the_same_order(order['data'], existing_order) for existing_order in existing_orders):
+                        order_ids.append(self._process_order(order, draft, False))
+            except Exception as e:
+                _logger.exception("An error occurred when processing the PoS order %s", order_name)
+                pos_session = self.env['pos.session'].browse(order['data']['pos_session_id'])
+                pos_session._handle_order_process_fail(order, e, draft)
+                raise
+        res = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference', 'account_move'], load=False)
+        _logger.info("Finish PoS synchronisation #%d with result: %s", sync_token, res)
+        return res
 
     def _is_the_same_order(self, data, existing_order):
         received_payments = [(p[2]['amount'], p[2]['payment_method_id']) for p in data['statement_ids']]

@@ -21,6 +21,7 @@ class StockQuant(models.Model):
     _name = 'stock.quant'
     _description = 'Quants'
     _rec_name = 'product_id'
+    _rec_names_search = ['location_id', 'lot_id', 'package_id', 'owner_id']
 
     def _domain_location_id(self):
         if self.user_has_groups('stock.group_stock_user'):
@@ -57,7 +58,7 @@ class StockQuant(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location',
         domain=lambda self: self._domain_location_id(),
-        auto_join=True, ondelete='restrict', required=True, index=True, check_company=True)
+        auto_join=True, ondelete='restrict', required=True, index=True)
     warehouse_id = fields.Many2one('stock.warehouse', related='location_id.warehouse_id')
     storage_category_id = fields.Many2one(related='location_id.storage_category_id', store=True)
     cyclic_inventory_frequency = fields.Integer(related='location_id.cyclic_inventory_frequency')
@@ -73,7 +74,8 @@ class StockQuant(models.Model):
         help='The package containing this quant', ondelete='restrict', check_company=True, index=True)
     owner_id = fields.Many2one(
         'res.partner', 'Owner',
-        help='This is the owner of the quant', check_company=True)
+        help='This is the owner of the quant', check_company=True,
+        index='btree_not_null')
     quantity = fields.Float(
         'Quantity',
         help='Quantity of products in this quant, in the default unit of measure of the product',
@@ -354,10 +356,13 @@ class StockQuant(models.Model):
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_id.id),
             ('lot_id', '=', self.lot_id.id),
-            '|',
-                ('package_id', '=', self.package_id.id),
-                ('result_package_id', '=', self.package_id.id),
         ]
+        if self.package_id:
+            action['domain'] += [
+                '|',
+                    ('package_id', '=', self.package_id.id),
+                    ('result_package_id', '=', self.package_id.id),
+            ]
         action['context'] = literal_eval(action.get('context'))
         action['context']['search_default_product_id'] = self.product_id.id
         return action
@@ -810,6 +815,8 @@ class StockQuant(models.Model):
         else:
             availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
             for quant in quants:
+                if not quant.lot_id and strict and lot_id:
+                    continue
                 if not quant.lot_id:
                     availaible_quantities['untracked'] += quant.quantity - quant.reserved_quantity
                 else:
@@ -856,7 +863,7 @@ class StockQuant(models.Model):
             quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
 
         if self.product_id.tracking == 'serial':
-            if float_compare(quantity, int(quantity), precision_digits=rounding) != 0:
+            if float_compare(quantity, int(quantity), precision_rounding=rounding) != 0:
                 quantity = 0
 
         reserved_quants = []
@@ -1068,7 +1075,7 @@ class StockQuant(models.Model):
             if reserved_quantity:
                 vals['reserved_quantity'] = reserved_quantity
             self.create(vals)
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, allow_negative=True), in_date
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=True):

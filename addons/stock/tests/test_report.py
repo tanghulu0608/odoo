@@ -96,6 +96,16 @@ class TestReports(TestReportsCommon):
         self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good, make sure quotes are correctly escaped')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
+    def test_reports_product_no_barcode(self):
+        """ Test that product without barcode is correctly rendered without a barcode.
+        """
+        report = self.env.ref('stock.label_product_product')
+        self.product1.barcode = False
+        target = b'\n\n^XA^CI28\n^FT100,80^A0N,40,30^FD[C4181234""154654654654]Mellohi"^FS\n^FT100,115^A0N,30,24^FDC4181234""15465^FS\n^FT100,150^A0N,30,24^FD4654654^FS\n^XZ\n'
+        rendering, qweb_type = report._render_qweb_text('stock.label_product_product', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 1}, 'active_model': 'product.template'})
+        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
+        self.assertEqual(qweb_type, 'text', 'the report type is not good')
+
     def test_report_quantity_1(self):
         product_form = Form(self.env['product.product'])
         product_form.detailed_type = 'product'
@@ -1162,7 +1172,9 @@ class TestReports(TestReportsCommon):
 
     def test_report_forecast_11_non_reserved_order(self):
         """ Creates deliveries with different operation type reservation methods.
-        Checks replenishment lines are correctly sorted by reservation_date:
+        Checks replenishment lines are correctly sorted by the flollowing criteria:
+            - If the reservation date is in the past at any time T, use the priority and scheduled date
+            - If the reservation date is in the future, use reservation date, priority and scheduled date
             'manual': always last (no reservation_date)
             'at_confirm': reservation_date = time of creation
             'by_date': reservation_date = scheduled_date - reservation_days_before(_priority)
@@ -1230,11 +1242,11 @@ class TestReports(TestReportsCommon):
         delivery_at_confirm = delivery_form.save()
         delivery_at_confirm.action_confirm()
 
-        # Order should be: delivery_by_date, delivery_at_confirm, delivery_by_date_priority, delivery_manual
+        # Order should be: delivery_at_confirm, delivery_by_date, delivery_by_date_priority, delivery_manual
         _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
         self.assertEqual(len(lines), 4, "The report must have 4 lines.")
-        self.assertEqual(lines[0]['document_out']['id'], delivery_by_date.id)
-        self.assertEqual(lines[1]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_at_confirm.id)
+        self.assertEqual(lines[1]['document_out']['id'], delivery_by_date.id)
         self.assertEqual(lines[2]['document_out']['id'], delivery_by_date_priority.id)
         self.assertEqual(lines[3]['document_out']['id'], delivery_manual.id)
 

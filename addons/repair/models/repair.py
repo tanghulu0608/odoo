@@ -292,13 +292,18 @@ class Repair(models.Model):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', self.default_get('picking_type_id')))
             if 'picking_type_id' not in vals:
                 vals['picking_type_id'] = picking_type.id
-            if not vals.get('name', False) or vals['name'] == _('New'):
+            if not vals.get('name', False) or vals['name'] == 'New':
                 vals['name'] = picking_type.sequence_id.next_by_id()
             if not vals.get('procurement_group_id'):
                 vals['procurement_group_id'] = self.env["procurement.group"].create({'name': vals['name']}).id
         return super().create(vals_list)
 
     def write(self, vals):
+        if vals.get('picking_type_id'):
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+            for repair in self:
+                if picking_type != repair.picking_type_id:
+                    repair.name = picking_type.sequence_id.next_by_id()
         res = super().write(vals)
         if 'product_id' in vals and self.tracking == 'serial':
             self.write({'product_qty': 1.0})

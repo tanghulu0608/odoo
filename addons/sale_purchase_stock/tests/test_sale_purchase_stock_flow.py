@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+from odoo.fields import Date
+from odoo.tools.date_utils import add
 from odoo.tests.common import TransactionCase, Form
-from freezegun import freeze_time
-from datetime import datetime, timedelta
+
 
 class TestSalePurchaseStockFlow(TransactionCase):
 
@@ -86,59 +88,58 @@ class TestSalePurchaseStockFlow(TransactionCase):
         sm.move_line_ids.quantity = 10
         self.assertEqual(so.order_line.qty_delivered, 10)
 
-    @freeze_time('2024-01-01')
-    def test_reordering_with_visibility_days(self):
-        """
-        If reordering rules' visibility is set bigger than
-        DAYS_FROM_TODAY_TO_ORDER (plus lead time). Then the
-        order should be included in the calculation of quantity to order.
+    def test_auto_trigger_snoozed_orderpoint(self):
+        """ Check that reordering rules are auto triggerred unless they are snoozed """
 
-            ┌─ Today                     ┌── Scheduled Delivery
-            │ (2024-01-01)               │    (2024-02-01)
-            │                            │    aka commitment_date
-            │                            │
-            ▼                            ▼
-          ──────────────────────────────────────────►
-                                                    time
-            ◄────────────────────────────►
-                DAYS_FROM_TODAY_TO_ORDER
-
-                                    ◄────►
-                                    lead_time
-        """
-        N_ORDERED_QTY = 666
-        DAYS_FROM_TODAY_TO_ORDER = 30
-        MONTH_FROM_TODAY = (datetime.today() + timedelta(days=DAYS_FROM_TODAY_TO_ORDER)).strftime('%Y-%m-%d')
-
-        # Setup: Create a product with vendor
-        partner = self.env['res.partner'].create({'name': 'Azure Interior'})
         seller = self.env['product.supplierinfo'].create({
-                'partner_id': partner.id,
-                'price': 1.0,
+            'partner_id': self.vendor.id,
+            'price': 10,
         })
         product = self.env['product.product'].create({
-            'name': 'Dummy Product',
+            'name': 'Super product 1',
             'type': 'product',
-            'seller_ids': [seller.id],
+            'seller_ids': [Command.set(seller.ids)],
+            'route_ids': [Command.set(self.buy_route.ids)],
         })
-
-        # Setup: Create sale order scheduled in the future
-        so = self.env['sale.order'].create({
-            'partner_id': self.customer.id,
-            'commitment_date': MONTH_FROM_TODAY,
-            'order_line': [(0, 0, {
-                'name': product.name,
-                'product_id': product.id,
-                'price_unit': 1,
-                'product_uom_qty': N_ORDERED_QTY,
-            })],
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Super product RR',
+            'route_id': self.buy_route.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
         })
-        so.action_confirm() # so.state: 'draft' -> 'sale'
+        so_1, so_2 = self.env['sale.order'].create([
+            {
+                'partner_id': self.customer.id,
+                'order_line': [Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': product.uom_id.id,
+                    'price_unit': product.list_price,
+                })]
+            },
+            {
+                'partner_id': self.customer.id,
+                'order_line': [Command.create({
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 2,
+                    'product_uom': product.uom_id.id,
+                    'price_unit': product.list_price,
+                })]
+            },
+        ])
 
-        # Create Reordering rule and trigger  recalculation
-        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.product_id = product
-        orderpoint_form.visibility_days = DAYS_FROM_TODAY_TO_ORDER
-        orderpoint = orderpoint_form.save()
+        # we check that the first so triggers the RR
+        so_1.action_confirm()
+        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)], limit=1)
+        self.assertEqual(po.order_line.product_qty, 6.0)
+        po.button_cancel()
+        self.assertEqual(po.state, "cancel")
 
-        self.assertEqual(orderpoint.qty_to_order, N_ORDERED_QTY, f"Order from {DAYS_FROM_TODAY_TO_ORDER} days from today NOT included into the qty_to_order calculation, despite having visibility days set {DAYS_FROM_TODAY_TO_ORDER}!")
+        # we snooze the RR and check that the second so does not trigger it
+        orderpoint.snoozed_until = add(Date.today(), days=1)
+        so_2.action_confirm()
+        po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id), ('state', '!=', 'cancel')], limit=1)
+        self.assertFalse(po)

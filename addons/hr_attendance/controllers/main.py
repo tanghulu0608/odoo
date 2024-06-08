@@ -4,6 +4,8 @@
 from odoo import http, _
 from odoo.http import request
 from odoo.tools import float_round
+from odoo.tools.image import image_data_uri
+
 import datetime
 
 class HrAttendance(http.Controller):
@@ -52,14 +54,20 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/kiosk_mode_menu', auth='user', type='http')
     def kiosk_menu_item_action(self):
+        # better use route with company_id suffix
         if request.env.user.user_has_groups("hr_attendance.group_hr_attendance_manager"):
             # Auto log out will prevent users from forgetting to log out of their session
             # before leaving the kiosk mode open to the public. This is a prevention security
             # measure.
             request.session.logout(keep_db=True)
-            return request.redirect(request.env.user.company_id.attendance_kiosk_url)
+            return request.redirect(request.env.company.attendance_kiosk_url)
         else:
             return request.not_found()
+
+    @http.route('/hr_attendance/kiosk_mode_menu/<int:company_id>', auth='user', type='http')
+    def kiosk_menu_item_action2(self, company_id):
+        request.update_context(allowed_company_ids=[company_id])
+        return self.kiosk_menu_item_action()
 
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='json')
     def kiosk_keepalive(self):
@@ -74,7 +82,7 @@ class HrAttendance(http.Controller):
         else:
             employee_list = [{"id": e["id"],
                               "name": e["name"],
-                              "avatar": e["avatar_1024"].decode(),
+                              "avatar": image_data_uri(e["avatar_1024"]),
                               "job": e["job_id"][1] if e["job_id"] else False,
                               "department": {"id": e["department_id"][0] if e["department_id"] else False,
                                              "name": e["department_id"][1] if e["department_id"] else False
@@ -103,8 +111,9 @@ class HrAttendance(http.Controller):
                         'employees': employee_list,
                         'departments': departement_list,
                         'kiosk_mode': company.attendance_kiosk_mode,
-                        'barcode_source': company.attendance_barcode_source
-                    }
+                        'barcode_source': company.attendance_barcode_source,
+                        'lang': company.partner_id.lang,
+                    },
                 }
             )
 

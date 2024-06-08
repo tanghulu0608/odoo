@@ -156,8 +156,7 @@ msgstr "Error al procesar el pago"
 #, python-format
 msgid "Received data for child transaction with missing transaction values"
 msgstr ""
-"Datos recibidos para transacción secundaria con valores de transacción "
-"faltante."
+"Datos recibidos para transacción hija con valores de transacción faltante."
 
 #. module: payment_adyen
 #. odoo-python
@@ -243,8 +242,8 @@ msgid ""
 "The capture request of %(amount)s for the transaction with reference %(ref)s"
 " has been requested (%(provider_name)s)."
 msgstr ""
-"La solicitud de captura de %(amount)s para la transacción con referencia "
-"%(ref)s se envió (%(provider_name)s)."
+"Se ha enviado la solicitud de captura de %(amount)s para la transacción con "
+"referencia %(ref)s (%(provider_name)s)."
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_client_key
@@ -254,8 +253,7 @@ msgstr "La clave de cliente del usuario del servicio web"
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_provider__adyen_merchant_account
 msgid "The code of the merchant account to use with this provider"
-msgstr ""
-"El código de la cuenta de vendedor que se debe de usar con este proveedor."
+msgstr "El código de la cuenta comercial que se debe usar con este proveedor"
 
 #. module: payment_adyen
 #. odoo-python
@@ -279,7 +277,7 @@ msgstr "La transacción no está vinculada a un token."
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
 msgid "The unique reference of the partner owning this token"
-msgstr "La referencia única del partner propietario de este token"
+msgstr "La referencia única del contacto propietario de este token"
 
 #. module: payment_adyen
 #. odoo-python

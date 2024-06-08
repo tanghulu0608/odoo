@@ -96,7 +96,9 @@ class Project(models.Model):
         for project in self:
             sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line'])
             project.sale_order_line_count = len(sale_order_lines)
-            project.sale_order_count = len(sale_order_lines.order_id)
+
+            # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
+            project.sale_order_count = len(sale_order_lines.sudo().order_id)
 
     def _compute_invoice_count(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
@@ -157,7 +159,8 @@ class Project(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]}).order_id
+        # Use sudo to avoid AccessErrors when the SOLs belong to different companies.
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'in', self.env['project.task'].OPEN_STATES)]}).sudo().order_id
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
@@ -338,7 +341,11 @@ class Project(models.Model):
         )
 
         SaleOrderLine = self.env['sale.order.line']
-        sale_order_line_domain = [('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)])]
+        sale_order_line_domain = [
+            '&',
+            ('order_id', 'any', [('analytic_account_id', 'in', self.analytic_account_id.ids)]),
+            ('display_type', '=', False),
+        ]
         sale_order_line_query = SaleOrderLine._where_calc(sale_order_line_domain)
         sale_order_line_sql = sale_order_line_query.select(
             f'{SaleOrderLine._table}.project_id AS id',
@@ -838,7 +845,7 @@ class ProjectTask(models.Model):
         (self - billable_task).partner_id = False
         super(ProjectTask, billable_task)._compute_partner_id()
 
-    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
+    @api.depends('partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'milestone_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         for task in self:
             if not (task.allow_billable or task.parent_id.allow_billable):

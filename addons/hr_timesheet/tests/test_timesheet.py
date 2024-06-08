@@ -703,3 +703,35 @@ class TestTimesheet(TestCommonTimesheet):
             },
         ])
         self.assertEqual(self.task1.progress, 100, 'The percentage of allocated hours should be 100%.')
+
+    def test_analytic_plan_setting(self):
+        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', 1)
+        project_1 = self.env['project.project'].create({
+            'name': "Project with plan setting 1",
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        self.assertEqual(project_1.analytic_account_id.plan_id.id, 1)
+
+        self.env['ir.config_parameter'].set_param('analytic.analytic_plan_projects', 2)
+        project_2 = self.env['project.project'].create({
+            'name': "Project with plan setting 2",
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        self.assertEqual(project_2.analytic_account_id.plan_id.id, 2)
+
+    def test_timesheet_update_user_on_employee(self):
+        timesheet = self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my first timesheet',
+            'employee_id': self.empl_employee.id,
+        })
+        self.assertEqual(timesheet.user_id, self.empl_employee.user_id)
+        new_user = self.env['res.users'].create({
+            'name': 'Test user',
+            'login': 'test',
+        })
+        self.empl_employee.user_id = new_user
+        self.assertEqual(timesheet.user_id, new_user)

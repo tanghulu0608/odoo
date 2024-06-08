@@ -6,6 +6,8 @@ from odoo.addons.base.models.res_bank import sanitize_account_number
 
 from xmlrpc.client import MAXINT
 
+from odoo.tools import create_index
+
 
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
@@ -44,7 +46,7 @@ class AccountBankStatementLine(models.Model):
         comodel_name='account.move',
         auto_join=True,
         string='Journal Entry', required=True, readonly=True, ondelete='cascade',
-        index='btree_not_null',
+        index=True,
         check_company=True)
     statement_id = fields.Many2one(
         comodel_name='account.bank.statement',
@@ -151,6 +153,14 @@ class AccountBankStatementLine(models.Model):
 
     # Technical field to store details about the bank statement line
     transaction_details = fields.Json(readonly=True)
+
+    def init(self):
+        super().init()
+        create_index(self.env.cr,
+                     indexname='account_bank_statement_line_internal_index_move_id_amount_idx',
+                     tablename='account_bank_statement_line',
+                     expressions=['internal_index', 'move_id', 'amount'],
+                     where='statement_id IS NULL')
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS

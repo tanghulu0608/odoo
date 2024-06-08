@@ -207,6 +207,7 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float(
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
+        default=0.0,
         digits='Product Unit of Measure',
         store=True, readonly=False, copy=False)
 
@@ -359,13 +360,16 @@ class SaleOrderLine(models.Model):
         :return: the description related to special variant attributes/values
         :rtype: string
         """
-        if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
+        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin.filtered(
+            # Only describe the attributes where a choice was made by the customer
+            lambda ptav: ptav.display_type == 'multi' or ptav.attribute_line_id.value_count > 1
+        )
+        if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
         name = "\n"
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
-        no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
 
         # display the no_variant attributes, except those that are also
@@ -413,20 +417,15 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
-        taxes_by_product_company = defaultdict(lambda: self.env['account.tax'])
         lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
         cached_taxes = {}
         for line in self:
             lines_by_company[line.company_id] += line
-        for product in self.product_id:
-            for tax in product.taxes_id:
-                taxes_by_product_company[(product, tax.company_id)] += tax
         for company, lines in lines_by_company.items():
             for line in lines.with_company(company):
-                taxes, comp = None, company
-                while not taxes and comp:
-                    taxes = taxes_by_product_company[(line.product_id, comp)]
-                    comp = comp.parent_id
+                taxes = None
+                if line.product_id:
+                    taxes = line.product_id.taxes_id._filter_taxes_by_company(company)
                 if not line.product_id or not taxes:
                     # Nothing to map
                     line.tax_id = False
@@ -471,14 +470,13 @@ class SaleOrderLine(models.Model):
             else:
                 line = line.with_company(line.company_id)
                 price = line._get_display_price()
-                line.price_unit = line.product_id._get_tax_included_unit_price(
-                    line.company_id or line.env.company,
-                    line.order_id.currency_id,
-                    line.order_id.date_order,
-                    'sale',
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    price,
+                    line.currency_id or line.order_id.currency_id,
+                    product_taxes=line.product_id.taxes_id.filtered(
+                        lambda tax: tax.company_id == line.env.company
+                    ),
                     fiscal_position=line.order_id.fiscal_position_id,
-                    product_price_unit=price,
-                    product_currency=line.currency_id
                 )
 
     def _get_display_price(self):
@@ -825,6 +823,16 @@ class SaleOrderLine(models.Model):
                 line.invoice_status = 'invoiced'
             else:
                 line.invoice_status = 'no'
+
+    def _can_be_invoiced_alone(self):
+        """ Whether a given line is meaningful to invoice alone.
+
+        It is generally meaningless/confusing or even wrong to invoice some specific SOlines
+        (delivery, discounts, rewards, ...) without others, unless they are the only left to invoice
+        in the SO.
+        """
+        self.ensure_one()
+        return self.product_id.id != self.company_id.sale_discount_product_id.id
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
@@ -1220,7 +1228,7 @@ class SaleOrderLine(models.Model):
                 'price': self.price_unit,
                 'readOnly': self.order_id._is_readonly() or (self.product_id.sale_line_warn == "block"),
             }
-            if self.product_id.sale_line_warn_msg:
+            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
                 res['warning'] = self.product_id.sale_line_warn_msg
             return res
         elif self:
@@ -1245,7 +1253,7 @@ class SaleOrderLine(models.Model):
                     )
                 )
             }
-            if self.product_id.sale_line_warn_msg:
+            if self.product_id.sale_line_warn != 'no-message' and self.product_id.sale_line_warn_msg:
                 res['warning'] = self.product_id.sale_line_warn_msg
             return res
         else:

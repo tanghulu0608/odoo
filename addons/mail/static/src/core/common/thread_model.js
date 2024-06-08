@@ -282,13 +282,12 @@ export class Thread extends Record {
      * @type {ScrollPosition}
      */
     scrollPosition = new ScrollPosition();
-    /** @type {number|'bottom'} */
-    scrollTop = Record.attr("bottom", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.type === "chatter" ? 0 : "bottom";
-        },
-    });
+    /**
+     * Stored scoll position of thread from top in ASC order.
+     *
+     * @type {number|'bottom'}
+     */
+    scrollTop = "bottom";
     showOnlyVideo = false;
     transientMessages = Record.many("Message");
     /** @type {'channel'|'chat'|'chatter'|'livechat'|'group'|'mailbox'} */
@@ -456,13 +455,25 @@ export class Thread extends Record {
         return [...this.messages].reverse().find((msg) => Number.isInteger(msg.id));
     }
 
-    newestPersistentNotEmptyOfAllMessage = Record.one("Message", {
+    newestPersistentAllMessages = Record.many("Message", {
         compute() {
-            const allPersistentMessages = this.allMessages.filter(
-                (message) => Number.isInteger(message.id) && !message.isEmpty
+            const allPersistentMessages = this.allMessages.filter((message) =>
+                Number.isInteger(message.id)
             );
             allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
-            return allPersistentMessages[0];
+            return allPersistentMessages;
+        },
+    });
+
+    newestPersistentOfAllMessage = Record.one("Message", {
+        compute() {
+            return this.newestPersistentAllMessages[0];
+        },
+    });
+
+    newestPersistentNotEmptyOfAllMessage = Record.one("Message", {
+        compute() {
+            return this.newestPersistentAllMessages.find((message) => !message.isEmpty);
         },
     });
 

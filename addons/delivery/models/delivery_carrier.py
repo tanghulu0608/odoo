@@ -231,7 +231,12 @@ class DeliveryCarrier(models.Model):
             res['carrier_price'] = res['price']
             # free when order is large enough
             amount_without_delivery = order._compute_amount_total_without_delivery()
-            if res['success'] and self.free_over and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount:
+            if (
+                res['success']
+                and self.free_over
+                and self.delivery_type != 'base_on_rule'
+                and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount
+            ):
                 res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.', self.amount)
                 res['price'] = 0.0
             return res
@@ -333,7 +338,7 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         self = self.sudo()
         order = order.sudo()
-        total = weight = volume = quantity = 0
+        total = weight = volume = quantity = wv = 0
         total_delivery = 0.0
         for line in order.order_line:
             if line.state == 'cancel':
@@ -347,6 +352,7 @@ class DeliveryCarrier(models.Model):
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
+            wv += (line.product_id.weight or 0.0) * (line.product_id.volume or 0.0) * qty
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
@@ -356,7 +362,7 @@ class DeliveryCarrier(models.Model):
         # 2- saved weight to use on sale order
         # 3- total order line weight as fallback
         weight = self.env.context.get('order_weight') or order.shipping_weight or weight
-        return self._get_price_from_picking(total, weight, volume, quantity)
+        return self.with_context(wv=wv)._get_price_from_picking(total, weight, volume, quantity)
 
     def _get_price_dict(self, total, weight, volume, quantity):
         '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
@@ -365,7 +371,7 @@ class DeliveryCarrier(models.Model):
             'price': total,
             'volume': volume,
             'weight': weight,
-            'wv': volume * weight,
+            'wv': self.env.context.get('wv') or volume * weight,
             'quantity': quantity
         }
 
@@ -373,8 +379,6 @@ class DeliveryCarrier(models.Model):
         price = 0.0
         criteria_found = False
         price_dict = self._get_price_dict(total, weight, volume, quantity)
-        if self.free_over and total >= self.amount:
-            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:

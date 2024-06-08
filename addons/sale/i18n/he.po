@@ -21,8 +21,9 @@
 # hed shefer <hed@laylinetech.com>, 2023
 # MichaelHadar, 2023
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
-# yael terner, 2024
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# yael terner, 2024
+# Orel Nahmany, 2024
 # Roy Sayag, 2024
 # 
 msgid ""
@@ -479,6 +480,11 @@ msgid "<i class=\"fa fa-fw fa-check\"/> Paid"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> Reversed"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> Expired"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> לא בתוקף"
@@ -749,7 +755,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "קבל וחתום על הצעת המחיר"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1367,7 +1373,7 @@ msgstr "תאריך יצירה"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Draft Invoice"
-msgstr ""
+msgstr "צור טיוטת חשבונית"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1961,7 +1967,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "פג תוקף ב%(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2003,7 +2009,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
 msgid "Fixed Amount"
-msgstr "סכום קבוע:"
+msgstr "סכום קבוע"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -2083,7 +2089,7 @@ msgstr "קבל אזהרות בהזמנות על מוצרים או לקוחות"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
 msgid "Global Discount"
-msgstr ""
+msgstr "הנחה כללית"
 
 #. module: sale
 #. odoo-javascript
@@ -2122,7 +2128,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "האם העמדה הפיסקלית השתנתה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2824,7 +2830,7 @@ msgstr "מספר המכירות לחיוב"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
 msgid "On All Order Lines"
-msgstr ""
+msgstr "על כל שורות ההזמנה"
 
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
@@ -3215,7 +3221,7 @@ msgstr "סכום תשלום מראש"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment percentage"
-msgstr ""
+msgstr "אחוז תשלום מראש"
 
 #. module: sale
 #. odoo-python
@@ -5128,6 +5134,13 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot cancel a locked order. Please unlock it first."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "You cannot change the pricelist of a confirmed order !"
 msgstr ""
 
 #. module: sale

@@ -3,9 +3,9 @@
 # 	* web
 # 
 # Translators:
-# Wil Odoo, 2023
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
 # Maitê Dietze, 2024
 # 
 msgid ""
@@ -1052,6 +1052,15 @@ msgstr "Adicionar data de início"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Add to Favorites"
+msgstr "Adicionar aos Favoritos"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Add: %s"
@@ -1817,12 +1826,12 @@ msgstr "Clicável"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datetime/datetime_picker_popover.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/dialog/dialog.xml:0
 #: code:addons/web/static/src/core/domain_selector_dialog/domain_selector_dialog.xml:0
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.xml:0
@@ -3554,8 +3563,8 @@ msgstr "EU TE AMO"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
-msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"today\"."
-msgstr "Data em formato ISO (Ex: \"2018-12-31\") ou \"hoje\"."
+msgid "ISO-formatted date (e.g. \"2018-12-31\") or \"%s\"."
+msgstr "Data em formato ISO (ex.: \"2018-12-31\") ou \"%s\"."
 
 #. module: web
 #. odoo-javascript
@@ -5061,6 +5070,13 @@ msgstr "Status não ativo, clique para alterar"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
+#, python-format
+msgid "Number of files"
+msgstr "Número de arquivos"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
@@ -5944,9 +5960,9 @@ msgstr "Somente leitura:"
 #: code:addons/web/static/src/core/confirmation_dialog/confirmation_dialog.js:0
 #, python-format
 msgid ""
-"Ready to make your record disappear into thin air? Are you sure?\n"
-"It will be gone forever!\n"
-"\n"
+"Ready to make your record disappear into thin air? Are you sure?\r\n"
+"It will be gone forever!\r\n"
+"\r\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
 "Pronto para fazer seu registro desaparecer entre as nuvens? Tem certeza?\n"
@@ -6081,6 +6097,15 @@ msgstr "Remover propriedade"
 #, python-format
 msgid "Remove field"
 msgstr "Remover campo"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#: code:addons/web/static/src/views/fields/boolean_favorite/boolean_favorite_field.xml:0
+#, python-format
+msgid "Remove from Favorites"
+msgstr "Remover dos favoritos"
 
 #. module: web
 #. odoo-javascript
@@ -6899,6 +6924,7 @@ msgstr "Camiseta"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
@@ -7099,19 +7125,6 @@ msgstr ""
 "desenvolvedor que deve ser corrigido em todo a base de dados antes de "
 "continuar o trabalho. Consulte o console do navegador ou os logs do servidor"
 " para obter mais informações."
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/errors/error_dialogs.xml:0
-#, python-format
-msgid ""
-"The style compilation failed, see the error below. This is an administrator "
-"or developer error that must be fixed for the entire database before "
-"continuing working."
-msgstr ""
-"A compilação do estilo falhou. Consulte o erro abaixo. Trata-se de um erro "
-"de administrador ou desenvolvedor que deve ser corrigido em toda a base de "
-"dados antes de continuar o trabalho."
 
 #. module: web
 #. odoo-python
@@ -7620,7 +7633,7 @@ msgstr "Carregar e Definir"
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Upload your file"
-msgstr "Carregue o arquivo"
+msgstr "Carregar arquivos"
 
 #. module: web
 #. odoo-javascript
@@ -8587,6 +8600,7 @@ msgstr "anchor"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/utils.js:0
 #: code:addons/web/static/src/core/tree_editor/utils.js:0
 #, python-format
@@ -33565,6 +33579,13 @@ msgstr "zombie"
 #, python-format
 msgid "— press"
 msgstr "– pressione"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "– pesquisar por"
 
 #. module: web
 #. odoo-javascript

@@ -404,6 +404,16 @@ msgid "Cards"
 msgstr "การ์ด"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
+msgid "Card design"
+msgstr "การออกแบบการ์ด"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.snippet_options
+msgid "Template badge"
+msgstr "ป้ายเทมเพลต"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -1234,6 +1244,11 @@ msgstr "กลับไปที่รายการอีเวนต์"
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_seo_optimized
 msgid "SEO optimized"
 msgstr "ปรับ SEO ให้เหมาะสม"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Share"
+msgstr "แชร์"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

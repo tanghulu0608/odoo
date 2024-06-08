@@ -283,7 +283,7 @@ class ResCompany(models.Model):
         return new_prefix + current_code.replace(old_prefix, '', 1).lstrip('0').rjust(digits-len(new_prefix), '0')
 
     def reflect_code_prefix_change(self, old_code, new_code):
-        if not old_code:
+        if not old_code or new_code == old_code:
             return
         accounts = self.env['account.account'].search([
             *self.env['account.account']._check_company_domain(self),
@@ -470,12 +470,18 @@ class ResCompany(models.Model):
             ('code', '=', str(code)),
         ]):
             code -= 1
-        return self.env['account.account'].create({
-                'code': str(code),
-                'name': _('Undistributed Profits/Losses'),
-                'account_type': unaffected_earnings_type,
-                'company_id': self.id,
-            })
+        return self.env['account.account']._load_records([
+            {
+                'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
+                'values': {
+                              'code': str(code),
+                              'name': _('Undistributed Profits/Losses'),
+                              'account_type': unaffected_earnings_type,
+                              'company_id': self.id,
+                          },
+                'noupdate': True,
+            }
+        ])
 
     def get_opening_move_differences(self, opening_move_lines):
         # TO BE REMOVED IN MASTER

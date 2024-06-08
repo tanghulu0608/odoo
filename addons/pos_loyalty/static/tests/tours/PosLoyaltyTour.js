@@ -382,3 +382,49 @@ registry.category("web_tour.tours").add('PosLoyaltyTour11.2', {
             PosLoyalty.finalizeOrder('Cash', '50'),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add('PosLoyaltyTour12', {
+    test: true,
+    url: '/pos/web',
+    steps: () =>
+        [
+            ProductScreen.confirmOpeningPopup(),
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.addOrderline('Free Product A', '2'),
+            ProductScreen.clickDisplayedProduct('Free Product A'),
+            ProductScreen.totalAmountIs('2.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-1.00'),
+            ProductScreen.addOrderline('Free Product B', '2'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.totalAmountIs('12.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-5.00'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.clickDisplayedProduct('Free Product B'),
+            ProductScreen.selectedOrderlineHas("Free Product B", "6.00"),
+            ProductScreen.totalAmountIs('22.00'),
+            PosLoyalty.hasRewardLine('Free Product', '-10.00'),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add('PosLoyaltyMinAmountAndSpecificProductTour', {
+    test: true,
+    url: '/pos/web',
+    steps: () =>
+        [
+            ProductScreen.clickHomeCategory(),
+            ProductScreen.confirmOpeningPopup(),
+
+            ProductScreen.clickDisplayedProduct('Product A'),
+            ProductScreen.selectedOrderlineHas('Product A', '1.00', '20.00'),
+            PosLoyalty.orderTotalIs('20.00'),
+
+            ProductScreen.clickDisplayedProduct('Product B'),
+            ProductScreen.selectedOrderlineHas('Product B', '1.00', '30.00'),
+            PosLoyalty.orderTotalIs('50.00'),
+
+            ProductScreen.clickDisplayedProduct('Product A'),
+            ProductScreen.selectedOrderlineHas('Product A', '2.00', '40.00'),
+            PosLoyalty.orderTotalIs('66.00'),
+        ].flat(),
+});

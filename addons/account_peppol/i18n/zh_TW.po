@@ -87,7 +87,7 @@ msgstr "接收 Peppol 文件必須使用採購日記賬。"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
 msgid "Account EDI proxy user"
-msgstr "帳戶 Edi 代理帳號"
+msgstr "賬戶 EDI 代理使用者"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
@@ -182,6 +182,11 @@ msgstr "已取消"
 #, python-format
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "無法取消已傳送至 Peppol 的記項"
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
+msgid "Cannot receive this format"
+msgstr "未能接收此格式"
 
 #. module: account_peppol
 #. odoo-python
@@ -579,6 +584,13 @@ msgstr "請填寫 EAS代碼及參與者 ID代碼。"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/res_company.py:0
+#, python-format
+msgid "Please install the phonenumbers library."
+msgstr "請安裝電話號碼程式庫。"
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Please verify partner configuration in partner settings."
@@ -688,6 +700,13 @@ msgstr ""
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
 msgstr "Peppol 終端點識別號碼不正確。"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid "The Peppol service that is used is likely to be %s."
+msgstr "所使用的 Peppol 服務很可能是 %s。"
 
 #. module: account_peppol
 #. odoo-python

@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
     def _check_combo_inclusions(self):
         for product in self:
             if not product.available_in_pos:
-                combo_name = self.env['pos.combo.line'].search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
+                combo_name = self.env['pos.combo.line'].sudo().search([('product_id', 'in', product.product_variant_ids.ids)], limit=1).combo_id.name
                 if combo_name:
                     raise UserError(_('You must first remove this product from the %s combo', combo_name))
 
@@ -68,6 +68,10 @@ class ProductTemplate(models.Model):
                     ])
         return res
 
+    @api.onchange('type')
+    def _onchange_type(self):
+        if self.type == "combo" and self.attribute_line_ids:
+            raise UserError(_("Combo products cannot contains variants or attributes"))
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'

@@ -95,6 +95,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         extra_trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)",
     },
     {
+        content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
+        trigger: 'iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
+        run: () => {}, // It's a check.
+    },
+    {
         content: "Click on Edit Link",
         trigger: 'iframe .o_edit_menu_popover a.o_we_edit_link',
     },
@@ -116,6 +121,7 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
     },
     // Edit the menu item from the "edit menu" popover button
     ...wTourUtils.clickOnEditAndWaitEditMode(),
+    wTourUtils.clickOnExtraMenuItem({}, true),
     {
         content: "Click on the 'Modnar' link",
         trigger: 'iframe .top_menu .nav-item a:contains("Modnar")',
@@ -174,14 +180,14 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         debugHelp: "This is a hack/workaround for the next step",
     },
     {
-        content: "Drag item into parent",
+        content: "Drag 'Contact Us' item below the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: "drag_and_drop_native .oe_menu_editor li:contains('Shop') .fa-bars",
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .fa-bars",
     },
     {
-        content: "Drag item into parent",
+        content: "Drag 'Contact Us' item as a child of the 'Home' item",
         trigger: '.oe_menu_editor li:contains("Contact us") .fa-bars',
-        run: 'drag_and_drop_native .oe_menu_editor li:contains("Contact us") .form-control',
+        run: "drag_and_drop_native .oe_menu_editor li:contains('Home') + li .form-control",
     },
     {
         content: "Wait for drop",

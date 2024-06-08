@@ -52,6 +52,26 @@ msgstr "لا يمكن ترك \"رابط URL من\" فارغاً. "
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid ""
+"\"URL to\" cannot be set to \"/\". To change the homepage content, use the "
+"\"Homepage URL\" field in the website settings or the page properties on any"
+" custom page."
+msgstr ""
+"لا يمكن تعيين \"الرابط إلى\" كـ \"/\". لتغيير محتوى الصفحة الرئيسية، استخدم "
+"حقل \"الصفحة الرئيسية\" في إعدادات الموقع الإلكتروني أو في خصائص الصفحة في "
+"أي صفحة مخصصة. "
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" cannot be set to an existing page."
+msgstr "لا يمكن تعيين \"رابط URL إلى\" في صفحة موجودة بالفعل. "
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "لا يمكن ترك \"رابط URL إلى\" فارغاً. "
 
@@ -262,8 +282,6 @@ msgid "...and switch the timeline contents to fit your needs."
 msgstr "...وقم بتغيير محتوى المخطط الزمني ليناسب احتياجاتك. "
 
 #. module: website
-#: model:website,contact_us_button_url:website.default_website
-#: model:website,contact_us_button_url:website.website2
 #: model_terms:ir.ui.view,arch_db:website.layout
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "/contactus"
@@ -1623,11 +1641,6 @@ msgstr "رمز الوصول "
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid "Access to this page"
 msgstr "الوصول إلى هذه الصفحة "
-
-#. module: website
-#: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
-msgid "Access token should be unique."
-msgstr "يجب أن يكون رمز الوصول فريداً. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -3234,7 +3247,7 @@ msgstr "الملابس "
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Clothes, Marketing, ..."
-msgstr ""
+msgstr "الملابس، التسويق، ... "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3942,7 +3955,7 @@ msgstr "صلاحيات الوصول الافتراضية"
 #: code:addons/website/static/src/snippets/s_searchbar/options.js:0
 #, python-format
 msgid "Default Input Style"
-msgstr ""
+msgstr "نوع المدخلات الافتراضي "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
@@ -6020,6 +6033,13 @@ msgid "Hide For"
 msgstr "إخفاء لـ "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "Hide this page from search results"
 msgstr "إخفاء هذه الصفحة من نتائج البحث"
@@ -6306,17 +6326,6 @@ msgid ""
 msgstr ""
 "إذا أردت إضافة تحليلات أو علامات تصنيف تسويقية، قم بحقن الكود في <head> أو "
 "<body> عوضاً عن ذلك. "
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
-#, python-format
-msgid ""
-"If you need to add analytics or marketing tags, inject code in your header "
-"or body instead."
-msgstr ""
-"إذا كنت بحاجة إلى إضافة التحليلات إلى علامات تصنيف التسويق، قم بحقن الكود في"
-" الترويسة أو المتن عوضاً عن ذلك. "
 
 #. module: website
 #. odoo-javascript
@@ -6941,7 +6950,6 @@ msgstr "اتركه فارغاً لاستخدام القيمة الافتراضي
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_ir_attachment__key
-#: model:ir.model.fields,field_description:website.field_product_document__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_attachment__key
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__key
@@ -8297,12 +8305,6 @@ msgid "None"
 msgstr "لا شيء"
 
 #. module: website
-#: model:website,prevent_zero_price_sale_text:website.default_website
-#: model:website,prevent_zero_price_sale_text:website.website2
-msgid "Not Available For Sale"
-msgstr "غير متوفر للبيع"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
 msgid "Not Published"
 msgstr "غير منشور "
@@ -8877,7 +8879,10 @@ msgid "Page Layout"
 msgstr "مخطط الصفحة "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "اسم الصفحة"
 
@@ -9227,6 +9232,13 @@ msgstr "إضافة إلى البداية "
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Preset"
 msgstr "معد مسبقاً "
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full screen"
+msgstr "اضغط على %(key)s للخروج من وضع ملء الشاشة "
 
 #. module: website
 #. odoo-javascript
@@ -10450,6 +10462,13 @@ msgid "Show site map"
 msgstr "إظهار خريطة الموقع "
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Desktop"
 msgstr "إظهار/إخفاء من سطح المكتب "
@@ -11205,6 +11224,8 @@ msgid ""
 "The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
 "Change that website's company first."
 msgstr ""
+"لا يمكن أرشفة الشركة %(company_name)r لأنها تملك موقعاً إلكترونياً مرتبطاً %(website_name)r.\n"
+"قم بتغيير شركة ذلك الموقع الإلكتروني أولاً. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -11412,7 +11433,6 @@ msgstr "ألوان السمات "
 #: model:ir.model.fields,field_description:website.field_ir_asset__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__theme_template_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__theme_template_id
-#: model:ir.model.fields,field_description:website.field_product_document__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_controller_page__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_menu__theme_template_id
 #: model:ir.model.fields,field_description:website.field_website_page__theme_template_id
@@ -12798,7 +12818,6 @@ msgstr "زائري الويب "
 #: model:ir.model.fields,field_description:website.field_ir_asset__website_id
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_id
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_id
-#: model:ir.model.fields,field_description:website.field_product_document__website_id
 #: model:ir.model.fields,field_description:website.field_res_company__website_id
 #: model:ir.model.fields,field_description:website.field_res_partner__website_id
 #: model:ir.model.fields,field_description:website.field_res_users__website_id
@@ -12844,11 +12863,6 @@ msgstr "خاصية أداة تهيئة الموقع الإلكتروني "
 #: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
 msgstr "نطاق الموقع الإلكتروني "
-
-#. module: website
-#: model:ir.model.constraint,message:website.constraint_website_domain_unique
-msgid "Website Domain should be unique."
-msgstr "يجب أن يكون نطاق الموقع الإلكتروني فريداً. "
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
@@ -13275,7 +13289,6 @@ msgstr "بإمكان التحرير وإنشاء النسخ المطابقة... 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/res_users.py:0
-#: model:ir.model.constraint,message:website.constraint_res_users_login_key
 #, python-format
 msgid "You can not have two users with the same login!"
 msgstr "لا يمكن لمستخدمين استخدام نفس بيانات الدخول!"
@@ -13312,6 +13325,17 @@ msgstr ""
 "ذلك "
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"لا يمكنك حذف قائمة الموقع الإلكتروني هذا حيث إنه يعمل كالقائمة الرئيسية "
+"الافتراضية للمواقع الإلكترونية الجديدة (مثال: /shop، /event، ...). "
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
@@ -13341,13 +13365,6 @@ msgid ""
 " engines."
 msgstr ""
 "لقد قمت بإخفاء هذه الصفحة من نتائج البحث. لن تقوم محركات البحث بفهرستها."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "لم تقم بتحديد النطاق الخاص بك "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy

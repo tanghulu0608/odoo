@@ -157,7 +157,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = dict.fromkeys({
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'data-editor-message',
+    'value_label', 'data-tooltip', 'data-editor-message', 'label',
 }, lambda e: True)
 
 def translate_attrib_value(node):
@@ -944,7 +944,7 @@ def _extract_translatable_qweb_terms(element, callback):
             # https://www.w3schools.com/html/html5_syntax.asp
             # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
             if not el.tag[0].isupper() and 't-component' not in el.attrib and 't-set-slot' not in el.attrib:
-                for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
+                for att in TRANSLATED_ATTRS:
                     if att in el.attrib:
                         _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
@@ -1452,7 +1452,7 @@ class TranslationImporter:
                     # [module_name, imd_name, module_name, imd_name, ...]
                     params = []
                     for xmlid in sub_xmlids:
-                        params.extend(xmlid.split('.'))
+                        params.extend(xmlid.split('.', maxsplit=1))
                     cr.execute(f'''
                         SELECT m.id, imd.module || '.' || imd.name, m."{field_name}", imd.noupdate
                         FROM "{model_table}" m, "ir_model_data" imd
@@ -1516,7 +1516,7 @@ class TranslationImporter:
                     # [xmlid, translations, xmlid, translations, ...]
                     params = []
                     for xmlid, translations in sub_field_dictionary:
-                        params.extend([*xmlid.split('.'), Json(translations)])
+                        params.extend([*xmlid.split('.', maxsplit=1), Json(translations)])
                     if not force_overwrite:
                         value_query = f"""CASE WHEN {overwrite} IS TRUE AND imd.noupdate IS FALSE
                         THEN m."{field_name}" || t.value
@@ -1614,20 +1614,16 @@ def load_language(cr, lang):
 
 def get_po_paths(module_name: str, lang: str):
     lang_base = lang.split('_')[0]
-    if lang_base == 'es' and lang != 'es_ES':
-        # force es_419 as fallback language for the spanish variations
-        if lang == 'es_419':
-            langs = ['es_419']
-        else:
-            langs = ['es_419', lang]
-    else:
-        langs = [lang_base, lang]
-
+    # Load the base as a fallback in case a translation is missing:
+    po_names = [lang_base, lang]
+    # Exception for Spanish locales: they have two bases, es and es_419:
+    if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
+        po_names.insert(1, 'es_419')
     po_paths = [
         path
-        for lang_ in langs
+        for filename in po_names
         for dir_ in ('i18n', 'i18n_extra')
-        if (path := join(module_name, dir_, lang_ + '.po'))
+        if (path := join(module_name, dir_, filename + '.po'))
     ]
     for path in po_paths:
         with suppress(FileNotFoundError):
@@ -1720,6 +1716,7 @@ def _get_translation_upgrade_queries(cr, field):
     cleanup_queries = []
 
     if field.translate is True:
+        emtpy_src = """'{"en_US": ""}'::jsonb"""
         query = f"""
             WITH t AS (
                 SELECT it.res_id as res_id, jsonb_object_agg(it.lang, it.value) AS value, bool_or(imd.noupdate) AS noupdate
@@ -1730,7 +1727,8 @@ def _get_translation_upgrade_queries(cr, field):
               GROUP BY it.res_id
             )
             UPDATE {Model._table} m
-               SET "{field.name}" = CASE WHEN t.noupdate IS FALSE THEN t.value || m."{field.name}"
+               SET "{field.name}" = CASE WHEN m."{field.name}" IS NULL THEN {emtpy_src} || t.value
+                                         WHEN t.noupdate IS FALSE THEN t.value || m."{field.name}"
                                          ELSE m."{field.name}" || t.value
                                      END
               FROM t

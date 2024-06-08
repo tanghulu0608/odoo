@@ -3,7 +3,7 @@
 # 	* mrp
 # 
 # Translators:
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # Wil Odoo, 2024
 # 
 msgid ""
@@ -797,6 +797,11 @@ msgstr "Lưu trữ hoạt động"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Đã lưu trữ"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Are you sure you want to cancel this manufacturing order?"
+msgstr "Bạn có chắc chắn muốn huỷ lệnh sản xuất này không?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -2054,7 +2059,7 @@ msgstr "Hiển thị số lô/sê-ri đã sử dụng."
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the produced Lot/Serial Numbers."
-msgstr ""
+msgstr "Hiển thị số lô/sê-ri đã sản xuất."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -4859,6 +4864,12 @@ msgid "Routing"
 msgstr "Tuyến"
 
 #. module: mrp
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Quay lại Tồn kho"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
 msgid "Routing Lines"
 msgstr "Chi tiết quy trình"
@@ -5178,15 +5189,6 @@ msgid ""
 msgstr ""
 "Một số nguyên liệu được theo dõi, bạn phải chỉ rõ lệnh sản xuất để thu về "
 "đúng nguyên liệu. "
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid ""
-"Some product moves have already been confirmed, this manufacturing order "
-"can't be completely cancelled. Are you still sure you want to process?"
-msgstr ""
-"Một số dịch chuyển sản phẩm đã được xác nhận, lệnh sản xuất này không thể bị"
-" hủy hoàn toàn. Bạn vẫn chắc chắn muốn tiếp tục?"
 
 #. module: mrp
 #. odoo-python
@@ -7022,7 +7024,7 @@ msgstr "Bạn cần cung cấp số lô cho thành phẩm. "
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products and 'consume' them:"
-msgstr ""
+msgstr "Bạn cần cung cấp số lô/sê-ri cho sản phẩm và 'tiêu thụ' chúng:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7035,6 +7037,17 @@ msgstr "Bạn đã sản xuất ít hơn nhu cầu ban đầu"
 #, python-format
 msgid "You should provide a lot number for the final product."
 msgstr "Bạn nên cung cấp số lô cho thành phẩm. "
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"Bạn nên cập nhật số lượng nguyên liệu thay vì trực tiếp cập nhật số lượng "
+"sản phẩm theo bộ kit."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -7057,7 +7070,7 @@ msgstr "ngày"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "e.g. SN0000001"
-msgstr ""
+msgstr "VD: SN0000001"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit

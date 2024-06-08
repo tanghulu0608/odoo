@@ -113,6 +113,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._get_partner_party_vals(partner, role)
 
+        partner = partner.commercial_partner_id
         vals.update({
             'endpoint_id': partner.peppol_endpoint,
             'endpoint_id_attrs': {'schemeID': partner.peppol_eas},
@@ -133,7 +134,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _get_delivery_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_21
         supplier = invoice.company_id.partner_id.commercial_partner_id
-        customer = invoice.commercial_partner_id
+        customer = invoice.partner_id
 
         economic_area = self.env.ref('base.europe').country_ids.mapped('code') + ['NO']
         intracom_delivery = (customer.country_id.code in economic_area
@@ -239,6 +240,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals['currency_dp'] = 2
         vals['price_vals']['currency_dp'] = 2
 
+        if line.currency_id.compare_amounts(vals['price_vals']['price_amount'], 0) == -1:
+            # We can't have negative unit prices, so we invert the signs of
+            # the unit price and quantity, resulting in the same amount in the end
+            vals['price_vals']['price_amount'] *= -1
+            vals['line_quantity'] *= -1
+
         return vals
 
     def _export_invoice_vals(self, invoice):
@@ -246,7 +253,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals = super()._export_invoice_vals(invoice)
 
         vals['vals'].update({
-            'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
+            'customization_id': self._get_customization_ids()['ubl_bis3'],
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
             'currency_dp': 2,
             'ubl_version_id': None,
@@ -268,13 +275,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _export_invoice_constraints(self, invoice, vals):
         # EXTENDS account.edi.xml.ubl_21
         constraints = super()._export_invoice_constraints(invoice, vals)
-
-        constraints.update({
-            'peppol_eas_is_set_supplier': self._check_required_fields(vals['supplier'], 'peppol_eas'),
-            'peppol_eas_is_set_customer': self._check_required_fields(vals['customer'], 'peppol_eas'),
-            'peppol_endpoint_is_set_supplier':  self._check_required_fields(vals['supplier'], 'peppol_endpoint'),
-            'peppol_endpoint_is_set_customer':  self._check_required_fields(vals['customer'], 'peppol_endpoint'),
-        })
 
         constraints.update(
             self._invoice_constraints_peppol_en16931_ubl(invoice, vals)
@@ -330,18 +330,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
-            if invoice.currency_id.compare_amounts(line.price_unit, 0) == -1:
-                # [BR-27]-The Item net price (BT-146) shall NOT be negative.
-                constraints.update({'cen_en16931_positive_item_net_price': _(
-                    "The invoice contains line(s) with a negative unit price, which is not allowed."
-                    " You might need to set a negative quantity instead.")})
             if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         for role in ('supplier', 'customer'):
-            constraints[f'cen_en16931_{role}_country'] = self._check_required_fields(vals[role], 'country_id')
+            constraints[f'cen_en16931_{role}_country'] = self._check_required_fields(
+                vals['vals'][f'accounting_{role}_party_vals']['party_vals']['postal_address_vals']['country_vals'],
+                'identification_code',
+                _("The country is required for the %s.", role)
+            )
             scheme_vals = vals['vals'][f'accounting_{role}_party_vals']['party_vals']['party_tax_scheme_vals'][-1:]
             if (
                 not (scheme_vals and scheme_vals[0]['company_id'] and scheme_vals[0]['company_id'][:2].isalpha())
@@ -411,7 +410,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'nl_r_005': _(
                         "%s should have a KVK or OIN number: the Peppol e-address (EAS) should be '0106' or '0190'.",
                         vals['customer'].display_name
-                    ) if vals['customer'].peppol_eas not in ('0106', '0190') else '',
+                    ) if vals['customer'].commercial_partner_id.peppol_eas not in ('0106', '0190') else '',
                 })
 
         if vals['supplier'].country_id.code == 'NO':
@@ -425,3 +424,19 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
             })
         return constraints
+
+    def _import_retrieve_partner_vals(self, tree, role):
+        # EXTENDS account.edi.xml.ubl_20
+        partner_vals = super()._import_retrieve_partner_vals(tree, role)
+        nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
+        endpoint_node = tree.find(f'.//cac:Accounting{role}Party/cac:Party/cbc:EndpointID', nsmap)
+        if endpoint_node is not None:
+            peppol_eas = endpoint_node.attrib.get('schemeID')
+            peppol_endpoint = endpoint_node.text
+            if peppol_eas and peppol_endpoint:
+                # include the EAS and endpoint in the search domain when retrieving the partner
+                partner_vals.update({
+                    'peppol_eas': peppol_eas,
+                    'peppol_endpoint': peppol_endpoint,
+                })
+        return partner_vals

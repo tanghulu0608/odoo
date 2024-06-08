@@ -13,7 +13,6 @@
 # Alena Vlasova, 2023
 # valmasone, 2023
 # ILMIR <karamov@it-projects.info>, 2023
-# Collex100, 2023
 # Sergey Vilizhanin, 2023
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
@@ -21,6 +20,8 @@
 # Martin Trigaux, 2023
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Wil Odoo, 2024
+# Collex100, 2024
+# nadia martynova, 2024
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: nadia martynova, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,7 +292,7 @@ msgstr ""
 "* Местонахождение клиента: Виртуальное местоположение, представляющее собой место назначения для продуктов, отправляемых вашим клиентам.\n"
 "* Убыток от инвентаризации: виртуальное местоположение, служащее контрагентом по инвентарным операциям, используемым для корректировки уровня запасов (физические запасы).\n"
 "* Производство: Виртуальное расположение контрагентов для производственной деятельности: это местоположение потребляет компоненты и производит готовую продукцию.\n"
-"* Транзитное местоположение: Местоположение контрагента, которое должно использоваться в межфирменных или межскладских операциях."
+"* Транзитное местоположение: Местоположение контрагента, которое должно использоваться в межфирменных или межскладских операциях"
 
 #. module: stock
 #. odoo-python
@@ -1071,15 +1072,6 @@ msgid "All at once"
 msgstr "Все сразу"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"All our contractual relations will be governed exclusively by United States "
-"law."
-msgstr ""
-"Все наши договорные отношения будут регулироваться исключительно "
-"законодательством США."
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
 msgid "All returned moves"
 msgstr "Все возвращенные ходы"
@@ -1220,6 +1212,11 @@ msgstr "Апрель"
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
 msgstr "Архивировано"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Are you sure you want to cancel this transfer?"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1472,15 +1469,6 @@ msgid "Before scheduled date"
 msgstr "До назначенной даты"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
-"responsibility."
-msgstr ""
-"Приведенный ниже текст служит предложением и не влечет за собой "
-"ответственности Odoo S.A."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
 msgid "Blocking Message"
 msgstr "Блокирующее сообщение"
@@ -1621,26 +1609,6 @@ msgstr "Категория"
 #: model:ir.model.fields,field_description:stock.field_product_template__route_from_categ_ids
 msgid "Category Routes"
 msgstr "Категория Маршруты"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Certain countries apply withholding at source on the amount of invoices, in "
-"accordance with their internal legislation. Any withholding at source will "
-"be paid by the client to the tax authorities. Under no circumstances can My "
-"Company (Chicago) become involved in costs related to a country's "
-"legislation. The amount of the invoice will therefore be due to My Company "
-"(Chicago) in its entirety and does not include any costs relating to the "
-"legislation of the country in which the client is located."
-msgstr ""
-"Некоторые страны в соответствии со своим внутренним законодательством "
-"удерживают налог у источника на сумму счетов-фактур. Любые удержания у "
-"источника выплачиваются клиентом налоговым органам. Ни при каких "
-"обстоятельствах My Company (Chicago) не может быть вовлечена в расходы, "
-"связанные с законодательством той или иной страны. Таким образом, сумма "
-"счета будет причитаться My Company (Chicago) в полном объеме и не будет "
-"включать в себя расходы, связанные с законодательством страны, в которой "
-"находится клиент."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -2781,7 +2749,7 @@ msgstr "Описание для Внутренних Перемещений"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Receipts"
-msgstr "Описание к квитанциям"
+msgstr "Описание к Поступлению товаров"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
@@ -2835,7 +2803,7 @@ msgstr "Dest Package Id Домен"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
 msgid "Destination Address "
-msgstr "Адрес назначения"
+msgstr "Адрес назначения "
 
 #. module: stock
 #. odoo-python
@@ -3561,6 +3529,13 @@ msgid "Generate Serials numbers"
 msgstr "Генерация серийных номеров"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Generate Serials/Lots"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Get a full traceability from vendors to customers"
 msgstr "Получите полную прослеживаемость от поставщиков к клиентам"
@@ -3780,19 +3755,6 @@ msgid "Icon to indicate an exception activity."
 msgstr "Значок, обозначающий исключение Дела."
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"If a payment is still outstanding more than sixty (60) days after the due "
-"payment date, My Company (Chicago) reserves the right to call on the "
-"services of a debt recovery company. All legal expenses will be payable by "
-"the client."
-msgstr ""
-"Если платеж остается непогашенным более шестидесяти (60) дней после "
-"наступления даты платежа, My Company (Chicago) оставляет за собой право "
-"обратиться к услугам компании по возврату долгов. Все судебные издержки "
-"оплачивает клиент."
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__same
 msgid "If all products are same"
 msgstr "Если все продукты одинаковые"
@@ -4001,7 +3963,7 @@ msgstr ""
 "Если этот флажок установлен, вы сможете выбрать партии / серийные номера. Вы"
 " также можете решить не помещать партии в этот тип операции. Это означает, "
 "что он создаст запас без каких-либо затрат или не поставит ограничение на "
-"занятую партию"
+"занятую партию. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -4027,7 +3989,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_type_entire_packs
 #: model:ir.model.fields,help:stock.field_stock_picking_type__show_entire_packs
 msgid "If ticked, you will be able to select entire packages to move"
-msgstr "Если отмечено, вы сможете выбрать все упаковки для перемещения."
+msgstr "Если отмечено, вы сможете выбрать все упаковки для перемещения"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -4054,6 +4016,13 @@ msgid "Import Lots"
 msgstr "Импортные партии"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, python-format
+msgid "Import Serials/Lots"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
@@ -4069,19 +4038,6 @@ msgstr "В наличии"
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
 msgid "In Type"
 msgstr "В тип"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"In order for it to be admissible, My Company (Chicago) must be notified of "
-"any claim by means of a letter sent by recorded delivery to its registered "
-"office within 8 days of the delivery of the goods or the provision of the "
-"services."
-msgstr ""
-"Для того чтобы претензия могла быть принята, \"Моя компания\" (Чикаго) "
-"должна быть уведомлена о ней письмом, отправленным заказным письмом на ее "
-"зарегистрированный офис в течение 8 дней с момента поставки товара или "
-"оказания услуг."
 
 #. module: stock
 #. odoo-javascript
@@ -4873,6 +4829,13 @@ msgid "Locations"
 msgstr "Местоположение"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.server,name:stock.action_toggle_is_locked
 msgid "Lock/Unlock"
 msgstr "Блокировка/Рзблокировка"
@@ -4893,6 +4856,11 @@ msgstr "Лот"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__lot_label_format
 msgid "Lot Label Format to auto-print"
 msgstr "Формат этикетки лота для автоматической печати"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "Отчет о маркировке партии"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_properties_definition
@@ -5297,23 +5265,6 @@ msgid "My Activity Deadline"
 msgstr "Крайний срок моей активности"
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"My Company (Chicago) undertakes to do its best to supply performant services"
-" in due time in accordance with the agreed timeframes. However, none of its "
-"obligations can be considered as being an obligation to achieve results. My "
-"Company (Chicago) cannot under any circumstances, be required by the client "
-"to appear as a third party in the context of any claim for damages filed "
-"against the client by an end consumer."
-msgstr ""
-"Моя компания (Chicago) обязуется сделать все возможное для своевременного "
-"оказания услуг в соответствии с оговоренными сроками. Однако ни одно из "
-"обязательств не может рассматриваться как обязательство по достижению "
-"результата. My Company (Chicago) ни при каких обстоятельствах не может быть "
-"обязана клиентом выступать в качестве третьей стороны в контексте любого "
-"иска о возмещении ущерба, поданного против клиента конечным потребителем."
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
 msgstr "Мои подсчеты"
@@ -5396,12 +5347,6 @@ msgstr "Изменить количество в наличии"
 #: model:ir.actions.act_window,name:stock.action_picking_form
 msgid "New Transfer"
 msgstr "Новый Трансфер"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
-#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Следующее событие календаря активности"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
@@ -5932,23 +5877,6 @@ msgstr "Исходное правило перегруппировки"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Other Information"
 msgstr "Другая информация"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"Our invoices are payable within 21 working days, unless another payment "
-"timeframe is indicated on either the invoice or the order. In the event of "
-"non-payment by the due date, My Company (Chicago) reserves the right to "
-"request a fixed interest payment amounting to 10% of the sum remaining due. "
-"My Company (Chicago) will be authorized to suspend any provision of services"
-" without prior warning in the event of late payment."
-msgstr ""
-"Наши счета подлежат оплате в течение 21 рабочего дня, если в счете или "
-"заказе не указаны другие сроки оплаты. В случае неуплаты в установленный "
-"срок My Company (Chicago) оставляет за собой право потребовать уплаты "
-"фиксированного процента в размере 10% oот суммы, оставшейся к оплате. В "
-"случае просрочки платежа My Company (Chicago) будет вправе приостановить "
-"предоставление услуг без предварительного предупреждения."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -7198,19 +7126,12 @@ msgid "RETURN OF"
 msgstr "ВОЗВРАЩЕНИЕ"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_lot__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_picking__rating_ids
-#: model:ir.model.fields,field_description:stock.field_stock_scrap__rating_ids
-msgid "Ratings"
-msgstr "Рейтинги"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
-msgstr "Готово"
+msgstr "Подтверждение"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -7250,12 +7171,12 @@ msgstr "Маршрут получения"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Receipts"
-msgstr "Квитанции"
+msgstr "Поступления"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr "Расписки позволяют получать товары от партнера."
+msgstr "Поставки - это получение товаров от партнеров. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7793,6 +7714,14 @@ msgstr ""
 " и категориям товаров"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "Правило %s принадлежит %s, а маршрут - %s."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "Правило Сообщение"
@@ -7866,11 +7795,6 @@ msgstr "Демоверсия SSCC"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
 msgstr "SSCC:"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "СТАНДАРТНЫЕ ПОЛОЖЕНИЯ И УСЛОВИЯ ПРОДАЖИ"
 
 #. module: stock
 #. odoo-javascript
@@ -8904,19 +8828,6 @@ msgstr "Обратный заказ %s был создан."
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
 msgid "The barcode for a location must be unique per company!"
 msgstr "Штрих-код места должен быть уникальным для каждой компании!"
-
-#. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid ""
-"The client explicitly waives its own standard terms and conditions, even if "
-"these were drawn up after these standard terms and conditions of sale. In "
-"order to be valid, any derogation must be expressly agreed to in advance in "
-"writing."
-msgstr ""
-"Клиент однозначно отказывается от своих собственных стандартных условий, "
-"даже если они были составлены после настоящих стандартных условий продажи. "
-"Для того чтобы любое отступление было действительным, оно должно быть "
-"предварительно согласовано в письменном виде."
 
 #. module: stock
 #. odoo-python
@@ -10055,7 +9966,7 @@ msgstr "Пользователь, которому поручено вести �
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Validate"
-msgstr "Проверка"
+msgstr "Подтверждение"
 
 #. module: stock
 #. odoo-javascript
@@ -10836,6 +10747,17 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"Нельзя упаковывать продукты в одну упаковку, если они получены из разных "
+"пересылок с разными типами операций."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -11050,11 +10972,6 @@ msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "Вам необходимо указать номер партии/серийный номер для продукции %s."
 
 #. module: stock
-#: model_terms:res.company,invoice_terms_html:stock.res_company_1
-msgid "You should update this document to reflect your T&amp;C."
-msgstr "Вам следует обновить этот документ в соответствии с вашими Т&amp;С."
-
-#. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
@@ -11093,15 +11010,6 @@ msgstr ""
 "Здесь вы найдете умные предложения по пополнению запасов, основанные на прогнозах товарных запасов.\n"
 "            Выберите количество для закупки или производства и запускайте заказы одним щелчком мыши.\n"
 "            Чтобы сэкономить время в будущем, установите правила как «автоматические»."
-
-#. module: stock
-#: model_terms:res.company,lunch_notify_message:stock.res_company_1
-msgid ""
-"Your lunch has been delivered.\n"
-"Enjoy your meal!"
-msgstr ""
-"Ваш обед доставлен.\n"
-"Наслаждайтесь едой!"
 
 #. module: stock
 #. odoo-python

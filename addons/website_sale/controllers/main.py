@@ -177,6 +177,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
 
+    def _add_search_subdomains_hook(self, search):
+        return []
+
     def _get_shop_domain(self, search, category, attrib_values, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
@@ -188,6 +191,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 if search_in_description:
                     subdomains.append([('website_description', 'ilike', srch)])
                     subdomains.append([('description_sale', 'ilike', srch)])
+                extra_subdomain = self._add_search_subdomains_hook(srch)
+                if extra_subdomain:
+                    subdomains.append(extra_subdomain)
                 domains.append(expression.OR(subdomains))
 
         if category:
@@ -1823,7 +1829,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/shop')
 
         if order and not order.amount_total and not tx_sudo:
-            order.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
+            if order.state != 'sale':
+                order.with_context(send_email=True).with_user(SUPERUSER_ID).action_confirm()
             return request.redirect(order.get_portal_url())
 
         # clean context and session, then redirect to the confirmation page
