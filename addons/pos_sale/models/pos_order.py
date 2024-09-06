@@ -102,6 +102,9 @@ class PosOrder(models.Model):
             for picking in self.env['stock.picking'].browse(waiting_picking_ids):
                 if all(is_product_uom_qty_zero(move) for move in picking.move_ids):
                     picking.action_cancel()
+                else:
+                    # We make sure that the original picking still has the correct quantity reserved
+                    picking.action_assign()
 
         return order_ids
 
@@ -156,9 +159,9 @@ class PosOrderLine(models.Model):
 
     def _export_for_ui(self, orderline):
         result = super()._export_for_ui(orderline)
-        # NOTE We are not exporting 'sale_order_line_id' because it is being used in any views in the POS App.
         result['down_payment_details'] = bool(orderline.down_payment_details) and orderline.down_payment_details
         result['sale_order_origin_id'] = bool(orderline.sale_order_origin_id) and orderline.sale_order_origin_id.read(fields=['name'])[0]
+        result['sale_order_line_id'] = bool(orderline.sale_order_line_id) and orderline.sale_order_line_id.read(fields=['name'])[0]
         return result
 
     def _order_line_fields(self, line, session_id=None):
@@ -171,3 +174,10 @@ class PosOrderLine(models.Model):
             order_line = self.env['sale.order.line'].search([('id', '=', vals['sale_order_line_id']['id'])], limit=1)
             vals['sale_order_line_id'] = order_line.id if order_line else False
         return result
+
+    def _launch_stock_rule_from_pos_order_lines(self):
+        orders = self.mapped('order_id')
+        for order in orders:
+            for line in order.lines:
+                line.sale_order_line_id.move_ids.mapped("move_line_ids").unlink()
+        return super()._launch_stock_rule_from_pos_order_lines()

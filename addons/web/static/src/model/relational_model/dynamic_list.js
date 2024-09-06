@@ -163,9 +163,7 @@ export class DynamicList extends DataPoint {
     }
 
     selectDomain(value) {
-        return this.model.mutex.exec(() => {
-            this.isDomainSelected = value;
-        });
+        return this.model.mutex.exec(() => this._selectDomain(value));
     }
 
     sortBy(fieldName) {
@@ -215,7 +213,9 @@ export class DynamicList extends DataPoint {
             resIds = await this.getResIds(true);
         }
 
-        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds]);
+        const duplicated = await this.model.orm.call(this.resModel, "copy_multi", [resIds], {
+            context: this.context,
+        });
         if (resIds.length > duplicated.length) {
             this.model.notification.add(_t("Some records could not be duplicated"), {
                 title: _t("Warning"),
@@ -408,6 +408,10 @@ export class DynamicList extends DataPoint {
                 dp[handleField] = dpData[handleField];
             }
         }
+    }
+
+    _selectDomain(value) {
+        this.isDomainSelected = value;
     }
 
     async _toggleArchive(isSelected, state) {

@@ -290,7 +290,7 @@ class AccountMoveSend(models.TransientModel):
     def _compute_mail_partner_ids(self):
         for wizard in self:
             if wizard.mode == 'invoice_single' and wizard.mail_template_id:
-                wizard.mail_partner_ids = self._get_default_mail_partner_ids(self.move_ids, wizard.mail_template_id, wizard.mail_lang)
+                wizard.mail_partner_ids = wizard._get_default_mail_partner_ids(wizard.move_ids, wizard.mail_template_id, wizard.mail_lang)
             else:
                 wizard.mail_partner_ids = None
 
@@ -377,7 +377,7 @@ class AccountMoveSend(models.TransientModel):
         if invoice.invoice_pdf_report_id:
             return
 
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
+        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render('account.account_invoices', invoice.ids)
 
         invoice_data['pdf_attachment_values'] = {
             'raw': content,
@@ -394,7 +394,7 @@ class AccountMoveSend(models.TransientModel):
         :param invoice:         An account.move record.
         :param invoice_data:    The collected data for the invoice so far.
         """
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids, data={'proforma': True})
+        content, _report_format = self.env['ir.actions.report'].with_company(invoice.company_id)._render('account.account_invoices', invoice.ids, data={'proforma': True})
 
         invoice_data['proforma_pdf_attachment_values'] = {
             'raw': content,
