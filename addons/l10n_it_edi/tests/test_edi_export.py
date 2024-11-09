@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
@@ -249,6 +248,40 @@ class TestItEdiExport(TestItEdi):
         })
         self.assertEqual(['partner_address_missing'], list(invoice._l10n_it_edi_export_data_check().keys()))
 
+    def test_bill_refund_no_reconcile(self):
+        Move = self.env['account.move'].with_company(self.company)
+        purchase_tax = self.env['account.tax'].with_company(self.company).create({
+            'name': 'Tax 4%',
+            'amount': 4.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('+03', )),
+                self.RepartitionLine(100, 'tax', ('+5v', ))),
+            'refund_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('-03', )),
+                self.RepartitionLine(100, 'tax', False))
+        })
+        values = {
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'partner_bank_id': self.test_bank.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(purchase_tax.ids)],
+                })
+            ]
+        }
+
+        bill = Move.create({'move_type': 'in_invoice', **values})
+        credit_note = Move.create({'move_type': 'in_refund', **values})
+        (bill + credit_note).action_post()
+        credit_note.reversed_entry_id = bill
+        self._assert_export_invoice(credit_note, 'credit_note_refund_no_reconcile.xml')
+
     def test_invoice_zero_percent_taxes(self):
         tax_zero_percent_hundred_percent_repartition = self.env['account.tax'].with_company(self.company).create({
             'name': 'all of nothing',
@@ -363,9 +396,8 @@ class TestItEdiExport(TestItEdi):
             ],
         })
         invoice.action_post()
-
-        with self.assertRaises(UserError, msg="You have negative lines that we can't dispatch on others. They need to have the same tax."):
-            self._assert_export_invoice(invoice, 'invoice_negative_price.xml')
+        with self.subTest('invoice_different_taxes'):
+            self._assert_export_invoice(invoice, 'invoice_negative_price_different_taxes.xml')
 
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits

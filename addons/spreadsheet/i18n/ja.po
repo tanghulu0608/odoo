@@ -4005,7 +4005,7 @@ msgstr "ラジアンの値の逆正接、。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Is between"
-msgstr "間に存在します"
+msgstr "が次の間である"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11269,7 +11269,7 @@ msgstr "年は、特定の日付で指定されました。"
 #: code:addons/spreadsheet/static/src/helpers/constants.js:0
 #, python-format
 msgid "Year to Date"
-msgstr "年から日"
+msgstr "年初からの累計"
 
 #. module: spreadsheet
 #. odoo-javascript

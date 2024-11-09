@@ -273,7 +273,7 @@ msgstr ""
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Restaurant"
-msgstr ""
+msgstr "رستوران نقدی"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -861,7 +861,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/floor_screen/edit_bar.xml:0
 #, python-format
 msgid "Rename"
-msgstr ""
+msgstr "تغییر نام دهید"
 
 #. module: pos_restaurant
 #. odoo-javascript

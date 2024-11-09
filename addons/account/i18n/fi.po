@@ -24,7 +24,6 @@
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2023
 # Joni Winsten, 2023
 # Juha Torkkeli <juha.torkkeli@labaduu.com>, 2023
-# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2023
 # Miika Nissi <miika.nissi@tawasta.fi>, 2023
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
@@ -42,19 +41,20 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2024
 # Konsta Aavaranta, 2024
 # Jussi Lehto, 2024
-# Jessica Jakara, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
 # Martin Trigaux, 2024
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2024
+# Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2024
+# Jessica Jakara, 2024
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 16:15+0000\n"
+"POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2024\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1646,6 +1646,20 @@ msgstr ""
 "Tili %s ei salli täsmäytystä. Salli täsmäytys muuttamalla tilin asetuksia."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 msgid "Account Avatax"
 msgstr "Avatax-tili"
@@ -1991,7 +2005,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Accountant"
-msgstr ""
+msgstr "Kirjanpitäjä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -3528,7 +3542,7 @@ msgstr "Estoviesti"
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Bookkeeper"
-msgstr ""
+msgstr "Kirjanpitäjä"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -4187,7 +4201,7 @@ msgstr "Kaupallinen yksikkö"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr "Viitetyyppi"
+msgstr "Viestintästandardi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
@@ -7042,6 +7056,9 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"Kaava muodossa line_code.expression_label. Tämän avulla voidaan määrittää "
+"tämän lausekkeen siirtokohde (_carryover_*-merkityssä lausekkeessa), jos se "
+"on eri kuin kantarivi."
 
 #. module: account
 msgid ""
@@ -7575,8 +7592,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
-"Jos tyhjä, käytä päiväkirjan määrittelemää päiväkirjaa kirjauksen "
-"peruuttamiseen."
+"Jos tyhjä, käyttää päiväkirjan määrittelemää päiväkirjaa vastakirjauksiin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -8849,7 +8865,7 @@ msgstr "Päiväkirjat, joissa vastaava numero ei ole asetettu"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Journal should be the same type as the reversed entry."
-msgstr "Päiväkirjan on oltava samantyyppinen kuin käänteinen kirjaus."
+msgstr "Päiväkirjan on oltava samantyyppinen kuin hyvityksellä."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -11819,7 +11835,7 @@ msgstr "Uudelleen sekvensointi"
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Read-only"
-msgstr ""
+msgstr "Vain luku"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
@@ -12281,7 +12297,7 @@ msgstr "Vastakirjaus tositteelle %s"
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "Käänteinen"
+msgstr "Hyvitä"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12303,7 +12319,7 @@ msgstr "Käänteiset siirrot"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse and Create Invoice"
-msgstr "Käännä ja luo lasku"
+msgstr "Hyvitä ja luo lasku"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
@@ -12312,7 +12328,7 @@ msgstr "Käännä ja luo lasku"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr "Palautettu"
+msgstr "Hyvitetty"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
@@ -12427,7 +12443,7 @@ msgstr "SO123"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "VAKIOMUOTOISET MYYNTIEHDOT"
+msgstr "YLEISET MYYNTIEHDOT"
 
 #. module: account
 #: model:account.account,name:account.1_expense_salary
@@ -14054,6 +14070,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -14280,8 +14305,8 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"Asiakas luopuu nimenomaisesti omista vakioehdoistaan, vaikka ne olisi "
-"laadittu näiden vakiomyyntiehtojen jälkeen. Jotta poikkeukset olisivat "
+"Asiakas luopuu nimenomaisesti omista yleisistä ehdoistaan, vaikka ne olisi "
+"laadittu näiden yleisten myyntiehtojen jälkeen. Jotta poikkeukset olisivat "
 "päteviä, niistä on sovittava etukäteen kirjallisesti ja nimenomaisesti."
 
 #. module: account
@@ -15331,7 +15356,7 @@ msgstr "Tämä merkintä on kopioitu osoitteesta %s"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This entry has been reversed from %s"
-msgstr "Tämä merkintä on peruutettu %s"
+msgstr "Tämä merkintä on hyvitetty %s"
 
 #. module: account
 #. odoo-python
@@ -15367,6 +15392,14 @@ msgid ""
 msgstr ""
 "Tämä on oletusluottoraja, jota käytetään kumppaneille, joille ei ole "
 "asetettu erityistä luottorajaa."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "Tämä päiväkirja liittyy maksutapaan. Et voi arkistoida sitä."
 
 #. module: account
 #. odoo-python
@@ -15937,6 +15970,13 @@ msgstr "Yksikköhinta:"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
 msgstr "Mittayksikkö"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/template_generic_coa.py:0
+#, python-format
+msgid "United States of America (Generic)"
+msgstr "Yhdysvallat (Yleinen)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -16578,6 +16618,8 @@ msgid ""
 "When targeting an expression for carryover, the label of that expression "
 "must start with _applied_carryover_"
 msgstr ""
+"Kun kohdistat lausekkeen siirtoa varten, kyseisen lausekkeen nimikkeen on "
+"alettava sanalla _applied_carryover_"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16773,7 +16815,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr "Voit peruuttaa vain kirjattuja tapahtumia."
+msgstr "Voit hyvittää vain kirjattuja tapahtumia."
 
 #. module: account
 #. odoo-python
@@ -17402,6 +17444,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
+"Kenttää carryover_target ei voi käyttää lausekkeessa, jonka nimike ei ala "
+"_carryover_ -alukkeella"
 
 #. module: account
 #. odoo-python

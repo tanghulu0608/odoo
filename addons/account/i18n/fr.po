@@ -8,13 +8,14 @@
 # Yassine KHATTABI, 2024
 # Rémi CAZENAVE, 2024
 # Wil Odoo, 2024
+# allanot nicolas <n.allanot@free.fr>, 2024
 # Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-14 16:15+0000\n"
+"POT-Creation-Date: 2024-09-06 12:08+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1616,6 +1617,24 @@ msgid ""
 msgstr ""
 "Le compte %s ne permet pas le lettrage. Modifiez sa configuration pour "
 "pouvoir lettrer des écritures."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"Le compte %s est de type créditeur, mais est utilisé dans une opération de "
+"vente."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"Le compte %s est de type débiteur, mais est utilisé dans une opération "
+"d'achat."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
@@ -7316,7 +7335,7 @@ msgstr "Comparaison de croissance"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
 msgid "HALF-UP"
-msgstr "ARRONDIR À L'ENTIER SUPÉRIEUR"
+msgstr "ARRONDIR AU DEMI LE PLUS PROCHE"
 
 #. module: account
 #: model:ir.model,name:account.model_ir_http
@@ -14140,6 +14159,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr "Translation placeholder"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -15501,6 +15529,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Ce journal est associé à un mode de paiement. Vous ne pouvez pas l'archiver."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -16073,6 +16110,13 @@ msgstr "Prix unitaire :"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
 msgstr "Unité de mesure"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/template_generic_coa.py:0
+#, python-format
+msgid "United States of America (Generic)"
+msgstr "États-Unis d'Amérique (Générique)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form

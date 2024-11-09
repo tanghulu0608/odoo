@@ -1775,6 +1775,12 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mos.move_finished_ids.mapped('quantity'), [1] * 3)
 
     def test_components_availability(self):
+        def check_availability_state(state):
+            self.assertEqual(mo.components_availability_state, state)
+            MO = self.env['mrp.production']
+            self.assertIn(mo, MO.search([('components_availability_state', '=', state)]))
+            self.assertNotIn(mo, MO.search([('components_availability_state', '!=', state)]))
+
         self.bom_2.unlink()  # remove the kit bom of product_5
         now = fields.Datetime.now()
         mo_form = Form(self.env['mrp.production'])
@@ -1804,25 +1810,26 @@ class TestMrpOrder(TestMrpCommon):
 
         mo.invalidate_recordset(['components_availability', 'components_availability_state'])
         self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
-        self.assertEqual(mo.components_availability_state, 'late')
+        check_availability_state('late')
 
         mo.date_start = after_tommorrow
 
         self.assertEqual(mo.components_availability, f'Exp {format_date(self.env, tommorrow)}')
         self.assertEqual(mo.components_availability_state, 'expected')
+        check_availability_state('expected')
 
         (move1 | move2 | move3).picked = True
         (move1 | move2 | move3)._action_done()
 
         mo.invalidate_recordset(['components_availability', 'components_availability_state'])
         self.assertEqual(mo.components_availability, 'Available')
-        self.assertEqual(mo.components_availability_state, 'available')
+        check_availability_state('available')
 
         mo.action_assign()
 
         self.assertEqual(mo.reservation_state, 'assigned')
         self.assertEqual(mo.components_availability, 'Available')
-        self.assertEqual(mo.components_availability_state, 'available')
+        check_availability_state('available')
 
 
     def test_immediate_validate_6(self):
@@ -3969,6 +3976,7 @@ class TestMrpOrder(TestMrpCommon):
         will be set too. As if the finish date is not set the planned workorder will not
         be shown in planning gantt view
         """
+        self.env.company.resource_calendar_id.tz = 'Europe/Brussels'
         mo = self.env['mrp.production'].create({
             'product_id': self.product.id,
             'product_uom_id': self.bom_1.product_uom_id.id,
@@ -4127,8 +4135,8 @@ class TestMrpOrder(TestMrpCommon):
 
         # Set a different duration, finish the wo and validate the second bo
         bo_2.workorder_ids.button_start()
-        bo_2.workorder_ids.duration = 100
         bo_2.workorder_ids.button_finish()
+        bo_2.workorder_ids.duration = 100
         self.assertRecordValues(bo_2.workorder_ids, [
             {'qty_produced': 4.0, 'qty_remaining': 0.0, 'duration_expected': 165.0, 'duration': 100.0, 'state': 'done'}
         ])
@@ -4250,6 +4258,33 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_2.blocked_by_workorder_ids, op_1)
         self.assertEqual(op_3.blocked_by_workorder_ids, op_2)
 
+    def test_update_mo_from_bom_with_kit(self):
+        """
+        Test that an MO can be updated from BoM when the finished product has a kit as a component.
+        """
+        # Test that the finished product has a kit as a component
+        kit_bom_line = self.bom_3.bom_line_ids.filtered(lambda line: line.product_id.is_kits)
+        self.assertEqual(len(kit_bom_line), 1)
+        kit_bom = kit_bom_line.product_id.bom_ids
+        self.assertEqual(len(kit_bom.bom_line_ids), 2)
+        # Check that other components are present in the BoM
+        self.assertEqual(len(self.bom_3.bom_line_ids), 3)
+        # Create a MO
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_3.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        # keep only the kit as component
+        (self.bom_3.bom_line_ids - kit_bom_line).unlink()
+        self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 2, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 3, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):
@@ -4306,5 +4341,5 @@ class TestMrpSynchronization(HttpCase):
         self.start_tour(url, "test_manufacturing_and_byproduct_sm_to_sml_synchronization", login="admin", timeout=100)
         self.assertEqual(mo.move_raw_ids.quantity, 7)
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
-        self.assertEqual(mo.move_byproduct_ids.quantity, 7)
+        self.assertEqual(mo.move_byproduct_ids.quantity, 8)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 2)

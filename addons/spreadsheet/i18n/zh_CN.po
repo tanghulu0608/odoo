@@ -5680,7 +5680,7 @@ msgstr "根据标准规则四舍五入数字。"
 msgid ""
 "Rounds a number down to the nearest integer that is less than or equal to "
 "it."
-msgstr ""
+msgstr "将数字向下舍入，取整至小于或等于该数字的最接近整数。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8393,7 +8393,7 @@ msgstr "返回的数字."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The number to round down to the nearest integer."
-msgstr ""
+msgstr "要向下舍入到最接近的整数的数字。"
 
 #. module: spreadsheet
 #. odoo-javascript

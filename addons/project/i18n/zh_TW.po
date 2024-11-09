@@ -1049,7 +1049,7 @@ msgstr "直接向任務附加所有文件或連結，集中處理所有研究資
 #: model:ir.model.fields,field_description:project.field_project_task__message_attachment_count
 #: model:ir.model.fields,field_description:project.field_project_update__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
@@ -1128,7 +1128,7 @@ msgstr "平均評分：滿意"
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr "未完成的"
+msgstr "積壓工作"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
@@ -3771,7 +3771,7 @@ msgstr "專案"
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid ""
 "Projects contain tasks on the same topic, and each has its own dashboard."
-msgstr "專案包含相同主題的任務，每個專案都有自己的概覽畫面。"
+msgstr "專案包含相同主題的任務，每個專案都有自己的Dashboard。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
@@ -5207,7 +5207,7 @@ msgstr "未讀消息"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__until
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__until
 msgid "Until"
-msgstr "直到"
+msgstr "直至"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__update_ids

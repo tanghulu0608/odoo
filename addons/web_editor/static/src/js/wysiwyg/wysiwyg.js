@@ -1699,15 +1699,9 @@ export class Wysiwyg extends Component {
             }, {
                 onPositioned: (popover) => {
                     restoreSelection();
-                    // Set the 'parentContextRect' option in 'options' when
-                    // 'getContextFromParentRect' is available. This facilitates
-                    // element positioning relative to a parent or reference
-                    // rectangle.
-                    const options = {};
-                    if (this.options.getContextFromParentRect) {
-                        options['parentContextRect'] = this.options.getContextFromParentRect();
-                    }
-                    const rangePosition = getRangePosition(popover, this.options.document, options);
+                    const rangePosition = getRangePosition(popover, this.options.document, {
+                        getContextFromParentRect: this.options.getContextFromParentRect,
+                    });
                     popover.style.top = rangePosition.top + 'px';
                     popover.style.left = rangePosition.left + 'px';
                     const oInputBox = popover.querySelector('input');
@@ -1948,8 +1942,6 @@ export class Wysiwyg extends Component {
         });
         $toolbar.find('#image-crop').click(() => this._showImageCrop());
         $toolbar.find('#image-transform').click(e => {
-            const sel = document.getSelection();
-            sel.removeAllRanges();
             if (!this.lastMediaClicked) {
                 return;
             }
@@ -2170,6 +2162,9 @@ export class Wysiwyg extends Component {
         if (!selection) return;
         const anchorNode = selection.anchorNode;
         if (isProtected(anchorNode)) {
+            return;
+        }
+        if (this.odooEditor.document.querySelector(".transfo-container")) {
             return;
         }
 
@@ -2459,7 +2454,7 @@ export class Wysiwyg extends Component {
                 fontawesome: 'fa-pencil-square-o',
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: async () => {
-                    const uid = Array.isArray(session.user_id) ? session.user_id[0] : session.user_id;
+                    const uid = (Array.isArray(session.user_id) ? session.user_id[0] : session.user_id)  | session.uid;
                     const [user] = await this.orm.read(
                         'res.users',
                         [uid],
@@ -3578,7 +3573,7 @@ export class Wysiwyg extends Component {
         // command is being applied. Note that this needs to be done *before*
         // the command and not after because some commands (e.g. font-size)
         // rely on some elements not to have the class to fully work.
-        for (const node of OdooEditorLib.getSelectedNodes(this.$editable[0])) {
+        for (const node of OdooEditorLib.getTraversedNodes(this.$editable[0])) {
             const el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
             const defaultTextEl = el.closest('.o_default_snippet_text');
             if (defaultTextEl) {

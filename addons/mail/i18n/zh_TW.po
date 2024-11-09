@@ -1357,14 +1357,14 @@ msgstr "附件"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/chatter.xml:0
 #, python-format
 msgid "Attachment counter loading..."
-msgstr "附件計數器加載中..."
+msgstr "正在載入附件計數器⋯"
 
 #. module: mail
 #. odoo-javascript
@@ -5997,7 +5997,7 @@ msgstr "混入程式，以計算一項記錄對 many2one 欄位可載有的每�
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__res_model
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "Model"
-msgstr "資料集"
+msgstr "模型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
@@ -10117,7 +10117,7 @@ msgstr "使用者:"
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__user
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__username
 msgid "Username"
-msgstr "使用者名"
+msgstr "使用者名稱"
 
 #. module: mail
 #. odoo-python

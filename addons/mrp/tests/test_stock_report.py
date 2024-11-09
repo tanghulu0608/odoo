@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests.common import Form
 from odoo.addons.stock.tests.test_report import TestReportsCommon
 
@@ -361,3 +362,99 @@ class TestMrpStockReports(TestReportsCommon):
 
         overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(overview_values['data']['id'], mo.id, "computing overview value should work")
+
+    def test_multi_step_component_forecast_availability(self):
+        """
+        Test that the component availability is correcly forecasted
+        in multi step manufacturing
+        """
+        # Configures the warehouse.
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm_sam'
+        final_product, component = self.product, self.product1
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_uom_id': final_product.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 10}),
+            ],
+        })
+        # Creates a MO without any component in stock
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.components_availability, 'Not Available')
+        self.assertEqual(mo.move_raw_ids.forecast_availability, -20.0)
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 100)
+        # change the qty_producing to force a recompute of the availability
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 2.0
+        self.assertEqual(mo.components_availability, 'Available')
+
+    def test_mo_overview_same_component(self):
+        """
+        Test that for an mo for a product which has 2+ component lines for the same product,
+        if there is some quantity of the component reserved, we properly match replenishments with
+        components lines
+        """
+        # BOM structure:
+        # 'finished', manufactured:
+        #    - 1 'part'
+        #    - 1 'part'
+        part, finished = self.env['product.product'].create([
+            {
+                'name': name,
+                'type': 'product',
+            } for name in ['Part', 'Finished']
+        ])
+        self.env['mrp.bom'].create([
+            {
+                'product_id': finished.id,
+                'product_tmpl_id': finished.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'normal',
+                'bom_line_ids': [
+                    Command.create({'product_id': part.id, 'product_qty': 1.0})
+                ] * 2,
+            }
+        ])
+        # Put 2 parts in stock
+        self.env['stock.quant']._update_available_quantity(part, self.stock_location, 2)
+
+        # Receive 20 parts
+        self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_type': 'one',
+            'move_ids_without_package': [Command.create({
+                    'name': 'test_out_1',
+                    'product_id': part.id,
+                    'product_uom_qty': 20,
+                    'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                    'location_dest_id': self.stock_location.id,
+                }),
+            ],
+        }).action_confirm()
+
+        # Create an MO for 5 finished product
+        mo = self.env['mrp.production'].create({
+            'name': 'MO',
+            'product_qty': 5.0,
+            'product_id': finished.id,
+        })
+        mo.action_confirm()
+
+        # Test overview report values
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        [line0, line1] = overview_values['data']['components']
+        [repl0, repl1] = line0['replenishments'], line1['replenishments']
+        self.assertEqual(len(repl0), 1)
+        self.assertEqual(len(repl1), 1)
+        self.assertEqual(repl0[0]['summary']['quantity'], 3)
+        self.assertEqual(repl1[0]['summary']['quantity'], 5)

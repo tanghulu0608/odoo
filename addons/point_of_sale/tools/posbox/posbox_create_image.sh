@@ -29,7 +29,7 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=17.0
-VERSION_IOTBOX=24.08
+VERSION_IOTBOX=24.10
 
 
 # ask user for the branch/version
@@ -165,10 +165,6 @@ find "${MOUNT_POINT}"/ -type f -name "*.iotpatch"|while read iotpatch; do
         patch -f --verbose "${file}" < "${iotpatch}"
     done
 done
-
-# copy the odoo.conf file to the overwrite directory
-mv -v "${MOUNT_POINT}/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/odoo.conf" "${MOUNT_POINT}/home/pi/"
-chown pi:pi "${MOUNT_POINT}/home/pi/odoo.conf"
 
 # cleanup
 umount -fv "${MOUNT_POINT}"/boot/
