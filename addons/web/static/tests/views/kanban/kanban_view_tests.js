@@ -11824,7 +11824,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("ungrouped kanban with handle field", async (assert) => {
-        assert.expect(3);
+        assert.expect(5);
 
         await makeView({
             type: "kanban",
@@ -11839,6 +11839,9 @@ QUnit.module("Views", (hooks) => {
                 "</div>" +
                 "</t></templates></kanban>",
             async mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read: order: ${args.kwargs.order}`);
+                }
                 if (route === "/web/dataset/resequence") {
                     assert.deepEqual(
                         args.ids,
@@ -11854,6 +11857,7 @@ QUnit.module("Views", (hooks) => {
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
         assert.deepEqual(getCardTexts(target), ["blip", "yop", "gnap", "blip"]);
+        assert.verifySteps(["web_search_read: order: int_field ASC, id ASC"]);
     });
 
     QUnit.test("ungrouped kanban without handle field", async (assert) => {
@@ -15097,4 +15101,27 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(getProgressBars(target, 0)[0].style.width, "100%"); // abc: 1
         }
     );
+    QUnit.test("hide pager in the kanban view with sample data", async (assert) => {
+        serverData.models.partner.records = [];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban sample="1">
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="int_field"/>
+                                <field name="category_ids" widget="many2many_tags"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.hasClass(target.querySelector(".o_content"), "o_view_sample_data");
+        assert.isNotVisible(target.querySelector(".o_cp_pager"));
+    });
 });

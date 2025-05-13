@@ -111,6 +111,15 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             ),
         }]
 
+    def _get_partner_party_legal_entity_vals_list(self, partner):
+        # EXTEND 'account.edi.xml.ubl_20'
+        partners_party_legal = super()._get_partner_party_legal_entity_vals_list(partner)
+        for partner_party_legal in partners_party_legal:
+            if partner_party_legal['commercial_partner'].country_code != 'SA':
+                partner_party_legal['company_id'] = False
+
+        return partners_party_legal
+
     def _l10n_sa_get_payment_means_code(self, invoice):
         """ Return payment means code to be used to set the value on the XML file """
         return 'unknown'
@@ -138,9 +147,13 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             Seller Vat Number (BT-31), Date (BT-2), Time (KSA-25), Invoice Number (BT-1)
         """
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
-        invoice_number = re.sub("[^a-zA-Z0-9 -]", "-", invoice.name)
+        invoice_number = re.sub(r'[^a-zA-Z0-9 -]+', '-', invoice.name)
         invoice_date = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), invoice.l10n_sa_confirmation_datetime)
-        return '%s_%s_%s.xml' % (vat, invoice_date.strftime('%Y%m%dT%H%M%S'), invoice_number)
+        file_name = f"{vat}_{invoice_date.strftime('%Y%m%dT%H%M%S')}_{invoice_number}"
+        file_format = self.env.context.get('l10n_sa_file_format', 'xml')
+        if file_format:
+            file_name = f'{file_name}.{file_format}'
+        return file_name
 
     def _l10n_sa_get_invoice_transaction_code(self, invoice):
         """
@@ -185,7 +198,10 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             the buyer VAT registration number or buyer group VAT registration number must not exist in the Invoice
         """
         if role != 'customer' or partner.country_id.code == 'SA':
-            return super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
+            for vals in vals_list:
+                vals['tax_scheme_vals'] = {'id': 'VAT'}
+            return vals_list
         return []
 
     def _apply_invoice_tax_filter(self, base_line, tax_values):
@@ -357,7 +373,7 @@ class AccountEdiXmlUBL21Zatca(models.AbstractModel):
             to be included in the UBL
         """
         if not line.move_id._is_downpayment() and line.sale_line_ids and all(sale_line.is_downpayment for sale_line in line.sale_line_ids):
-            prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(lambda m: m._is_downpayment())
+            prepayment_move_id = line.sale_line_ids.invoice_lines.move_id.filtered(lambda m: m.move_type == 'out_invoice' and m._is_downpayment())
             return {
                 'prepayment_id': prepayment_move_id.name,
                 'issue_date': fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'),

@@ -328,6 +328,12 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this._setObserver();
         this.odooEditor.observerActive();
     }
+    _getBannerCommands() {
+        return [];
+    }
+    _getBannerCategory() {
+        return [];
+    }
     /**
      * Stop the widgets and save the content.
      *
@@ -784,6 +790,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 priority: 100,
                 description: _t('Insert an alert snippet'),
                 fontawesome: 'fa-info',
+                keywords: ["banner", "info", "success", "warning", "danger"],
                 isDisabled: () => !this.odooEditor.isSelectionInBlockRoot(),
                 callback: () => {
                     snippetCommandCallback('.oe_snippet_body[data-snippet="s_alert"]');
@@ -984,7 +991,7 @@ export class WysiwygAdapterComponent extends Wysiwyg {
         this.__savedCovers[resModel].push(resID);
 
         const imageEl = el.querySelector('.o_record_cover_image');
-        let cssBgImage = imageEl.style.backgroundImage;
+        let cssBgImage = getComputedStyle(imageEl)["backgroundImage"];
         if (imageEl.classList.contains("o_b64_image_to_save")) {
             imageEl.classList.remove("o_b64_image_to_save");
             const groups = cssBgImage.match(/url\("data:(?<mimetype>.*);base64,(?<imageData>.*)"\)/)?.groups;

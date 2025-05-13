@@ -23,8 +23,14 @@ class AccountEdiProxyClientUser(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
-    @handle_demo
+
     def _make_request(self, url, params=False):
+        if self.proxy_type == 'peppol':
+            return self._make_request_peppol(url, params=params)
+        return super()._make_request(url, params=params)
+
+    @handle_demo
+    def _make_request_peppol(self, url, params=False):
         # extends account_edi_proxy_client to update peppol_proxy_state
         # of archived users
         try:
@@ -59,11 +65,11 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_new_documents()
 
     def _cron_peppol_get_message_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_message_status()
 
     # -------------------------------------------------------------------------
@@ -127,7 +133,6 @@ class AccountEdiProxyClientUser(models.Model):
                     enc_key = content["enc_key"]
                     document_content = content["document"]
                     filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-                    partner_endpoint = content["accounting_supplier_party"]
                     decoded_document = edi_user._decrypt_data(document_content, enc_key)
                     attachment_vals = {
                         'name': f'{filename}.xml',
@@ -145,11 +150,7 @@ class AccountEdiProxyClientUser(models.Model):
                                 default_peppol_message_uuid=uuid,
                             )\
                             ._create_document_from_attachment(attachment.id)
-                        if partner_endpoint:
-                            move._message_log(body=_(
-                                'Peppol document has been received successfully. Sender endpoint: %s', partner_endpoint))
-                        else:
-                            move._message_log(body=_('Peppol document has been received successfully'))
+                        move._message_log(body=_('Peppol document has been received successfully'))
                     # pylint: disable=broad-except
                     except Exception:  # noqa: BLE001
                         # if the invoice creation fails for any reason,
@@ -211,7 +212,7 @@ class AccountEdiProxyClientUser(models.Model):
                             continue
 
                         move.peppol_move_state = 'error'
-                        move._message_log(body=_("Peppol error: %s", content['error']['message']))
+                        move._message_log(body=_("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
                         continue
 
                     move.peppol_move_state = content['state']
@@ -223,7 +224,7 @@ class AccountEdiProxyClientUser(models.Model):
                 )
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['pending', 'not_verified', 'sent_verification'])])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['pending', 'not_verified', 'sent_verification']), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_participant_status()
 
     def _peppol_get_participant_status(self):

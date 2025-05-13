@@ -197,6 +197,7 @@ export class MediaDialog extends Component {
                 } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
                     const parentEl = this.props.media.parentElement;
                     if (
+                        parentEl &&
                         parentEl.tagName === "A" &&
                         parentEl.children.length === 1 &&
                         this.props.media.tagName === "IMG"
@@ -278,9 +279,9 @@ export class MediaDialog extends Component {
         if (saveSelectedMedia) {
             const elements = await this.renderMedia(selectedMedia);
             if (this.props.multiImages) {
-                this.props.save(elements);
+                await this.props.save(elements);
             } else {
-                this.props.save(elements[0]);
+                await this.props.save(elements[0]);
             }
         }
         this.props.close();

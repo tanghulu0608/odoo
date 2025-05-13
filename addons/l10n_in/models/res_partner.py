@@ -39,13 +39,13 @@ class ResPartner(models.Model):
             ):
                 if partner.vat[:2] == "99":
                     partner.l10n_in_gst_state_warning = _(
-                        "As per GSTN the country should be other than India, so it's recommended to update it."
+                        "As per GSTN the country should be other than India, so it's recommended to"
                     )
                 else:
-                    state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', partner.vat[:2])])
+                    state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', partner.vat[:2])], limit=1)
                     if state_id and state_id != partner.state_id:
                         partner.l10n_in_gst_state_warning = _(
-                            "As per GSTN the state should be %s, so it's recommended to update it.", state_id.name
+                            "As per GSTN the state should be %s, so it's recommended to", state_id.name
                         )
                     else:
                         partner.l10n_in_gst_state_warning = False
@@ -100,3 +100,5 @@ class ResPartner(models.Model):
         self.ensure_one()
         state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', self.vat[:2])], limit=1)
         self.state_id = state_id
+        if self.ref_company_ids:
+            self.ref_company_ids._update_l10n_in_fiscal_position()

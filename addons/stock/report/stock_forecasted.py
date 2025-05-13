@@ -51,8 +51,8 @@ class StockForecasted(models.AbstractModel):
 
     def _move_confirmed_domain(self, product_template_ids, product_ids, wh_location_ids):
         in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_location_ids)
-        out_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
-        in_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
+        out_domain += [('state', 'in', ['waiting', 'confirmed', 'partially_available', 'assigned'])]
+        in_domain += [('state', 'in', ['waiting', 'confirmed', 'partially_available', 'assigned'])]
         return in_domain, out_domain
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
@@ -112,11 +112,7 @@ class StockForecasted(models.AbstractModel):
         assert product_template_ids or product_ids
         res = {}
 
-        if self.env.context.get('warehouse') and isinstance(self.env.context['warehouse'], int):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
-        else:
-            warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
-
+        warehouse = self.env['stock.warehouse'].browse(self.env['stock.warehouse']._get_warehouse_id_from_context()) or self.env['stock.warehouse'].search([['active', '=', True]])[0]
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],

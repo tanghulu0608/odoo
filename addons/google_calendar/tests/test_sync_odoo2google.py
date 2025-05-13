@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent, GoogleCalendarService
 from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
-from odoo.addons.google_calendar.tests.test_sync_common import TestSyncGoogle, patch_api
+from .test_sync_common import TestSyncGoogle, patch_api
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo import tools
@@ -91,7 +91,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
 
             events._sync_odoo2google(self.google_service)
 
-        with self.assertQueryCount(__system__=28):
+        with self.assertQueryCount(__system__=29):
             events.unlink()
 
 
@@ -107,7 +107,6 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'duration': 18,
         })
         partner_model = self.env.ref('base.model_res_partner')
-        partner = self.env['res.partner'].search([], limit=1)
         with self.assertQueryCount(__system__=86):
             event = self.env['calendar.event'].create({
                 'name': "Event",
@@ -934,3 +933,43 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
             'transparency': 'opaque',
         }, timeout=3)
+
+    @patch_api
+    def test_event_duplication_allday_google_calendar(self):
+        event = self.env['calendar.event'].with_user(self.organizer_user).create({
+            'name': "Event",
+            'allday': True,
+            'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)],
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False,
+        })
+        event._sync_odoo2google(self.google_service)
+        event_response_data = {
+             'id': False,
+            'start': {'date': '2020-01-15', 'dateTime': None},
+            'end': {'date': '2020-01-16', 'dateTime': None},
+            'summary': 'Event',
+            'description': '',
+            'location': '',
+            'guestsCanModify': True,
+            'organizer': {'email': self.organizer_user.email, 'self': True},
+            'attendees': [
+                            {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
+                            {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
+                         ],
+            'reminders': {'overrides': [], 'useDefault': False},
+            'visibility': 'public',
+            'transparency': 'opaque',
+        }
+        self.assertGoogleEventInsertedMultiTime({
+            **event_response_data,
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+        })
+
+        event2 = event.copy()
+        event2._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInsertedMultiTime({
+            **event_response_data,
+            'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event2.id}},
+        })

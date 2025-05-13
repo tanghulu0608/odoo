@@ -166,7 +166,7 @@ class MassMailing(models.Model):
         compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
-        compute='_compute_mailing_domain', readonly=False, store=True)
+        compute='_compute_mailing_domain', readonly=False, store=True, compute_sudo=False)
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -367,7 +367,8 @@ class MassMailing(models.Model):
 
     @api.depends('email_from', 'mail_server_id')
     def _compute_warning_message(self):
-        for mailing in self:
+        self.warning_message = False
+        for mailing in self.filtered(lambda mailing: mailing.mailing_type == "mail"):
             mail_server = mailing.mail_server_id
             if mail_server and not mail_server._match_from_filter(mailing.email_from, mail_server.from_filter):
                 mailing.warning_message = _(
@@ -1037,7 +1038,7 @@ class MassMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'document_id': res_id,
@@ -1079,7 +1080,7 @@ class MassMailing(models.Model):
                 'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
+                'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
                 'composition_mode': 'mass_mail',
                 'email_from': mailing.email_from,
                 'mail_server_id': mailing.mail_server_id.id,

@@ -113,7 +113,7 @@ class Task(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         search_domain = [('id', 'in', stages.ids)]
-        if 'default_project_id' in self.env.context and not self._context.get('subtask_action'):
+        if 'default_project_id' in self.env.context and not self._context.get('subtask_action') and 'project_kanban' in self.env.context:
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
@@ -297,7 +297,7 @@ class Task(models.Model):
         for task in self:
             task.analytic_account_id = task.project_id.analytic_account_id
 
-    @api.depends('stage_id', 'depend_on_ids.state', 'project_id.allow_task_dependencies')
+    @api.depends('stage_id', 'depend_on_ids.state')
     def _compute_state(self):
         for task in self:
             dependent_open_tasks = []
@@ -386,7 +386,7 @@ class Task(models.Model):
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Set task notification based on project notification preference if user follow the project"""
         if not subtype_ids:
-            project_followers = self.project_id.message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
+            project_followers = self.project_id.sudo().message_follower_ids.filtered(lambda f: f.partner_id.id in partner_ids)
             for project_follower in project_followers:
                 project_subtypes = project_follower.subtype_ids
                 task_subtypes = (project_subtypes.mapped('parent_id') | project_subtypes.filtered(lambda sub: sub.internal or sub.default)).ids if project_subtypes else None
@@ -774,7 +774,7 @@ class Task(models.Model):
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
             if 'company_id' in default_fields and 'default_project_id' not in self.env.context:
-                vals['company_id'] = project.sudo().company_id
+                vals['company_id'] = project.sudo().company_id.id
         elif 'default_user_ids' not in self.env.context and 'user_ids' in default_fields:
             user_ids = vals.get('user_ids', [])
             user_ids.append(Command.link(self.env.user.id))
@@ -1442,6 +1442,7 @@ class Task(models.Model):
         # found.
         create_context = dict(self.env.context or {})
         create_context['default_user_ids'] = False
+        create_context['mail_notify_author'] = True  # Allows sending stage updates to the author
         if custom_values is None:
             custom_values = {}
         # Auto create partner if not existant when the task is created from email

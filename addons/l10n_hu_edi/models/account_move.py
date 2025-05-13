@@ -11,7 +11,7 @@ from psycopg2.errors import LockNotAvailable
 from odoo import fields, models, api, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import formatLang, float_round, float_repr, cleanup_xml_node, groupby
+from odoo.tools import formatLang, float_compare, float_is_zero, float_round, float_repr, cleanup_xml_node, groupby
 from odoo.tools.misc import split_every
 from odoo.addons.base_iban.models.res_partner_bank import normalize_iban
 from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import format_bool, L10nHuEdiConnection, L10nHuEdiConnectionError
@@ -510,10 +510,19 @@ class AccountMove(models.Model):
         for i, invoice in enumerate(self, start=1):
             invoice.l10n_hu_edi_batch_upload_index = i
 
+        def get_operation_type(invoice):
+            operation_type = 'MODIFY'
+            base_invoice = invoice._l10n_hu_get_chain_base()
+            if invoice == base_invoice:
+                operation_type = 'CREATE'
+            elif base_invoice.amount_residual == 0:
+                operation_type = 'STORNO'
+            return operation_type
+
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': 'CREATE' if invoice._l10n_hu_get_chain_base() == invoice else 'MODIFY',
+                'operation': get_operation_type(invoice),
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self
@@ -899,7 +908,12 @@ class AccountMove(models.Model):
 
             if line.display_type == 'product':
                 vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
-                price_unit_signed = sign * line.price_unit
+
+                if line.quantity == 0.0 or line.discount == 100.0:
+                    price_unit_signed = 0.0
+                else:
+                    price_unit_signed = sign * line.price_subtotal / (1 - line.discount / 100) / line.quantity
+
                 price_net_signed = self.currency_id.round(price_unit_signed * line.quantity * (1 - line.discount / 100.0))
                 discount_value_signed = self.currency_id.round(price_unit_signed * line.quantity - price_net_signed)
                 price_total_signed = sign * line.price_total

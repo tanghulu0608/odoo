@@ -219,6 +219,7 @@ class AccountMove(models.Model):
         }
         taxes = []
         taxes_withheld = []
+        invoice_ref = self.ref[:20] if self.ref else False
         for line in self.invoice_line_ids:
             if line.display_type in {'line_section', 'line_note'}:
                 continue
@@ -255,12 +256,13 @@ class AccountMove(models.Model):
             receiver_transaction_reference = (
                 line.sale_line_ids.order_id.client_order_ref[:20]
                 if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
-                else False
+                else invoice_ref
             )
 
             invoice_line_values.update({
                 'ReceiverTransactionReference': receiver_transaction_reference,
-                'FileReference': self.ref[:20] if self.ref else False,
+                'FileReference': invoice_ref,
+                'ReceiverContractReference': invoice_ref,
                 'FileDate': fields.Date.context_today(self),
                 'ItemDescription': line.name,
                 'Quantity': line.quantity,
@@ -317,6 +319,10 @@ class AccountMove(models.Model):
         if self.move_type == "entry":
             return False
 
+        operation_date = None
+        if self.delivery_date and self.delivery_date != self.invoice_date:
+            operation_date = self.delivery_date.isoformat()
+
         eur_curr = self.env['res.currency'].search([('name', '=', 'EUR')])
         inv_curr = self.currency_id
         legal_literals = self.narration.striptags() if self.narration else False
@@ -368,6 +374,7 @@ class AccountMove(models.Model):
                 'InvoiceClass': 'OO',
                 'Corrective': self._l10n_es_edi_facturae_get_corrective_data(),
                 'InvoiceIssueData': {
+                    'OperationDate': operation_date,
                     'ExchangeRateDetails': need_conv,
                     'ExchangeRate': f"{round(conversion_rate, 4):.4f}",
                     'LanguageName': self._context.get('lang', 'en_US').split('_')[0],

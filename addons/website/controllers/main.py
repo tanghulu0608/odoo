@@ -405,8 +405,11 @@ class Website(Home):
 
     @http.route('/website/snippet/options_filters', type='json', auth='user', website=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.NotFound()
         domain = request.website.website_domain()
         if search_domain:
+            assert all(leaf[0] in request.env['website.snippet.filter']._fields for leaf in search_domain)
             domain = expression.AND([domain, search_domain])
         if model_name:
             domain = expression.AND([
@@ -708,6 +711,10 @@ class Website(Home):
             if group['templates']:
                 result.append(group)
         return result
+
+    @http.route('/website/save_xml', type='json', auth='user', website=True)
+    def save_xml(self, view_id, arch):
+        request.env['ir.ui.view'].browse(view_id).with_context(lang=request.website.default_lang_id.code).arch = arch
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):

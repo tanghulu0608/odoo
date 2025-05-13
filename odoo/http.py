@@ -741,7 +741,7 @@ def route(route=None, **routing):
         # Sanitize the routing
         assert routing.get('type', 'http') in _dispatchers.keys()
         if route:
-            routing['routes'] = route if isinstance(route, list) else [route]
+            routing['routes'] = [route] if isinstance(route, str) else route
         wrong = routing.pop('method', None)
         if wrong is not None:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
@@ -1217,8 +1217,9 @@ class HTTPRequest:
     def __init__(self, environ):
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
-        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
+        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
+        httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
@@ -1597,7 +1598,7 @@ class Request:
                         profile_session=self.session.profile_session,
                         collectors=self.session.profile_collectors,
                         params=self.session.profile_params,
-                    )
+                    )._get_cm_proxy()
                 except Exception:
                     _logger.exception("Failure during Profiler creation")
                     self.session.profile_session = None
@@ -1662,7 +1663,7 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/')
+            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
@@ -1728,8 +1729,12 @@ class Request:
         try:
             directory = root.statics[module]
             filepath = werkzeug.security.safe_join(directory, path)
+            debug = (
+                'assets' in self.session.debug and
+                ' wkhtmltopdf ' not in self.httprequest.user_agent.string
+            )
             res = Stream.from_path(filepath, public=True).get_response(
-                max_age=0 if 'assets' in self.session.debug else STATIC_CACHE,
+                max_age=0 if debug else STATIC_CACHE,
                 content_security_policy=None,
             )
             root.set_csp(res)
@@ -1759,6 +1764,7 @@ class Request:
         """
         try:
             self.registry = Registry(self.db).check_signaling()
+            threading.current_thread().dbname = self.registry.db_name
         except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
             # psycopg2 error or attribute error while constructing
             # the registry. That means either
@@ -1783,7 +1789,8 @@ class Request:
             except Exception as exc:
                 if isinstance(exc, HTTPException) and exc.code is None:
                     raise  # bubble up to odoo.http.Application.__call__
-                exc.error_response = self.registry['ir.http']._handle_error(exc)
+                if not hasattr(exc, 'error_response'):
+                    exc.error_response = self.registry['ir.http']._handle_error(exc)
                 raise
 
     def _serve_ir_http(self):
@@ -2113,7 +2120,7 @@ class Application:
         for url, endpoint in _generate_routing_rules([''] + odoo.conf.server_wide_modules, nodb_only=True):
             routing = submap(endpoint.routing, ROUTING_KEYS)
             if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                routing['methods'] = routing['methods'] + ['OPTIONS']
+                routing['methods'] = [*routing['methods'], 'OPTIONS']
             rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
             rule.merge_slashes = False
             nodb_routing_map.add(rule)

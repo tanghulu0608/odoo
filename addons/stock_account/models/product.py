@@ -49,7 +49,7 @@ class ProductTemplate(models.Model):
                     ._svl_empty_stock(description, product_template=product_template)
                 out_stock_valuation_layers = SVL.create(out_svl_vals_list)
                 if product_template.valuation == 'real_time':
-                    move_vals_list += Product._svl_empty_stock_am(out_stock_valuation_layers)
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_templates[product_template] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductTemplate, self).write(vals)
@@ -210,16 +210,17 @@ class ProductProduct(models.Model):
             rounding_error = currency.round(
                 (self.standard_price * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
             )
-            if rounding_error:
-                # If it is bigger than the (smallest number of the currency * quantity) / 2,
-                # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
-                if abs(rounding_error) <= max((abs(quantity) * currency.rounding) / 2, currency.rounding):
-                    vals['value'] += rounding_error
-                    vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
-                        '+' if rounding_error > 0 else '',
-                        float_repr(rounding_error, precision_digits=currency.decimal_places),
-                        currency.symbol
-                    )
+
+            # If it is bigger than the (smallest number of the currency * quantity) / 2,
+            # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+            threshold = currency.round(max((abs(quantity) * currency.rounding) / 2, currency.rounding))
+            if rounding_error and abs(rounding_error) <= threshold:
+                vals['value'] += rounding_error
+                vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                    '+' if rounding_error > 0 else '',
+                    float_repr(rounding_error, precision_digits=currency.decimal_places),
+                    currency.symbol
+                )
         if self.product_tmpl_id.cost_method == 'fifo':
             vals.update(fifo_vals)
         return vals
@@ -332,7 +333,7 @@ class ProductProduct(models.Model):
 
     def _get_fifo_candidates(self, company):
         candidates_domain = self._get_fifo_candidates_domain(company)
-        return self.env["stock.valuation.layer"].sudo().search(candidates_domain)
+        return self.env["stock.valuation.layer"].sudo().search(candidates_domain).sorted(lambda svl: svl._candidate_sort_key())
 
     def _get_qty_taken_on_candidate(self, qty_to_take_on_candidates, candidate):
         return min(qty_to_take_on_candidates, candidate.remaining_qty)
@@ -689,12 +690,12 @@ class ProductProduct(models.Model):
 
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             orig_qtys = self.env.context.get('products_orig_quantity_svl')
-            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) == 1:
-                debit_account_id = stock_input_account.id
-                credit_account_id = product_accounts[product.id]['stock_valuation'].id
-            else:
+            if orig_qtys and float_compare(orig_qtys[product.id], 0, precision_digits=precision) < 1:
                 debit_account_id = product_accounts[product.id]['stock_valuation'].id
                 credit_account_id = product_accounts[product.id]['stock_output'].id
+            else:
+                debit_account_id = stock_input_account.id
+                credit_account_id = product_accounts[product.id]['stock_valuation'].id
             value = out_stock_valuation_layer.value
             move_vals = {
                 'journal_id': product_accounts[product.id]['stock_journal'].id,
@@ -800,7 +801,8 @@ class ProductProduct(models.Model):
             candidates = candidates.with_prefetch(self.env.context.get('candidates_prefetch_ids'))
 
         if len(candidates) > 1:
-            candidates = candidates.sorted(lambda svl: (svl.create_date, svl.id))
+            # sort candidates by create_date > existing records by id > new records without origin
+            candidates = candidates.sorted(lambda svl: (svl.create_date, not bool(svl.ids), svl.ids[0] if svl.ids else 0))
 
         value_invoiced = self.env.context.get('value_invoiced', 0)
         if 'value_invoiced' in self.env.context:
@@ -976,7 +978,8 @@ class ProductCategory(models.Model):
                     ._svl_empty_stock(description, product_category=product_category)
                 out_stock_valuation_layers = SVL.sudo().create(out_svl_vals_list)
                 if product_category.property_valuation == 'real_time':
-                    move_vals_list += Product.with_context(product_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
+
+                    move_vals_list += Product.with_context(products_orig_quantity_svl=products_orig_quantity_svl)._svl_empty_stock_am(out_stock_valuation_layers)
                 impacted_categories[product_category] = (products, description, products_orig_quantity_svl)
 
         res = super(ProductCategory, self).write(vals)

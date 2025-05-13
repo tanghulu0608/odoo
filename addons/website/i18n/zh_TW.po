@@ -6,16 +6,16 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Martin Trigaux, 2024
 # Pak Wai Ho, 2024
-# Tony Ng, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,16 +239,6 @@ msgstr "+1 555-555-5556"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "+1 555-555-5556\""
 msgstr "+1 555-555-5556\""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
-msgid ", .s_searchbar_input"
-msgstr ", .s_searchbar_input"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_website_form_options
-msgid ", .s_website_form"
-msgstr ", .s_website_form"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -543,7 +533,7 @@ msgstr "<b>點選編輯</b> 開始設計您的主頁."
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click on a snippet</b> to access its options menu."
-msgstr "<b>按下小資料</b>可存取其選項選單。"
+msgstr "<b>按下小摘要</b>可存取其選項選單。"
 
 #. module: website
 #. odoo-javascript
@@ -1057,7 +1047,7 @@ msgid ""
 "your email with anyone else.</small>"
 msgstr ""
 "<small id=\"emailHelp\" class=\"form-text text-"
-"muted\">我們絕對不會向其他人洩漏您的電子郵件地址</small>"
+"muted\">我們絕對不會向其他人洩漏你的電子郵件地址</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -1075,7 +1065,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
-msgstr "<small>／月</small>"
+msgstr "<small>/月</small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.header_text_element
@@ -1109,7 +1099,7 @@ msgid ""
 "                <span class=\"visually-hidden\">Next</span>"
 msgstr ""
 "<span class=\"carousel-control-next-icon\"/>\n"
-"                <span class=\"visually-hidden\">下一個</span>"
+"                <span class=\"visually-hidden\">下一頁</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1119,7 +1109,7 @@ msgid ""
 "                <span class=\"visually-hidden\">Previous</span>"
 msgstr ""
 "<span class=\"carousel-control-prev-icon\"/>\n"
-"                <span class=\"visually-hidden\">上一個</span>"
+"                <span class=\"visually-hidden\">上一頁</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -1610,7 +1600,7 @@ msgstr "存取被拒絕"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
-msgstr "存取代碼(token)"
+msgstr "存取權杖(token)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
@@ -1620,7 +1610,7 @@ msgstr "訪問此頁面"
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
 msgid "Access token should be unique."
-msgstr "存取代碼(token)應是唯一的."
+msgstr "存取權杖(token)應是唯一的."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -1744,7 +1734,7 @@ msgstr "加入新的社交網絡"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog_add_product_widget
 msgid "Add Product"
-msgstr "添加產品"
+msgstr "加入產品"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -1847,8 +1837,8 @@ msgstr "新增語言"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
-msgid "Add new %s"
-msgstr "新增一個%s"
+msgid "Add option"
+msgstr "加入選項"
 
 #. module: website
 #. odoo-javascript
@@ -1959,7 +1949,7 @@ msgstr "對齊方式"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_media_list
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
-msgstr "Aline Turner，技術長"
+msgstr "Aline Turner，技術總監"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_0_s_three_columns
@@ -2369,7 +2359,7 @@ msgstr "訪客在頁面停留超過指定時間，便顯示彈出方塊。"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__auto_redirect_lang
 msgid "Autoredirect Language"
-msgstr "語系自動重導"
+msgstr "自動重新導向語言"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -2408,7 +2398,6 @@ msgstr "後端"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #, python-format
@@ -2437,7 +2426,7 @@ msgstr "背景影片"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Badge"
-msgstr "圖章"
+msgstr "徽章"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -2532,7 +2521,7 @@ msgstr "大"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Big Boxes"
-msgstr "大色塊"
+msgstr "大方塊"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3017,6 +3006,13 @@ msgstr "請檢查連線並重試"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Checkbox"
 msgstr "剔選方格"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Checkbox List"
+msgstr "勾選方格列表"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -3753,6 +3749,14 @@ msgstr "自訂密鑰"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Custom Text"
+msgstr "自訂文字"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Custom Url"
@@ -3806,7 +3810,7 @@ msgstr "天 - 小時 - 分 - 秒"
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #, python-format
 msgid "DRAG BUILDING BLOCKS HERE"
-msgstr "拖曳區塊到這裡"
+msgstr "拖曳區塊至此處"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
@@ -3872,7 +3876,7 @@ msgstr "日期及時間"
 #: model_terms:ir.ui.view,arch_db:website.s_countdown
 #, python-format
 msgid "Days"
-msgstr "天內"
+msgstr "天"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -3904,7 +3908,7 @@ msgstr "預設輸入樣式"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__default_lang_id
 msgid "Default Language"
-msgstr "預設語系"
+msgstr "預設語言"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__default_layout
@@ -3941,12 +3945,12 @@ msgstr "預設勾選方格"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_id
 msgid "Default language"
-msgstr "預設語系"
+msgstr "預設語言"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_default_lang_code
 msgid "Default language code"
-msgstr "預設語系代碼"
+msgstr "預設語言代碼"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_controller_page_listing_layout
@@ -4133,7 +4137,7 @@ msgstr "指示"
 #. module: website
 #: model:ir.actions.server,name:website.website_disable_unused_snippets_assets_ir_actions_server
 msgid "Disable unused snippets assets"
-msgstr "停用未使用的小資料資源"
+msgstr "停用未使用的小摘要資源"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -4375,7 +4379,7 @@ msgstr "推軌變焦"
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_domain
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Domain"
-msgstr "篩選範圍"
+msgstr "網域"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
@@ -4517,7 +4521,7 @@ msgstr "動態更新內容"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Snippet"
-msgstr "動態小資料"
+msgstr "動態小摘要"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
@@ -4872,6 +4876,13 @@ msgstr "例子"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Existing Fields"
+msgstr "現有欄位"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/utils.js:0
 #, python-format
 msgid "Expected "
@@ -5032,7 +5043,7 @@ msgstr "農場友善頂級雞肉"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Favicon"
-msgstr "網址列圖示"
+msgstr "網頁圖示"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -5076,6 +5087,13 @@ msgstr "特色列表"
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched elements"
 msgstr "已讀取元素"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Field"
+msgstr "欄位"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
@@ -5832,7 +5850,6 @@ msgstr "標題 1"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Headings"
 msgstr "標題"
@@ -5843,42 +5860,27 @@ msgid "Headings 1"
 msgstr "標題 1"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#, python-format
 msgid "Headings 2"
 msgstr "標題 2"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#, python-format
 msgid "Headings 3"
 msgstr "標題 3"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#, python-format
 msgid "Headings 4"
 msgstr "標題 4"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#, python-format
 msgid "Headings 5"
 msgstr "標題 5"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#, python-format
 msgid "Headings 6"
 msgstr "標題 6"
 
@@ -7231,10 +7233,7 @@ msgid "Linkedin"
 msgstr "LinkedIn"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#, python-format
 msgid "Links"
 msgstr "連結"
 
@@ -7513,7 +7512,7 @@ msgstr "地中海自助餐，包括前菜、主菜和甜品"
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
-msgstr "中"
+msgstr "媒介"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_1_s_text_block_h2
@@ -7646,7 +7645,7 @@ msgstr "元數據"
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_text_image
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Mich Stark, COO"
-msgstr "Mich Stark，運營長"
+msgstr "Mich Stark，營運總監"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_text_image
@@ -8203,7 +8202,7 @@ msgstr "已發佈"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Not tracked"
-msgstr "追蹤網址"
+msgstr "未追蹤"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -8242,7 +8241,7 @@ msgstr "數字（整數）"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_language_count
 #: model:ir.model.fields,field_description:website.field_website__language_count
 msgid "Number of languages"
-msgstr "語系數量"
+msgstr "語言數目"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -8490,6 +8489,13 @@ msgstr "選項 2"
 #, python-format
 msgid "Option 3"
 msgstr "選項 3"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option List"
+msgstr "選項列表"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8817,7 +8823,7 @@ msgstr "使用我的副本的頁面"
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 #, python-format
 msgid "Pages"
-msgstr "不同頁面"
+msgstr "頁面"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -9132,7 +9138,7 @@ msgstr "以新分頁預覽此網址"
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 #, python-format
 msgid "Previous"
-msgstr "前一個"
+msgstr "上一頁"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__arch_prev
@@ -9162,13 +9168,6 @@ msgstr "價格方案"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "主要"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-#, python-format
-msgid "Primary Buttons"
-msgstr "主要按鈕"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9384,7 +9383,7 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr "Qweb 聯繫人欄位"
+msgstr "Qweb 欄位聯絡人"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_html
@@ -9395,6 +9394,13 @@ msgstr "Qweb HTML欄位"
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Radar"
 msgstr "雷達圖"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Radio Button List"
+msgstr "單選按鈕列表"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -9996,13 +10002,6 @@ msgstr "第二功能清單"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary"
 msgstr "次要"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-#, python-format
-msgid "Secondary Buttons"
-msgstr "次要按鈕"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10671,7 +10670,7 @@ msgstr "今天開始銷售你的產品和服務。"
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
 msgid "Start with the customer – find out what they want and give it to them."
-msgstr "由客戶工作開始：找出他們想要甚麼，盡量滿足他們的需要。"
+msgstr "從客戶角度出發：找出他們想要甚麼，並盡量配合提供。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -10945,7 +10944,7 @@ msgstr "模板ID： %s"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
-msgstr "模板回復"
+msgstr "範本後備"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -10968,13 +10967,10 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "使用 Google 搜尋終端測試您的 robots.txt"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
-#, python-format
 msgid "Text"
 msgstr "文字"
 
@@ -11176,6 +11172,13 @@ msgid "The limit must be between 1 and 16."
 msgstr "此限制必須介於 1 到 16 之間."
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+#, python-format
+msgid "The logo is too large. Please upload a logo smaller than 2.5 MB."
+msgstr "標誌檔案太大。請上載小於 2.5 MB 的標誌。"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "The maximum number of files that can be uploaded."
 msgstr "上載檔案數目上限。"
@@ -11363,7 +11366,7 @@ msgstr "此指導計劃提供專門的力量訓練、營養指導和專家輔導
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
 #: model:ir.model.fields,help:website.field_website__favicon
 msgid "This field holds the image used to display a favicon on the website."
-msgstr "此欄位存放此網站網址列圖示的圖片."
+msgstr "此欄位存放用作顯示網站圖示的圖片。"
 
 #. module: website
 #. odoo-javascript
@@ -11383,7 +11386,7 @@ msgstr "此欄位與\"arch\"欄位相同，但不帶翻譯"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
 msgid "This field is used to set/get locales for user"
-msgstr "此欄位用於設定／取得使用者地區語系"
+msgstr "此欄位用於設定/取得使用者的語言及地區設定"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__arch
@@ -11448,7 +11451,7 @@ msgstr ""
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
 "extra attention to featured content or information."
-msgstr "這是一個簡單的超大螢幕樣式組件，用於引起對特色內容或信息的額外關注."
+msgstr "這是一個簡單的主要顯示組件，以簡單的超大螢幕形式顯示資訊，為特色內容或訊息引起額外注意力。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -11519,7 +11522,7 @@ msgstr "此檢視架構已修改"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
 msgid "This website does not have a domain configured."
 msgstr "此網站未設置網域名稱。"
@@ -11570,7 +11573,7 @@ msgstr "時間到！你現在可以訪問"
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Timeline"
-msgstr "時間軸"
+msgstr "時間線"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__timezone
@@ -11617,7 +11620,7 @@ msgstr "提示: 使用免版稅照片"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Title"
-msgstr "稱謂"
+msgstr "標題"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -12088,7 +12091,7 @@ msgid ""
 "Use this snippet to build various types of components that feature a left- "
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
-msgstr "使用此小片段建構各類型組件，這些組件有向左或向右對齊的圖像，旁邊附以文字內容。複製該元素以建立適合你需要的列表。"
+msgstr "使用此小摘要，建構各類型組件，這些組件有向左或向右對齊的圖像，旁邊附以文字內容。複製該元素以建立適合你需要的列表。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -12649,7 +12652,7 @@ msgstr "網站域名應獨一無二。"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
-msgstr "網站網址列圖示"
+msgstr "網站圖示"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_key
@@ -12750,7 +12753,7 @@ msgstr "網站設定"
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr "網站片段過濾器"
+msgstr "網站小摘要篩選器"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_menu
@@ -12865,7 +12868,7 @@ msgstr "網站: 分析"
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
 msgid "Website: Dashboard"
-msgstr "網站: 儀錶板"
+msgstr "網站：Dashboard"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_list
@@ -13010,13 +13013,6 @@ msgstr "寫客戶想知道的東西，<br/>而不是你想讓他們看的東西.
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Year"
 msgstr "年"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website_form_editor.xml:0
-#, python-format
-msgid "Yes"
-msgstr "是"
 
 #. module: website
 #. odoo-javascript
@@ -13183,7 +13179,7 @@ msgstr "你的公司"
 msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provided both a filter and a template to use.<br/>"
-msgstr "您的動態代碼段將顯示在此處... 顯示此消息是因為您沒有同時提供要使用的過濾器和模板.<br/>"
+msgstr "你的動態小摘要將在此處顯示。系統現時顯示此訊息，是因為你未有設定篩選器及範本以供使用。<br/>"
 
 #. module: website
 #. odoo-javascript
@@ -13383,7 +13379,7 @@ msgstr "及"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "and copy paste the address of the font page here."
-msgstr "並將字體頁面的地址複製粘貼到這裡."
+msgstr "並複製字型頁面的網址，貼上至此處。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets

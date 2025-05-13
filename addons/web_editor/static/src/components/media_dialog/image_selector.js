@@ -71,7 +71,7 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
-        this.isImageField = !!this.props.media?.closest("[data-oe-type=image]") || !!this.env.addFieldImage;
+        this.isImageField = !!(this.props.media && this.props.media.closest("[data-oe-type=image]")) || !!this.env.addFieldImage;
     }
 
     get canLoadMore() {
@@ -399,7 +399,8 @@ export class ImageSelector extends FileSelector {
         const mediaUrl = imgEl.src;
         try {
             const response = await fetch(mediaUrl);
-            if (response.headers.get('content-type') === 'image/svg+xml') {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.startsWith("image/svg+xml")) {
                 let svg = await response.text();
                 const dynamicColors = {};
                 const combinedColorsRegex = new RegExp(Object.values(weUtils.DEFAULT_PALETTE).join('|'), 'gi');

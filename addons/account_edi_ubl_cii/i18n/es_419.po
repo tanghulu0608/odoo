@@ -3,17 +3,17 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# Wil Odoo, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
-# Fernanda Alvarez, 2024
+# Wil Odoo, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,9 +39,8 @@ msgid ""
 "0002 - System Information et Repertoire des Entreprise et des "
 "Etablissements: SIRENE"
 msgstr ""
-"0002 - System Information et Repertoire des Entreprise et des "
-"Etablissements: SIRENE (Sistema de información y directorio de empresas y "
-"establecimientos)"
+"0002 - Sistema de información y directorio de empresas y establecimientos: "
+"SIRENE (por sus siglas en francés)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0007
@@ -106,9 +105,7 @@ msgstr "0142 - Identificadores de objeto SECETI"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
 msgid "0151 - Australian Business Number (ABN) Scheme"
-msgstr ""
-"0151 - Régimen del número de empresa australiano (ABN, por sus siglas en "
-"ingles)"
+msgstr "0151 - Régimen del número de empresa australiano (ABN)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0183
@@ -740,6 +737,12 @@ msgid "Generate Peppol format by default"
 msgstr "Generar formato Peppol de forma predeterminada"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__hide_peppol_fields
+msgid "Hide Peppol Fields"
+msgstr "Ocultar campos de Peppol"
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
@@ -833,6 +836,11 @@ msgid ""
 msgstr ""
 "Llene los datos de Peppol EAS y Peppol Endpoint en el formulario de su "
 "empresa para generar un archivo completo."
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
+msgid "Report Action"
+msgstr "Acción de reporte"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
@@ -1006,7 +1014,7 @@ msgid ""
 "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
 "known as 'Endpoint ID'."
 msgstr ""
-"El identificador único que utiliza la facturación BIS 3.0 y sus derivadas, "
+"El identificador único que utiliza la facturación BIS 3.0 y sus derivados, "
 "también conocido como \"ID del punto extremo\"."
 
 #. module: account_edi_ubl_cii

@@ -212,7 +212,11 @@ class SaleOrder(models.Model):
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
-    amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
+    amount_invoiced = fields.Monetary(
+        string="Already invoiced",
+        compute='_compute_amount_invoiced',
+        compute_sudo=True,  # compute `amount_invoiced` in sudo like the stored `amount_*` fields
+    )
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
@@ -640,7 +644,7 @@ class SaleOrder(models.Model):
                 order.amount_to_invoice = 0.0
                 continue
 
-            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted')
+            invoices = order.invoice_ids.filtered(lambda x: x.state == 'posted' or x.payment_state == 'invoicing_legacy')
             # Note: A negative amount can happen, since we can invoice more than the sales order amount.
             # Care has to be taken when summing amount_to_invoice of multiple orders.
             # E.g. consider one invoiced order with -100 and one uninvoiced order of 100: 100 + -100 = 0
@@ -660,7 +664,7 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
-                    order,
+                    order.sudo(),  # ensure access to `credit` & `credit_limit` fields
                     current_amount=(order.amount_total / order.currency_rate),
                 )
 
@@ -716,6 +720,12 @@ class SaleOrder(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
+    def onchange(self, values, field_names, fields_spec):
+        self_with_context = self
+        if not field_names: # Some warnings should not be displayed for the first onchange
+            self_with_context = self.with_context(sale_onchange_first_call=True)
+        return super(SaleOrder, self_with_context).onchange(values, field_names, fields_spec)
+
     @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
@@ -731,6 +741,8 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id_warning(self):
         self.show_update_pricelist = True
+        if self.env.context.get('sale_onchange_first_call'):
+            return
         if self.order_line and self.state == 'draft':
             return {
                 'warning': {
@@ -1389,8 +1401,11 @@ class SaleOrder(models.Model):
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not
-        if final:
-            moves.sudo().filtered(lambda m: m.amount_total < 0).action_switch_move_type()
+        if final and (moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0)):
+            with self.env.protecting([moves._fields['team_id']], moves_to_switch):
+                moves_to_switch.action_switch_move_type()
+                self.invoice_ids._set_reversed_entry(moves_to_switch)
+
         for move in moves:
             if final:
                 # Downpayment might have been determined by a fixed amount set by the user.

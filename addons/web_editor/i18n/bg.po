@@ -3,6 +3,7 @@
 # 	* web_editor
 # 
 # Translators:
+# Anton Vassilev, 2023
 # Radina <radis.choice@gmail.com>, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
@@ -12,18 +13,20 @@
 # aleksandar ivanov, 2023
 # Martin Trigaux, 2023
 # KeyVillage, 2023
-# Albena Mincheva <albena_vicheva@abv.bg>, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
-# Anton Vassilev, 2024
 # Elena Varbanova, 2024
+# Martin Dinovski, 2025
+# Albena Mincheva <albena_vicheva@abv.bg>, 2025
+# Maria Boyadjieva <marabo2000@gmail.com>, 2025
+# Veselina Slavkova, 2025
+# Petko Karamotchev, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-05-09 20:37+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Elena Varbanova, 2024\n"
+"Last-Translator: Petko Karamotchev, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1070,28 +1073,28 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Display 1"
-msgstr ""
+msgstr "Дисплей 1"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Display 2"
-msgstr ""
+msgstr "Дисплей 2"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Display 3"
-msgstr ""
+msgstr "Дисплей 3"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Display 4"
-msgstr ""
+msgstr "Дисплей 4"
 
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__display_name
@@ -1107,17 +1110,24 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+#, python-format
+msgid "Documents"
+msgstr "Документи"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Dotted"
-msgstr ""
+msgstr "Пунктирана"
 
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Double"
-msgstr ""
+msgstr "Двойно"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1222,6 +1232,8 @@ msgstr ""
 #. module: web_editor
 #. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Error"
 msgstr "Грешка"
@@ -1264,7 +1276,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Fill"
-msgstr ""
+msgstr "Попълнете"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1335,7 +1347,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 #, python-format
 msgid "Focus"
-msgstr ""
+msgstr "Фокус"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1376,7 +1388,7 @@ msgstr "Формат"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Full screen"
-msgstr ""
+msgstr "Пълен екран"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1439,7 +1451,7 @@ msgstr ""
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Маршрутизиране"
 
 #. module: web_editor
 #. odoo-javascript
@@ -1683,6 +1695,13 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+#, python-format
+msgid "Icons"
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid ""
@@ -1734,6 +1753,13 @@ msgstr ""
 #, python-format
 msgid "Image padding"
 msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+#, python-format
+msgid "Images"
+msgstr "Изображения"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2068,7 +2094,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/backend/html_field.js:0
 #, python-format
 msgid "Max height"
-msgstr ""
+msgstr "Максимална височина"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2078,7 +2104,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Media"
-msgstr ""
+msgstr "Медия"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2160,7 +2186,7 @@ msgstr "Име"
 #: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid "Navigation"
-msgstr ""
+msgstr "Навигация"
 
 #. module: web_editor
 #. odoo-javascript
@@ -2216,13 +2242,6 @@ msgstr ""
 #: code:addons/web_editor/static/src/components/media_dialog/icon_selector.xml:0
 #, python-format
 msgid "No pictograms found."
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/js/backend/html_field.js:0
-#, python-format
-msgid "No videos"
 msgstr ""
 
 #. module: web_editor
@@ -2358,13 +2377,6 @@ msgstr "Позиция"
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/xml/snippets.xml:0
-#, python-format
-msgid "Preset #{number}"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
@@ -2385,7 +2397,7 @@ msgstr "Първоначален"
 #: code:addons/web_editor/static/src/components/upload_progress_toast/upload_progress_toast.xml:0
 #, python-format
 msgid "Progress bar"
-msgstr ""
+msgstr "Лента за напредък"
 
 #. module: web_editor
 #: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__c
@@ -2418,7 +2430,7 @@ msgstr "Цитат"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field
@@ -2586,7 +2598,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 #, python-format
 msgid "Replace"
-msgstr ""
+msgstr "Замени"
 
 #. module: web_editor
 #. odoo-javascript
@@ -3495,6 +3507,13 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/media_dialog.js:0
+#, python-format
+msgid "Videos"
+msgstr "Видеа"
+
+#. module: web_editor
+#. odoo-javascript
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.js:0
 #, python-format
 msgid "Videos are muted when autoplay is enabled"
@@ -3586,7 +3605,7 @@ msgstr "Напишете нещо..."
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "XL"
-msgstr ""
+msgstr "XL"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -3599,6 +3618,23 @@ msgstr ""
 #, python-format
 msgid "Yes"
 msgstr "Да"
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
+#, python-format
+msgid ""
+"You can not replace a field by this image. If you want to use this image, "
+"first save it on your computer and then upload it here."
+msgstr ""
+
+#. module: web_editor
+#. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/image_selector.xml:0
+#, python-format
+msgid "You can not use this image in a field"
+msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
@@ -3689,13 +3725,6 @@ msgstr ""
 
 #. module: web_editor
 #. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
-#, python-format
-msgid "all"
-msgstr "всички"
-
-#. module: web_editor
-#. odoo-javascript
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/chatgpt_alternatives_dialog.xml:0
 #, python-format
 msgid "alternatives..."
@@ -3719,43 +3748,8 @@ msgid "darken"
 msgstr ""
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
-#, python-format
-msgid "database"
-msgstr ""
-
-#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "exclusion"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "fill"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "fill,rounded-circle"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "flat"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "lg"
 msgstr ""
 
 #. module: web_editor
@@ -3764,29 +3758,8 @@ msgid "lighten"
 msgstr ""
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/file_selector.xml:0
-#, python-format
-msgid "media-library"
-msgstr ""
-
-#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "multiply"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "outline"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "outline,rounded-circle"
 msgstr ""
 
 #. module: web_editor
@@ -3802,22 +3775,8 @@ msgid "px"
 msgstr ""
 
 #. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "rounded-circle"
-msgstr ""
-
-#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "screen"
-msgstr ""
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
-#, python-format
-msgid "sm"
 msgstr ""
 
 #. module: web_editor
@@ -3825,7 +3784,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/components/media_dialog/video_selector.xml:0
 #, python-format
 msgid "videos"
-msgstr ""
+msgstr "видео материали"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_websocket
@@ -3835,4 +3794,4 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "www.example.com"
-msgstr ""
+msgstr "www.example.com"
